@@ -17,8 +17,6 @@ I recently encountered a situation in which I was writing data to a key/value da
 
 I could mock the data access layer, but I wanted something more functional &#8212; something that would _behave_ like the data store layer, and possibly even be used to test it. I decided to write something mimicking the production data store layer that used a Ruby Hash for storage. How could I use the language to help me know that I had faithfully reproduced all the functions in the original object?
   
-<!--more-->
-
 ### Dependency Inversion
 
 Dependency inversion is defined in [Wikipedia](http://en.wikipedia.org/wiki/Dependency_inversion_principle "Wikipedia") as:

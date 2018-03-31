@@ -45,8 +45,6 @@ When I tried this, I was astonished to see that the destination directory consum
 1.1G    .
 </pre>
 
-<!--more-->
-
 After some investigation I found that it was due to the fact that scp &#8220;follows&#8221; symbolic links. That is, instead of creating a symbolic link on the destination, it makes a copy of the linked-to directory with the link name as the name of the containing directory.
 
 For example, here are the ~/.rvm/rubies listings on the two machines:

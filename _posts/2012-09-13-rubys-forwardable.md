@@ -36,8 +36,6 @@ After the meeting I thought of a class I had been working on recently that would
 
 It turned out that almost half the methods were minimal enough to be replaced with Forwardable calls. The diff is shown here:
 
-<!--more-->
-
 [gist id=3713110]
 
 The modified class is viewable on Github [here](https://github.com/keithrbennett/life_game_viewer/blob/6a44806a15e708068258f30b45c60c36a2142d87/lib/life_game_viewer/view/life_table_model.rb).

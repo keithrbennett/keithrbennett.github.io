@@ -19,8 +19,6 @@ A recent addition to the hackerspaces of the world is Bangspace in Bangkok, Thai
 
 [<img src="http://www.bbs-software.com/blog/wp-content/uploads/2010/02/bangspace-front1.jpg" alt="Bangspace Street View" title="Bangspace Street View" width="544" height="408" class="size-full wp-image-241" />](http://www.bbs-software.com/blog/wp-content/uploads/2010/02/bangspace-front1.jpg)<figcaption class="caption wp-caption-text">Bangspace Street View</figcaption></figure> 
 
-<!--more-->
-
 
   
 <figure id="attachment_243" class="thumbnail wp-caption aligncenter" style="width: 554px">

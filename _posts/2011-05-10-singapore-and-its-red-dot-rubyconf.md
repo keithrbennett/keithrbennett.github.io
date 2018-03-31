@@ -29,9 +29,7 @@ In additional to the regional speakers and participants, Matz (the creator of th
           <p>
             <figure id="attachment_426" class="thumbnail wp-caption alignnone" style="width: 310px"><a href="http://www.bbs-software.com/blog/wp-content/uploads/2011/05/matz_and_keith.jpg"><img class="size-medium wp-image-426" title="Matz and Me (Keith Bennett)" src="http://www.bbs-software.com/blog/wp-content/uploads/2011/05/matz_and_keith.jpg?w=300" alt="Matz and Me (Keith Bennett)" width="300" height="225" /></a><figcaption class="caption wp-caption-text">Matz and Me (Keith Bennett)</figcaption></figure></td> </tr> </tbody> </table> 
             
-            <p>
-              <!--more-->
-            </p><figure id="attachment_390" class="thumbnail wp-caption alignright" style="width: 310px">
+            <figure id="attachment_390" class="thumbnail wp-caption alignright" style="width: 310px">
             
             <a href="http://www.bbs-software.com/blog/wp-content/uploads/2011/05/smu.jpg"><img class="size-medium wp-image-390" title="SMU (Singapore Management University), RedDotRubyConf Site" src="http://www.bbs-software.com/blog/wp-content/uploads/2011/05/smu.jpg?w=300" alt="SMU (Singapore Management University), RedDotRubyConf Site" width="300" height="225" /></a><figcaption class="caption wp-caption-text">SMU (Singapore Management University), RedDotRubyConf Site</figcaption></figure> 
             

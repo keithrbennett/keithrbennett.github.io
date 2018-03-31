@@ -30,8 +30,6 @@ Here is an image of the application&#8217;s sole window.  There are text fields
 
 <img class="size-full wp-image-13" title="converter-window" src="http://www.bbs-software.com/blog/wp-content/uploads/2009/02/converter-window.png" alt="The Fahrenheit  Celsius temperature conversion Swing app window" width="499" height="148" /><figcaption class="caption wp-caption-text">the temperature conversion Swing app window</figcaption></figure> 
 
-<!--more-->
-
 We&#8217;ll get to JRuby soon, but first a little about the Swing issues we&#8217;ll be addressing in comparing JRuby with Java.
 
 Swing enables the sharing of behavior among visual components such as menu items and buttons via the sharing of Action objects (or, to be precise, implementations of the javax.swing.Action interface).  So, for example, in this app there is a single Exit action object shared by both the Exit button and the Exit item of the File Menu (that is, both the button and menu item contain references to the same action).

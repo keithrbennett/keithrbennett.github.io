@@ -27,8 +27,6 @@ Here is an image of the application&#8217;s sole window. There are text fields f
 
 <img class="size-full wp-image-13" title="converter-window" src="http://www.bbs-software.com/blog/wp-content/uploads/2009/02/converter-window.png" alt="The Fahrenheit  Celsius temperature conversion Swing app window" width="499" height="148" /><figcaption class="caption wp-caption-text">the temperature conversion Swing app window</figcaption></figure> 
 
-<!--more-->
-
 The Git repository for this project is at <http://github.com/keithrbennett/multilanguage-swing/tree/master>. You can get to the FrameInClojure.clj source file by clicking the _src_ folder, and then clicking _FrameInClojure.clj_. It would probably help to have the program open in another window (or printed out) while reading this article. 
 
 If you can access the REPL interactive Clojure command line, you can issue the following commands to run the example program and have access to the main-frame variable for inspection and manipulation:

@@ -11,8 +11,6 @@ categories:
 ---
 The Ruby culture prefers open source technologies, and when it comes to relational data bases, MySQL and Postgres are commonly used. However, there are times when the Rubyist will not be in a position to choose technologies and must inherit legacy decisions. For example, a common issue in the enterprise is the need to integrate with Oracle. In this article, I&#8217;ll talk about integrating Oracle and JRuby (1), using both Active Record (Ruby on Rails) and the Sequel gem.
 
-<!--more-->
-
 ### JDBC
 
 The JVM typically communicates with data bases using [JDBC](http://www.oracle.com/technetwork/java/javase/jdbc/index.html "http://www.oracle.com/technetwork/java/javase/jdbc/index.html") (Java Data Base Connectivity). The JDBC layer provides an abstraction with which application code can access the data base without (for the most part) needing to know anything about its underlying implementation.

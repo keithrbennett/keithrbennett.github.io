@@ -23,8 +23,6 @@ For the database, though, it&#8217;s not so simple. Most of the information onli
 
 ## The Solution
 
-<!--more-->
-
 My research indicates that there is a command line alternative, _mysqldump_ (which is probably the command called by phpMyAdmin). mysqldump generates a text file containing all the SQL commands necessary to reconstruct the data base with the identical schema and data.
 
 Mysqldump&#8217;s parameters include user id, password, host, and data base name. These are already available in plain text in the blog&#8217;s _wp-config.php_ configuration file. I&#8217;d like to read that file dynamically, rather than copying the data somewhere else, or requiring that it be provided on the command line (which would make it visible in the shell&#8217;s command history).

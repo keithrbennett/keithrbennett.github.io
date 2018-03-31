@@ -21,8 +21,6 @@ This article describes the development environment I settled on for now, and how
 
 Following is a step by step guide. Although I installed Linux Mint, most or all of these steps should work on standard Ubuntu distributions too.
 
-<!--more-->
-
 * * *
 
 ### Download the ISO

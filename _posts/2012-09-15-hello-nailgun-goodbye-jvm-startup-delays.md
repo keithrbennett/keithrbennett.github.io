@@ -22,8 +22,6 @@ If you&#8217;re using JRuby, and working with gem, rspec, irb, and other JRuby t
 
 [Nailgun](http://www.martiansoftware.com/nailgun/ "http://www.martiansoftware.com/nailgun/") is a Java utility that starts up a JVM and behaves like a server, accepting client requests to run Java based software on it. The JRuby team did a great job of integrating it into JRuby, making it trivially simple to use.
 
-<!--more-->
-
 To start the server, just run:
 
 <pre class="brush: plain; title: ; notranslate" title="">jruby --ng-server  # 'jruby' can be replaced with 'ruby' if running in rvm

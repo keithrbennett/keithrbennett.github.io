@@ -18,8 +18,6 @@ But there&#8217;s one thing in Ruby I haven&#8217;t gotten used to&#8230;the wid
 
 I strongly believe that just as we software developers strive to create user interfaces that communicate structure and content with visual cues to our users, we should do the same for each other in our source code.
 
-<!--more-->
-
 The beginning of a line of source code has a special status and importance. As the eyes scan down a section of code, the most prominent text is the text that begins each line.
 
 The opportunity cost of embedding a conditional in the middle of a statement is the lost opportunity to communicate that conditional more clearly and strongly. The result is that the reader is required to work harder to understand the flow of execution.

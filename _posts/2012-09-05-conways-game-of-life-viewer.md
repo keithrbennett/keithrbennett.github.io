@@ -21,8 +21,6 @@ Here&#8217;s a screen shot:
 
 [<img src="http://www.bbs-software.com/blog/wp-content/uploads/2012/09/life-game-viewer7.png" alt="Life Game Viewer Screenshot" title="life-game-viewer" width="799" height="637" class="aligncenter size-full wp-image-666" />](http://www.bbs-software.com/blog/wp-content/uploads/2012/09/life-game-viewer7.png)
 
-<!--more-->
-
 <div>
   In case you don&#8217;t recognize the face, it&#8217;s Alfred E. Neuman, made famous by Mad magazine, but, as I just learned this minute from Wikipedia (I read it there so it <em>must</em> be true), &#8220;[his] face had drifted through American pictography for decades before being claimed and named by <em>Mad</em>&#8230;&#8221;&#8230;but I digress&#8230;
 </div>

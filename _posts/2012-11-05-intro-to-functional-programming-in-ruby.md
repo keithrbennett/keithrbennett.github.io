@@ -19,8 +19,6 @@ Here&#8217;s a walk through some basic functional programming in Ruby. A file co
 
 We&#8217;ll start with some simple examples and work up to creating the execution of a workflow defined as an array of lambdas.
 
-<!--more-->
-
 * * *
 
 ##### An &#8220;Add&#8221; Function

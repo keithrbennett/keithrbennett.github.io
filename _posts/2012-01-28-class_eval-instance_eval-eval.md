@@ -17,7 +17,7 @@ categories:
 ---
 A couple of days ago I attended an interesting discussion of metaprogramming by Arild Shirazi at a meeting of the Northern Virginia Ruby User Group. Arild showed how he used metaprogramming (_class_eval_ in particular) to generate functions whose names would only be known at runtime. His talk was very effective at reminding me that I don&#8217;t know as much about metaprogramming as I thought!
 
-<!--more-->(Feel free to offer suggestions and corrections, and I&#8217;ll try to update the article accordingly.)
+(Feel free to offer suggestions and corrections, and I&#8217;ll try to update the article accordingly.)
 
 Dave Thomas, in his excellent Advanced Ruby training, emphasizes the value of knowing just who _self_ is at any point in the code. (For a good time, bounce around an rspec source file and try to guess what _self_ is in various places&#8230;).
 

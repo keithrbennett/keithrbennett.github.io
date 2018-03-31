@@ -19,8 +19,6 @@ GUI builders are great, but for building anything more than a trivial solitary a
 
 As the number of windows increases, the natural tendency is to copy and paste. For the same reasons copy and paste degrade the quality of source code, they do the same to user interface configurations.
 
-<!--more-->
-
 #### Changing Project Wide Settings
 
 On a Java Swing project on which I once worked, it was decided to follow the Java Look and Feel Design Guidelines, and to use some standard project-wide conventions. We had to change lots of windows and components, even down to the minutiae of border pixel widths. Fortunately, we had been creating our UI&#8217;s in source code, so with some refactoring, I was able to confine these common characteristics to a single shared place in the code.

@@ -26,8 +26,6 @@ _
 
 I&#8217;ve recently been asked to participate on a committee that will come up with a set of coding standards. These standards will be used by several teams, so it&#8217;s especially important that they be good and not overly restrictive. The Sun conventions are a reasonable place we may start. On the whole, I think they&#8217;re great, but I do have some reservations about a few points. Below are some notes regarding the Sun conventions, listed by section in the original document to which they refer. Quotes from the Sun document are indicated in italics, except for source code. I invite your feedback. This article may be modified based on your comments or my own &#8220;clearer thinking and better information&#8221;.
 
-<!--more-->
-
 * * *
 
 **3.1.1 Beginning Comments**

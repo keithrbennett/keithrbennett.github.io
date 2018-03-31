@@ -21,8 +21,6 @@ A good user interface designer understands and exploits the way the human mind p
 
 Amazingly, many software developers believe that we as a group somehow transcend the constraints and limitations of human perception, learning, and thought. According to them, that which is necessary for the common masses of &#8220;users&#8221; does not apply to us, for we are the high priesthood of software engineers, masters of the virtual universe.
 
-<!--more-->
-
 ### Source Code
 
 What am I talking about? Source code, that medium with which we spend so many of our working hours. Although source code is used as input to a compiler, it is also used by humans; that is, us.

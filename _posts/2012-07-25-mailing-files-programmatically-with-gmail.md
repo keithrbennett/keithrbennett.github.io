@@ -17,8 +17,6 @@ Recently I had the need to send someone multiple 1-2 MB files. Email was the bes
 
 I naturally turned to my favorite language, Ruby.  I did a little research into the various gems and their configuration, and offer this simple example (source code below) in the hope that it will save you a little time if you have the same need.
 
-<!--more-->
-
 I&#8217;ve tried to trim out anything not relating to the actual sending of the mail so that you can more easily understand it and adapt it for your use.
 
 &#8211; Keith
