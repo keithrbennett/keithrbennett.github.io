@@ -1,6 +1,6 @@
 ---
 id: 584
-title: 'Conway&#8217;s Game of Life Viewer'
+title: "Conway's Game of Life Viewer"
 date: 2012-09-05T23:30:57+00:00
 author: keithrbennett
 layout: post

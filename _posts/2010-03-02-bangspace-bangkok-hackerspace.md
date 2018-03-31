@@ -1,6 +1,6 @@
 ---
 id: 216
-title: 'Bangspace &#8212; Bangkok Hackerspace'
+title: "Bangspace's Bangkok Hackerspace"
 date: 2010-03-02T13:58:27+00:00
 author: keithrbennett
 layout: post

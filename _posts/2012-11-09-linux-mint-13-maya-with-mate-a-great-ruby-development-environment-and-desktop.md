@@ -1,6 +1,6 @@
 ---
 id: 963
-title: 'Building A Great Ruby Development Environment and Desktop with Linux Mint 13 &#8220;Maya&#8221; Mate'
+title: 'Building A Great Ruby Development Environment and Desktop with Linux Mint 13 "Maya" Mate'
 date: 2012-11-09T13:18:48+00:00
 author: keithrbennett
 layout: post

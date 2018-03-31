@@ -1,6 +1,6 @@
 ---
 id: 11
-title: 'JRuby &#8212; A Better Language for the Java Virtual Machine'
+title: 'JRuby: A Better Language for the Java Virtual Machine'
 date: 2009-02-26T02:53:22+00:00
 author: keithrbennett
 layout: post

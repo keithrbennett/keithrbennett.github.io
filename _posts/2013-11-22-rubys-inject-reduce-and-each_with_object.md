@@ -1,6 +1,6 @@
 ---
 id: 1327
-title: 'Ruby&#8217;s inject/reduce and each_with_object'
+title: "Ruby's inject/reduce and each_with_object"
 date: 2013-11-22T01:18:48+00:00
 author: keithrbennett
 layout: post

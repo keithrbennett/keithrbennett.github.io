@@ -1,6 +1,6 @@
 ---
 id: 436
-title: 'Android GUI&#8217;s &#8212; The Case Against GUI Builders and Data Driven GUI Configuration'
+title: "Android GUI's: The Case Against GUI Builders and Data Driven GUI Configuration"
 date: 2011-05-28T21:20:27+00:00
 author: keithrbennett
 layout: post

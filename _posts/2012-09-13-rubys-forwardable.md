@@ -1,6 +1,6 @@
 ---
 id: 698
-title: 'Ruby&#8217;s Forwardable'
+title: "Ruby's Forwardable"
 date: 2012-09-13T11:02:24+00:00
 author: keithrbennett
 layout: post

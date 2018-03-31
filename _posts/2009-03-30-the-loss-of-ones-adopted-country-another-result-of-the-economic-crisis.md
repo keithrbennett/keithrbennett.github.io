@@ -1,6 +1,6 @@
 ---
 id: 190
-title: 'The Loss of One&#8217;s Adopted Country &#8211; Another Result of the Economic Crisis'
+title: "The Loss of One's Adopted Country: Another Result of the Economic Crisis"
 date: 2009-03-30T13:20:33+00:00
 author: keithrbennett
 layout: post

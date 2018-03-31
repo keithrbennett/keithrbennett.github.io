@@ -1,6 +1,6 @@
 ---
 id: 197
-title: 'GPartEd &#8211; Free and Open Source Disk Partitioner'
+title: 'GPartEd -- Free and Open Source Disk Partitioner'
 date: 2009-07-01T13:18:50+00:00
 author: keithrbennett
 layout: post
@@ -21,8 +21,6 @@ GPartEd (<http://gparted.sourceforge.net>) is a free and open source software to
 Although I have not done any thorough or systematic comparison of GPartEd and PartitionMagic, I _can_ say that I have successfully used GPartEd for some nontrivial partition schemes, and it worked beautifully.
 
 GPartEd runs natively on Linux, but if you are using other operating systems such as Windows or OS X, you can put it on a bootable medium such as a CD or USB drive and boot from that medium. More information on this is at <http://gparted.sourceforge.net/livecd.php>.
-
-<!--more-->
 
 When the bootable medium starts up, it boots Linux, but you don&#8217;t need to care about that &#8212; it&#8217;s got an attractive and intuitive GUI. It&#8217;s aware of a multitude of partition types, including types used by Windows, OS X, Linux, and Solaris, so it&#8217;s not likely that the one you want will be missing. You can see all the supported partition types at <http://gparted.sourceforge.net/features.php>.
 
