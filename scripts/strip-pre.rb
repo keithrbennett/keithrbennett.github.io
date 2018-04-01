@@ -3,6 +3,7 @@
 require 'shellwords'
 require 'trick_bag'
 
+LANGUAGE = (ARGV[0] && ARGV[0][0] == 'r') ? 'ruby' : ''
 
 def ellipsize(string, max_length = 60)
   string[0...max_length] << (string.length > max_length ? '...' : '')
@@ -24,7 +25,7 @@ def transform(s)
   s = s[pos_close_pre_start..-1]
   s.gsub!('</pre>', '')
   s.chomp!
-  "```ruby\n" + CGI.unescapeHTML(s) + "\n```\n"
+  "```#{LANGUAGE}\n" + CGI.unescapeHTML(s) + "```\n"
 end
 
 

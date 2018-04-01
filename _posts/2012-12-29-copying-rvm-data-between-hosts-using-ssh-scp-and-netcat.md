@@ -17,9 +17,7 @@ I haven&#8217;t tested this, but I imagine that for installing rvm on multiple s
 
 ## Not So Good &#8212; Using scp
 
-_Note: This approach requires that the ssh port (22) be open on the destination host, and sshd is running. On the Mac, this is done by enabling &#8220;Remote Login&#8221; in the Sharing Preferences.
-  
-_ 
+_Note: This approach requires that the ssh port (22) be open on the destination host, and sshd is running. On the Mac, this is done by enabling &#8220;Remote Login&#8221; in the Sharing Preferences._ 
 
 A very simple way to do this is to use `scp` (secure copy, over ssh) with the `-r` (recursive) option. For example:
 
@@ -98,8 +96,9 @@ Here are the actual commands I used:
 
 On the destination machine, with the current directory set to where I want the files to be written:
 
-<pre class="brush: bash; title: ; notranslate" title="">nc -l 12345 | tar xzf -
-</pre>
+```
+>nc -l 12345 | tar xzf -
+```
 
 Some notes on this command:
 
@@ -110,10 +109,11 @@ Some notes on this command:
 
 On the sending side, we execute this command:
 
-<pre class="brush: bash; title: ; notranslate" title="">&gt;time tar czf - . | nc destination_host 12345
+```
+>>time tar czf - . | nc destination_host 12345
 tar czf - .  21.05s user 1.47s system 9% cpu 4:07.18 total
 nc destination_host 12345  0.09s user 1.04s system 0% cpu 4:07.20 total
-</pre>
+```
 
   * tar&#8217;s &#8220;c&#8221; option tells tar to create an archive
   * nc&#8217;s options specify a destination host whose name is `destination_host`, on port 12345
@@ -124,9 +124,7 @@ This approach results in the correct handling of symbolic links. In addition, it
 
 ## Best &#8212; Using tar with ssh
 
-_Note: This approach assumes that the source host&#8217;s ssh port is open and sshd is running.
-  
-_ 
+_Note: This approach assumes that the source host&#8217;s ssh port is open and sshd is running._ 
   
 Although the previous approach was a great improvement, there are two potential issues with it:
 
@@ -137,10 +135,11 @@ After some web searching, I found this excellent solution posted at [http://www.
 
 It takes advantage of ssh&#8217;s ability to execute a remote command and send its output to the local host&#8217;s stdout. This makes it possible to pipe the output to a local command, tar in this case:
 
-<pre class="brush: bash; title: ; notranslate" title="">&gt;time ssh keithb@source_host "cd ~/.rvm; tar czf - ." | tar xzf -
+```
+>>time ssh keithb@source_host "cd ~/.rvm; tar czf - ." | tar xzf -
 Password:
 ssh keithb@source_host "cd ~/.rvm; tar czf - ."  2.31s user 0.75s system 7% cpu 38.676 total
 tar xzf -  2.01s user 6.74s system 22% cpu 38.675 total
-</pre>
+```
 
 This is over six times faster then the nc approach and 48 times faster than scp! In addition, it is a single command executed from one host, and travels over an encrypted connection. Sweet!
