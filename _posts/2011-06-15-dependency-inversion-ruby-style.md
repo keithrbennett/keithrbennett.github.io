@@ -65,7 +65,8 @@ What is the appropriate Ruby way to provide some kind of confidence in these plu
 
 Here is a class that can be used to verify the presence of instance methods (also at [https://gist.github.com/1034775](https://gist.github.com/1034788 "instance_method_validator.rb")):
 
-<pre class="brush: ruby; title: ; notranslate" title=""># Shows a crude way to enforce that a class implements
+```ruby
+# Shows a crude way to enforce that a class implements
 # required methods.  Use it like this:
 #
 # class OkClass
@@ -113,14 +114,15 @@ class InstanceMethodValidator
   end
 
 
-  class Error &lt; RuntimeError
+  class Error < RuntimeError
   end
 end
-</pre>
+```
 
 The contract below (also at [https://gist.github.com/1034784](https://gist.github.com/1034788 "encryption_contract.rb")) lists the required methods. It&#8217;s also a good place to provide information about these methods. 
 
-<pre class="brush: ruby; title: ; notranslate" title="">require 'instance_method_validator'
+```ruby
+>require 'instance_method_validator'
 
 module EncryptionContract
 
@@ -151,11 +153,12 @@ module EncryptionContract
     InstanceMethodValidator.new(required_function_names).validate(klass)
   end
 end
-</pre>
+```
 
 Now let&#8217;s write a naive example implementation. Having the above code makes it trivial for the implementer to test that all required methods are implemented. Here is the rspec (also at [https://gist.github.com/1034785](https://gist.github.com/1034788 "reverse_encrypter_spec.rb")):
 
-<pre class="brush: ruby; title: ; notranslate" title="">require 'rspec'
+```ruby
+>require 'rspec'
 require 'reverse_encrypter'
 
 describe ReverseEncrypter do
@@ -164,11 +167,12 @@ describe ReverseEncrypter do
     lambda { subject.validate_contract }.should_not raise_error
   end
 end
-</pre>
+```
 
 Here is the implementation itself (see also [https://gist.github.com/1034788](https://gist.github.com/1034788 "encryption_contract.rb")):
 
-<pre class="brush: ruby; title: ; notranslate" title="">require 'encryption_contract'
+```ruby
+>require 'encryption_contract'
 
 # Naive and totally lame encrypter that just reverses the string.
 class ReverseEncrypter
@@ -183,7 +187,7 @@ class ReverseEncrypter
    s.reverse
  end
 end
-</pre>
+```
 
 In a pluggable framework as described above, it can be helpful to validate all &#8220;foreign&#8221; (that is, not provided by the framework authors) components as thoroughly as possible. The approach above enables the validation to be done at will, either in unit tests or at runtime. It&#8217;s a trivial function call and takes virtually no time to execute.
 

@@ -11,7 +11,8 @@ categories:
 ---
 Last night I had the pleasure of attending the [Arlington Ruby User Group](http://www.meetup.com/Arlington-Ruby/) meeting in Arlington, Virginia. Marius Pop, a new Rubyist, presented on Ruby&#8217;s [Forwardable](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/forwardable/rdoc/Forwardable.html) module. Forwardable allows you to very succinctly specify that you want to define a method that simply calls (that is, delegates to) a method on one of the object&#8217;s instance variables, and returns its return value, if there is one. Here is an example file that illustrates this:
 
-<pre class="brush: ruby; title: ; notranslate" title="">require 'forwardable'
+```ruby
+>require 'forwardable'
 
 class FancyList
   extend Forwardable
@@ -30,7 +31,7 @@ puts "FancyList.new.respond_to?(:size) = #{FancyList.new.respond_to?(:size)}"
 # Output is:
 # FancyList.new.size = 0
 # FancyList.new.respond_to?(:size) = true
-</pre>
+```
 
 After the meeting I thought of a class I had been working on recently that would benefit from this. It&#8217;s the [LifeTableModel](https://github.com/keithrbennett/life_game_viewer/blob/a56d329901999b20a2b23117d2fe2a8155a3799a/lib/life_game_viewer/view/life_table_model.rb "LifeTableModel class") class in my [Life Game Viewer](https://github.com/keithrbennett/life_game_viewer) application, a Java Swing app written in JRuby. The LifeTableModel is the model that backs the visual table (in Swing, a _JTable_). Often the table model will contain the logic that provides the data to the table, but in my case, it was more like a thin adapter between the table and other model objects that did the real work.
 

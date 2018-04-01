@@ -57,12 +57,17 @@ Almost all natural (human) languages use some kind of space to separate words. T
 
 My United States passport displays the passport number as nine consecutive digits, without any separators. Reading this number is difficult and error prone. In contrast, telephone numbers in the U.S. are expressed as (999) 999-9999 rather than 9999999999, and postal zip codes are expressed as 99999-9999 rather than 999999999. The reason for this should be obvious. Therefore, it is also better in source code to use spacing in such a way that optimizes readability.
 
-<pre>for(int i=0;i&lt;max&&;(!foo)&&(!bar);i++)</pre>
+```java
+for(int i=0;i<max&&;(!foo)&&(!bar);i++)
+```
+
+end
 
 is better as:
 
-<pre>for(int i = 0; i &lt; max && (! foo) && (! bar); i++)
-</pre>
+```java
+for(int i = 0; i < max && (! foo) && (! bar); i++)
+```
 
 &#8230;or some variation thereof.
 
@@ -94,17 +99,14 @@ Wikipedia has an excellent elaboration on this concept of cohesion at [http://en
 
 A larger separation in meaning should be represented by a larger separation in whitespace. For example, it is common within a method to skip a line for readability. Therefore, I suggest skipping at least _two_ lines between method definitions. This makes it easier for the reader to see that it is a method boundary, and can be especially helpful when viewing an entire file. Although this is not as important when viewing a file in an IDE, many developers do not use IDE&#8217;s, and they would not be that helpful when the source code is printed out.
 
-Line continuations should be indented at least twice as much as indentations expressing logical levels such as 
+Line continuations should be indented at least twice as much as indentations expressing logical levels. For example:
 
-<pre>if</pre>
-
-statements. For example:
-
-<pre>if (some_really_longggggggggg_condition &&
+```java
+if (some_really_longggggggggg_condition &&
         another_really_longggggggggg_condition) {
     handleIt();
 }
-</pre>
+```
 
 The degree of indentation signals to the reader whether the line is a continuation or a deeper level of nesting.
 
@@ -114,9 +116,10 @@ Anything that appears in the source code should communicate enough meaning to ju
 
 For example, the comment below is useless because it adds nothing, and worse than useless because it wastes the reader&#8217;s time in the process:
 
-<pre>// gets the foo and puts it into myFoo:
+```java
+// gets the foo and puts it into myFoo:
 String myFoo = getFoo();
-</pre>
+```
 
 ### Avoid Code Duplication
 
@@ -140,9 +143,10 @@ Prefer self documenting code to code plus documentation. This can be helpful in 
 
 This is an example of the signal to noise ratio issue. Consider the two methods below that express the same thing:
 
-<pre>boolean isOddVerbose(int n) {</pre>
+```java
+boolean isOddVerbose(int n) {
 
-<pre>boolean odd;
+    boolean odd;
     if (n % 2 == 0) {
         odd = false;
     } else
@@ -150,39 +154,33 @@ This is an example of the signal to noise ratio issue. Consider the two methods 
     }
     return odd;
 }
+```
 
-
-</pre>
-
-<pre>boolean isOddConcise(int n) {
+```java
+>boolean isOddConcise(int n) {
     return (n % 2) != 0;
 }
-</pre>
+```
 
 The reader has far less to parse, and the eyes have far less distance to travel, in the concise method.
 
 Another way of making code clearer and more concise is through the use of the ternary operator (? and :), an often underutilized feature of many programming languages. Consider the two alternative representations of getFoo() below:
 
-<pre>public Foo getFooVerbose(Bar bar) {</pre>
-
-<pre>Foo foo;
+```java
+public Foo getFooVerbose(Bar bar) {
+    Foo foo;
     if (bar != null) {
         foo = Foo.X;
     } else {
         foo = Foo.Y;
     }
-</pre>
-
-<pre>return foo;
+    return foo;
 }
 
-
-</pre>
-
-<pre>public Foo getFooConcise(Bar bar) {
+public Foo getFooConcise(Bar bar) {
     return (bar != null) ? Foo.X : Foo.Y;
 }
-</pre>
+```
 
 While the ternary operator may take a little getting used to, once it is familiar it&#8217;s a handy tool that&#8217;s hard to do without.
 
@@ -190,8 +188,6 @@ While the ternary operator may take a little getting used to, once it is familia
 
 I hope I have persuaded you that good presentation in source code is not merely a frill, but rather an essential component of effective communication with your colleagues. Above are just a handful of concrete suggestions of how to do this. I look forward to reading your suggestions as well.
 
-### About Me<figure id="attachment_6" class="thumbnail wp-caption alignleft" style="width: 260px">
+### About Me 
 
-[<img class="size-full wp-image-6" title="keith-avatar" src="http://www.bbs-software.com/blog/wp-content/uploads/2008/11/keith-avatar.jpg" alt="Keith Bennett" width="250" height="260" />](http://www.bbs-software.com/blog/wp-content/uploads/2008/11/keith-avatar.jpg)<figcaption class="caption wp-caption-text">Keith Bennett</figcaption></figure> 
-
-I&#8217;m a Sun Certified Java Programmer with over twenty years experience in software development using a wide variety of languages, tools, and operating systems. Currently I live and work in Reston, Virginia, building [Bennett Business Solutions](http://www.bbsinc.biz), a small consulting company focusing on Ruby software development.
+I&#8217;m a Sun Certified Java Programmer with over twenty years experience in software development using a wide variety of languages, tools, and operating systems. Currently I live and work in Reston, Virginia, building [Bennett Business Solutions](http://www.bbs-software.com/), a small consulting company focusing on Ruby software development.

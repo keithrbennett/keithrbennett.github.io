@@ -27,8 +27,9 @@ Here&#8217;s a screen shot:
 
 You can install the gem in the usual way (make sure you&#8217;re in JRuby when you do):
 
-<pre class="brush: plain; title: ; notranslate" title="">gem install life_game_viewer
-</pre>
+```
+>gem install life_game_viewer
+```
 
 A sample model implementation with sample initial values are provided so that you can play with the viewer before beginning the exercise. This sample implementation is available by running `LifeGameViewer::Main.view_sample` in irb, or `life_view_sample` on the command line.
 
@@ -36,13 +37,16 @@ You can&#8217;t see it in this image, but if you hover over a cell, a tool tip c
 
 One of my favorite features is the simplicity of data initialization. One of the required model methods is a static method _create_, which takes a row count, column count, and optionally, a block with which to initialize each cell. This makes it simpler and more concise to experiment with forumulas and patterns. For example, the code below would result in an X shaped board, and is all the code you&#8217;d need to run the viewer.
 
-<pre class="brush: ruby; title: ; notranslate" title="">require 'life_game_viewer'
+```ruby
+require 'life_game_viewer'
 
 model = SampleLifeModel.create(12, 12) do |row, col|
   (row + col == 11) || (row == col)
 end
 LifeGameViewer::Main.view(model)
-</pre><figure id="attachment_688" class="thumbnail wp-caption aligncenter" style="width: 810px">
+```
+
+<figure id="attachment_688" class="thumbnail wp-caption aligncenter" style="width: 810px">
 
 [<img src="http://www.bbs-software.com/blog/wp-content/uploads/2012/09/life-game-viewer-x-board1.png" alt="Board initialized with: (row + col == 11) || (row == col)" title="life-game-viewer-x-board" width="800" height="565" class="size-full wp-image-688" />](http://www.bbs-software.com/blog/wp-content/uploads/2012/09/life-game-viewer-x-board1.png)<figcaption class="caption wp-caption-text">Board initialized with: (row + col == 11) || (row == col)</figcaption></figure> 
 

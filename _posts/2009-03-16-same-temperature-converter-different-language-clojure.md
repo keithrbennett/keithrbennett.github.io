@@ -31,10 +31,11 @@ The Git repository for this project is at <http://github.com/keithrbennett/multi
 
 If you can access the REPL interactive Clojure command line, you can issue the following commands to run the example program and have access to the main-frame variable for inspection and manipulation:
 
-<pre class="brush: xml; title: ; notranslate" title="">(load-file &quot;FrameInClojure.clj&quot;)
+```clojure
+(load-file "FrameInClojure.clj")
 (println temp-converter/main-frame)  ; illustrates access to the program's frame
 (.setVisible temp-converter/main-frame false) ; illustrates that it can be manipulated
-</pre>
+```
 
 The strengths of Clojure are many, and a Swing application is not the best program with which to showcase them. Therefore, it would not be fair to judge Clojure based solely on the content of this article, because I am intentionally excluding its greatest strengths &#8212; they are outside of the scope of porting this Swing application, and I am not yet expert enough to be qualified to teach about them. However, this article _is_ useful in illustrating some of the mechanics and philosophy of the language that can be used in general programming.
 
@@ -44,9 +45,10 @@ Firstly, Clojure (and, by extension, Lisp) struck me as a language that easily e
 
 For example, _let_ (see <http://clojure.org/special_forms#let>) is a construct that formalizes the definition of terms and their scope. Here&#8217;s an example of a function that uses it:
 
-<pre class="brush: xml; title: ; notranslate" title="">(defn center-on-screen
-&quot;Centers a component on the screen based on the screen dimensions
-reported by the Java runtime.&quot;
+```clojure
+(defn center-on-screen
+"Centers a component on the screen based on the screen dimensions
+reported by the Java runtime."
 [component]
 
   (let [
@@ -60,7 +62,7 @@ reported by the Java runtime.&quot;
 
     (.setLocation component new-x new-y))
   component)
-</pre>
+```
 
 The let clause above leaves no doubt 1) that those terms are inaccessible outside of the let clause, and 2) that all terms are colocated at the beginning of the let clause. The first feature is available in other languages such as Java, though it is (unfortunately) rarely used &#8212; I&#8217;m speaking of nesting some of a method&#8217;s code in curly braces without any enclosing for, if, do, or while, for the sole purpose of limiting the scope of the local variables used therein.
 
@@ -72,18 +74,20 @@ In the above function, the let clause is the only content of this function. Howe
 
 As a functional language, the creation of a chunk of behavior that can be assigned to a variable (known as a lambda) is trivial. Here are two ways to create a lambda that returns the square of its argument&#8230;
 
-<pre class="brush: xml; title: ; notranslate" title="">(def square1 (fn [n] (* n n)))
+```clojure
+(def square1 (fn [n] (* n n)))
 (def square2 #(* % %))
-</pre>
+```
 
 &#8230; and here&#8217;s an example of using a lambda concisely to guarantee uniform creation of two similar objects:
 
-<pre class="brush: xml; title: ; notranslate" title="">(let [
+```clojure
+(let [
   create-an-inner-panel #(JPanel. (GridLayout. 0 1 5 5))
   label-panel           (create-an-inner-panel)
   text-field-panel      (create-an-inner-panel)
   ;; ...
-</pre>
+```
 
 In the code above, a minimal lambda is created (the code between _#(_ and _)_), and then used to create two panels immediately below. In Java you would need to create a method to do this, probably either another instance method of the same class, or a static utility method of the same or another class. The Clojure approach is superior because a) the lambda&#8217;s code is invisible outside of the function (and even the let clause) in which it is used, and b) it appears in the code immediately adjacent to its use.
 
@@ -91,7 +95,8 @@ In the code above, a minimal lambda is created (the code between _#(_ and _)_), 
 
 Lisp and Clojure support macros that can greatly increase the power and flexibility of the language. For example, I found a need for a function that lazily initializes an object. In Java, it would have been:
 
-<pre class="brush: java; title: ; notranslate" title="">private MyClass foo;
+```java
+>private MyClass foo;
 
   public MyClass getFoo() {
     if (foo == null) {
@@ -99,11 +104,12 @@ Lisp and Clojure support macros that can greatly increase the power and flexibil
   }
   return foo;
 }
-</pre>
+```
 
 I coded the equivalent Clojure code, but (like the Java code) it smelled of verbosity, not to mention the redundancy when doing the same with several objects:
 
-<pre class="brush: xml; title: ; notranslate" title="">(def fahr-text-field nil)
+```clojure
+>(def fahr-text-field nil)
 
 (defn get-fahr-text-field []
   (if fahr-text-field
@@ -111,41 +117,45 @@ I coded the equivalent Clojure code, but (like the Java code) it smelled of verb
     (do
       (def fahr-text-field (create-a-text-field))
       fahr-text-field)))
-</pre>
+```
 
 So I asked the folks on the #clojure IRC channel. I was pointed to the \_delay\_ macro. So using that, I could eliminate the need to define the variable, and do:
 
-<pre class="brush: xml; title: ; notranslate" title="">(def get-fahr-text-field
+```clojure
+>(def get-fahr-text-field
   (let [x (delay (create-a-text-field))]
     #(force x)))
-</pre>
+```
 
 However, even that seemed like too much ceremony, so I asked them if there was a way to reduce that even further. Minutes later, one of the generous IRC folks offered the following macro:
 
-<pre class="brush: xml; title: ; notranslate" title="">(defmacro lazy-init [f &amp; args]
+```clojure
+>(defmacro lazy-init [f & args]
   `(let [x# (delay (~f ~@args))]
 #(force x#)))
-</pre>
+```
 
 Using this macro, definitions of lazily initialized objects were as easy as:
 
-<pre class="brush: xml; title: ; notranslate" title="">(def get-fahr-text-field (lazy-init create-a-text-field))
-</pre>
+```clojure
+>(def get-fahr-text-field (lazy-init create-a-text-field))
+```
 
 Seeing that, it struck me that Clojure enables writing code that&#8217;s DRYer than that of any other language with which I&#8217;ve worked. Through the use of macros, all the mechanics of the lazy initialization could be isolated down to two short, testable macros by an expert programmer or two, and then ignored by the rest of the world. Although I&#8217;ve done only a little Ruby metaprogramming, my sense is that Clojure&#8217;s macros make it more powerful than Ruby in this respect. I invite you to discuss this in comments to this article; I for one would like to learn more about this.
 
 As with JRuby, the Clojure implementation of SimpleDocumentListener is concise and straightforward:
 
-<pre class="brush: xml; title: ; notranslate" title="">(defn create-simple-document-listener
-&quot;Returns a DocumentListener that performs the specified behavior
-identically regardless of type of document change.&quot;
+```clojure
+>(defn create-simple-document-listener
+"Returns a DocumentListener that performs the specified behavior
+identically regardless of type of document change."
 [behavior]
 
   (proxy [DocumentListener][]
     (changedUpdate [event] (behavior event))
     (insertUpdate  [event] (behavior event))
     (removeUpdate  [event] (behavior event))))
-</pre>
+```
 
 Furthermore, the JRuby and Clojure implementations are superior to the Java implementation, because Java requires subclassing the SimpleDocumentListener for each type of behavior, and JRuby and Clojure do not. Not only does this reduce class clutter, it is conceptually simpler since the behavior is the only variable.
 
@@ -153,12 +163,13 @@ Furthermore, the JRuby and Clojure implementations are superior to the Java impl
 
 Note the underscore below:
 
-<pre class="brush: xml; title: ; notranslate" title="">(def clear-action (create-action &quot;Clear&quot;
+```clojure
+>(def clear-action (create-action "Clear"
   (fn [_]
-    (.setText (get-fahr-text-field) &quot;&quot;)
-    (.setText (get-cels-text-field) &quot;&quot;))
+    (.setText (get-fahr-text-field) "")
+    (.setText (get-cels-text-field) ""))
 ;; ...
-</pre>
+```
 
 All Swing Action implementations must include an _actionPerformed_ function that takes a single ActionEvent parameter. However, in many cases, access to that event parameter is not needed. In Clojure, the underscore is used idiomatically to indicate that the argument it identifies is not subsequently used. Although it is a legal identifier, its unique appearance stands out, so it is effective in communicating that it has a special meaning. Interestingly, this feature is available in C++ by specifying the data type without a variable name, but to my knowledge was never implemented in the Java language. The underscore is a valid identifier in Java, so there is nothing preventing using it as a convention. However, Java does not support using the same identifier for more than one parameter, so one would have to kludge it, for example by naming them __0_, __1_, etc.
 
@@ -168,11 +179,12 @@ One thing that threw me off several times while learning Clojure was the need to
 
 Therefore, unlike the other languages with which I&#8217;ve worked, _3_ does not evaluate to the same value as _(3)_, as evidenced by REPL&#8217;s responses below:
 
-<pre class="brush: xml; title: ; notranslate" title="">user=&gt; 3
+```clojure
+>user=> 3
 3
-user=&gt; (3)
+user=> (3)
 java.lang.ClassCastException: java.lang.Integer cannot be cast to clojure.lang.IFn (NO_SOURCE_FILE:0)
-</pre>
+```
 
 # Conclusion
 

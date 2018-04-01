@@ -24,8 +24,8 @@ Wait a minute, I thought, I wonder if there&#8217;s a Unicode character that can
 
 So I now have the Apple logo as the very first character of my system prompt. A picture grabs the eye more effectively than a letter, so it&#8217;s much easier now to tell that this terminal is connected to my Mac:
 
-<pre class="brush: bash; title: ; notranslate" title="">export PS1="\n \t \h:\w\n&gt; "
+```
+>export PS1="\n \t \h:\w\n> "
  
  21:00:50 my_host_name:~
-&gt; 
-</pre>
+> ```

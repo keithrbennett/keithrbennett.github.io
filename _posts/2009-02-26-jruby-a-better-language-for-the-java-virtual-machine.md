@@ -44,7 +44,8 @@ Unfortunately, the Swing DocumentListener interface requires implementing behavi
 
 The Java adapter is implemented here as the SimpleDocumentListener that implements DocumentListener.  It has a single abstract method that must be implemented by its subclasses, and delegates to that method from all three DocumentListener interface methods.  Note that it is necessary to create a new class inheriting from SimpleDocumentListener in order to use it. Here is the code:
 
-<pre class="brush: java; title: ; notranslate" title="">import javax.swing.event.DocumentEvent;
+```java
+>import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
@@ -74,22 +75,24 @@ public abstract class SimpleDocumentListener implements DocumentListener {
         handleDocumentEvent(event);
     }
 }
-</pre>
+```
 
 Here&#8217;s how the class is used to enable the Fahrenheit to Celsius conversion only when there is a number in the Fahrenheit text field:
 
-<pre class="brush: java; title: ; notranslate" title="">fahrTextField.getDocument().addDocumentListener(new SimpleDocumentListener() {
+```java
+>fahrTextField.getDocument().addDocumentListener(new SimpleDocumentListener() {
             public void handleDocumentEvent(DocumentEvent event) {
                 f2cAction.setEnabled(doubleStringIsValid(fahrTextField.getText()));
             }
         });
-</pre>
+```
 
 Although the anonymous inner class specification is concise, you are still creating another class. Furthermore, because the behavior must live within a class, it is more difficult to reuse the functionality in multiple places.
 
 In contrast, JRuby supports code blocks and objects such as lambdas that enable specifying the behavior by itself, without requiring the ceremony of creating an entire class to contain it. We exploit this by implementing the JRuby adapter as a class that is instantiated with such a code block or object. Here&#8217;s the JRuby implementation of SimpleDocumentListener:
 
-<pre class="brush: ruby; title: ; notranslate" title=""># Simple implementation of javax.swing.event.DocumentListener that
+```java
+># Simple implementation of javax.swing.event.DocumentListener that
 # enables specifying a single code block that will be called
 # when any of the three DocumentListener methods are called.
 #
@@ -120,30 +123,33 @@ class SimpleDocumentListener
   def removeUpdate(event);   behavior.call event; end
 
 end
-</pre>
+```
 
 And here&#8217;s how it is used:
 
-<pre class="brush: ruby; title: ; notranslate" title="">fahr_text_field.getDocument.addDocumentListener(
+```java
+>fahr_text_field.getDocument.addDocumentListener(
         SimpleDocumentListener.new do
           f2c_action.setEnabled double_string_valid?(fahr_text_field.getText)
         end)
-</pre>
+```
 
 Note that unlike Java, where it is necessary to subclass the abstract Java class SimpleDocumentListener, we merely create an instance of the Ruby SimpleDocumentListener with the behavior we want executed when a DocumentEvent occurs. Specifying the code block parameter in the function definition with the ampersand enables passing a code block inline (as above), or passing code in the form of a lambda or proc object as in:
 
-<pre class="brush: ruby; title: ; notranslate" title="">f2c_enabler = lambda do
+```java
+>f2c_enabler = lambda do
       f2c_action.setEnabled double_string_valid?(fahr_text_field.getText)
     end
     fahr_text_field.getDocument.addDocumentListener(
             SimpleDocumentListener.new(&f2c_enabler))
-</pre>
+```
 
 * * *As with Swing listeners, Swing actions written in Java are implemented as classes, although usually the only thing that differs among them is the behavior specified in the actionPeformed method.  (One could argue that a separate class 
 
 _is_ the appropriate way to express nontrivial processing, but then again if it is nontrivial the bulk of the processing might really belong in a model type class and not the action. This not only makes testing easier, it also makes it much easier to provide an alternate or replacement user or scripting interface; otherwise put, it increases code coherence.) We can therefore employ the same strategy as we did with the document listener. Here is how the exit action is specified in Java:</p> 
 
-<pre class="brush: java; title: ; notranslate" title="">private class ExitAction extends AbstractAction {
+```java
+>private class ExitAction extends AbstractAction {
 
         ExitAction() {
             super("Exit");
@@ -156,13 +162,14 @@ _is_ the appropriate way to express nontrivial processing, but then again if it 
             System.exit(0);
         }
     }
-</pre>
+```
 
 As you see, putValue is used to store key/value pairs in the action. There are multiple options; they are listed in a table at <http://java.sun.com/javase/6/docs/api/javax/swing/Action.html>.
 
 In Ruby, we create an adapter class that allows specifying the action&#8217;s name, options (tooltip text and keyboard accelerator in this case), and behavior:
 
-<pre class="brush: ruby; title: ; notranslate" title="">require 'java'
+```java
+>require 'java'
 
 # When running FrameInRuby, this will generate a warning because
 # it is already imported in FrameInRuby.  In JRuby, unfortunately,
@@ -180,7 +187,7 @@ import javax.swing.AbstractAction
 # for each behavior. Also, it allows the optional specification
 # of the action's properties via the passing of hash entries,
 # which are effectively named parameters.
-class SwingAction &lt; AbstractAction
+class SwingAction < AbstractAction
 
   attr_accessor :behavior
 
@@ -205,8 +212,8 @@ class SwingAction &lt; AbstractAction
 #
 # self.exit_action = SwingAction.new(
 #    "Exit",
-#     Action::SHORT_DESCRIPTION =&gt; "Exit this program",
-#     Action::ACCELERATOR_KEY =&gt;
+#     Action::SHORT_DESCRIPTION => "Exit this program",
+#     Action::ACCELERATOR_KEY =>
 #         KeyStroke.getKeyStroke(KeyEvent::VK_X, Event::CTRL_MASK)) do
 #       System.exit 0
 #     end
@@ -221,20 +228,21 @@ class SwingAction &lt; AbstractAction
     behavior.call action_event
   end
 end
-</pre>
+```
 
 Note the initialize method. The options parameter default to nil, but if any key value pairs are specified, they will be contained in a hash instance named _options_. The _options.each_ line illustrates a small part of the power of functional programming in Ruby. Iterating over the contents of the hash is clear and concise. For each key value pair, _putValue_ is called with the key and the value, in that order. The whole thing is done only if _options_ is not nil.
 
 Here&#8217;s how the exit action is specified in the JRuby program:
 
-<pre class="brush: ruby; title: ; notranslate" title="">self.exit_action = SwingAction.new("Exit",
-        Action::SHORT_DESCRIPTION =&gt; "Exit this program",
-        Action::ACCELERATOR_KEY =&gt;
+```java
+>self.exit_action = SwingAction.new("Exit",
+        Action::SHORT_DESCRIPTION => "Exit this program",
+        Action::ACCELERATOR_KEY =>
             KeyStroke.getKeyStroke(KeyEvent::VK_X, Event::CTRL_MASK))
         do |event|
           java.lang.System::exit 0
         end
-</pre>
+```
 
 While this may seem a bit crowded at first glance, notice that you are passing the name, options, and behavior, in that order. In that sense it is a logical and legible call. The _=>_ operator aids in visual recognition of the key/value pairs, so it&#8217;s easy for the eye to identify the various parts of this call.
 

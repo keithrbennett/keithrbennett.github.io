@@ -3,7 +3,22 @@
 require 'shellwords'
 require 'trick_bag'
 
-LANGUAGE = (ARGV[0] && ARGV[0][0] == 'r') ? 'ruby' : ''
+LANGUAGE = begin
+  if ARGV[0].nil?
+    nil
+  else
+    case ARGV[0][0].downcase
+      when 'r'
+        'ruby'
+      when 'j'
+        'java'
+      when 'c'
+        'clojure'
+      else
+        ''
+    end
+  end
+end
 
 def ellipsize(string, max_length = 60)
   string[0...max_length] << (string.length > max_length ? '...' : '')

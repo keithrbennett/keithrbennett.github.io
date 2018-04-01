@@ -25,143 +25,155 @@ _class_eval_ provides an alternate way to define characteristics of a class. It 
 
 Knowing very little about _class_eval_, I assumed that it changed self to be the class of the current value of self. I was wrong. class_eval doesn&#8217;t change self at all; in fact, in this respect it functions identically to eval:
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt; class ClassEvalExample
-&gt;   class_eval "def foo; puts 'foo'; end"
-&gt; end
-&gt; ClassEvalExample.new.foo
+```ruby
+>> class ClassEvalExample
+>   class_eval "def foo; puts 'foo'; end"
+> end
+> ClassEvalExample.new.foo
 foo
-</pre>
+```
 
 _eval_ appears to do the exact same thing:
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt; class EvalExample
-&gt;   eval "def foo; puts 'foo'; end"
-&gt; end
-&gt; EvalExample.new.foo
+```ruby
+>> class EvalExample
+>   eval "def foo; puts 'foo'; end"
+> end
+> EvalExample.new.foo
 foo
-</pre>
+```
 
 There is a difference, though, when you call them outside the class definition. For a class C, you can call C.class_eval, but not C.eval:
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt; class C1; end
-&gt; C1.class_eval "def foo; puts 'foo'; end"
-&gt; C1.new.foo
+```ruby
+>> class C1; end
+> C1.class_eval "def foo; puts 'foo'; end"
+> C1.new.foo
 foo
 
-&gt; class C2; end
-&gt; C2.eval "def foo; puts 'foo'; end"
+> class C2; end
+> C2.eval "def foo; puts 'foo'; end"
 NoMethodError: private method `eval' called for C2:Class
 	from (irb):2
 	from :0
-</pre>
+```
 
 If class_eval could be used to define an instance method on a class in a class definition _outside_ a function, what would happen if it were used _inside_ a function, where self is no longer the class, but the instance of the class? Would it define a method on the singleton class (a.k.a. _eigenclass_)? Let&#8217;s try it:
 
-<pre class="brush: ruby; title: ; notranslate" title="">:001 &gt; class D
- :002?&gt;     def initialize
- :003?&gt;         puts "In initialize"
- :004?&gt;         class_eval "def foo; puts 'foo'; end"
- :005?&gt;       end
- :006?&gt;   end
- =&gt; nil
- :007 &gt;
- :008 &gt;   D.new.foo
+```ruby
+>:001 > class D
+ :002?>     def initialize
+ :003?>         puts "In initialize"
+ :004?>         class_eval "def foo; puts 'foo'; end"
+ :005?>       end
+ :006?>   end
+ => nil
+ :007 >
+ :008 >   D.new.foo
 In initialize
 NoMethodError: undefined method `class_eval' for #
 	from (irb):4:in `initialize'
 	from (irb):8:in `new'
 	from (irb):8
 	from :0
-</pre>
+```
 
 No, this didn&#8217;t work&#8230;but wait a minute, isn&#8217;t class_eval a Kernel method? Let&#8217;s find out:
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt; Kernel.methods.include? 'class_eval'
-=&gt; true
-</pre>
+```ruby
+> Kernel.methods.include? 'class_eval'
+=> true
+```
 
 Alas, I was asking the wrong question. I should have asked if Kernel had an _instance_ method named _class_eval_:
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt; Kernel.instance_methods.include? 'class_eval'
-=&gt; false
-</pre>
+```ruby
+> Kernel.instance_methods.include? 'class_eval'
+=> false
+```
 
 It doesn&#8217;t, but _Class_ does:
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt; Class.instance_methods.include? 'class_eval'
-=&gt; true
-</pre>
+```ruby
+> Class.instance_methods.include? 'class_eval'
+=> true
+```
 
 &#8230;which is why the Kernel.methods.include? above worked.
 
 Although _class_eval_ didn&#8217;t work, _instance_eval_ will work:
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt; class F
-&gt;   def initialize
-&gt;     instance_eval 'def foo; puts "object id is #{object_id}"; end'
-&gt;   end
-&gt; end
-&gt; F.new.foo
+```ruby
+> class F
+>   def initialize
+>     instance_eval 'def foo; puts "object id is #{object_id}"; end'
+>   end
+> end
+> F.new.foo
 object id is 2149391220
-&gt; F.new.foo
+> F.new.foo
 object id is 2149362060
-</pre>
+```
 
 To illustrate that foo has not been created as a class or member function on class F, but only on object f:
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt; F.methods(false).include? 'foo'
- =&gt; false
-&gt; F.instance_methods(false).include? 'foo'
- =&gt; false
-&gt; f = F.new
-&gt; f.methods(false).include? 'foo'
- =&gt; true
-</pre>
+```ruby
+>> F.methods(false).include? 'foo'
+ => false
+> F.instance_methods(false).include? 'foo'
+ => false
+> f = F.new
+> f.methods(false).include? 'foo'
+ => true
+```
 
 Could _eval_ be substituted for _instance_eval_ in the same way as it was for _class_eval_? Let&#8217;s find out&#8230;
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt;   class F2
-&gt;     def initialize
-&gt;         eval 'def foo; puts "object id is #{object_id}"; end'
-&gt;     end
-&gt; end
-&gt; F2.new.foo
+```ruby
+>>   class F2
+>     def initialize
+>         eval 'def foo; puts "object id is #{object_id}"; end'
+>     end
+> end
+> F2.new.foo
 object id is 2149180440
-</pre>
+```
 
 Apparently, yes. However, similarly to _class_eval_, _instance_eval_ can be called outside of a class definition, but _eval_ cannot:
 
-<pre class="brush: ruby; title: ; notranslate" title="">&gt; class C; end
-&gt; c = C.new
-&gt; c.instance_eval 'def foo; puts "object id is #{object_id}"; end'
-&gt; c.foo
+```ruby
+>> class C; end
+> c = C.new
+> c.instance_eval 'def foo; puts "object id is #{object_id}"; end'
+> c.foo
 object id is 2149446940
 
-&gt; class D; end
-&gt; d = D.new
-&gt; d.eval 'def foo; puts "object id is #{object_id}"; end'
+> class D; end
+> d = D.new
+> d.eval 'def foo; puts "object id is #{object_id}"; end'
 NoMethodError: private method `eval' called for #
 	from (irb):7
 	from :0
-</pre>
+```
 
 Hmmm, I wonder, if we can define a _function_ using the eval methods, can we also declare an instance _variable_?:
 
-<pre class="brush: ruby; title: ; notranslate" title=""># First, class_eval:
-&gt; class E
-&gt;   class_eval "@@foo = 123"
-&gt;   def initialize; puts "@@foo = #{@@foo}"; end
-&gt;   end
-&gt; E.new
+```ruby
+># First, class_eval:
+> class E
+>   class_eval "@@foo = 123"
+>   def initialize; puts "@@foo = #{@@foo}"; end
+>   end
+> E.new
 @@foo = 123
 
 # Next, instance_eval:
-&gt; o = Object.new
-&gt; o.instance_eval '@var = 456'
-&gt; o.instance_eval 'def foo; puts "@var = #{@var}"; end'
-&gt; o.foo
+> o = Object.new
+> o.instance_eval '@var = 456'
+> o.instance_eval 'def foo; puts "@var = #{@var}"; end'
+> o.foo
 @var = 456
-</pre>
+```
 
 What&#8217;s interesting is that we created instance variable _var_ in instance _o_, but its class Object knows nothing about this new variable. In the data storage world, this would be analogous to using a document store such as MongoDB and adding a variable to a single document, unlike in an RDBMS where you would have to add it to the table definition and include it in all rows of the table.
 

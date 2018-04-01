@@ -105,8 +105,9 @@ end
 
 When we run this, we get:
 
-<pre class="brush: ruby; title: ; notranslate" title="">=> {1=>"1", 2=>"2", 3=>"3"}
-</pre>
+```ruby
+>=> {1=>"1", 2=>"2", 3=>"3"}
+```
 
 This worked! So how are the two different? As previously mentioned, 
 the block must modify the object initially passed to the `each_with_object` method.

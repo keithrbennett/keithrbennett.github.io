@@ -21,58 +21,63 @@ _Note: This approach requires that the ssh port (22) be open on the destination 
 
 A very simple way to do this is to use `scp` (secure copy, over ssh) with the `-r` (recursive) option. For example:
 
-<pre class="brush: bash; title: ; notranslate" title="">scp -r source_spec destination_spec
-</pre>
+```
+>scp -r source_spec destination_spec
+```
 
 &#8230;where source\_spec and destination\_spec can be local or remote file or directory specifications. (I&#8217;ll use the term _filespec_ to refer to both.) Remote filespecs should be in the format _user@host:filespec_. Don&#8217;t forget the colon, or the copy will be saved to the local host with a strange name! Here is an example that works correctly:
 
-<pre class="brush: bash; title: ; notranslate" title=""># To create ~/.rvm on the destination:
-&gt;time scp -rq ~/.rvm kbennett@destination_host:~/temp/rvm-copy/using-scp/
+```
+># To create ~/.rvm on the destination:
+>time scp -rq ~/.rvm kbennett@destination_host:~/temp/rvm-copy/using-scp/
 Password:
 scp -rq ~/.rvm kbennett@destination_host:~/temp/rvm-copy/using-scp/  25.38s user 40.99s system 3% cpu 31:12.66 total
-</pre>
+```
 
 When I tried this, I was astonished to see that the destination directory consumed more than twice as much space as the original! To easily get the amount of space consumed by a directory tree, with the size in human readable format, run `du -sh directory_name`. For example:
 
-<pre class="brush: bash; title: ; notranslate" title=""># At the source:
-&gt;du -sh .
+```
+># At the source:
+>du -sh .
 427M    .
 
 # At the destination:
-&gt;du -sh .
+>du -sh .
 1.1G    .
-</pre>
+```
 
 After some investigation I found that it was due to the fact that scp &#8220;follows&#8221; symbolic links. That is, instead of creating a symbolic link on the destination, it makes a copy of the linked-to directory with the link name as the name of the containing directory.
 
 For example, here are the ~/.rvm/rubies listings on the two machines:
 
-<pre class="brush: bash; title: ; notranslate" title=""># Source
-&gt;ls -l
-lrwxr-xr-x  1 keithb  keithb   41 Dec 28 21:45 1.9 -&gt; /Users/keithb/.rvm/rubies/ruby-1.9.3-p362
-lrwxr-xr-x  1 keithb  keithb   41 Dec 28 21:45 default -&gt; /Users/keithb/.rvm/rubies/ruby-1.9.3-p362
+```
+># Source
+>ls -l
+lrwxr-xr-x  1 keithb  keithb   41 Dec 28 21:45 1.9 -> /Users/keithb/.rvm/rubies/ruby-1.9.3-p362
+lrwxr-xr-x  1 keithb  keithb   41 Dec 28 21:45 default -> /Users/keithb/.rvm/rubies/ruby-1.9.3-p362
 drwxr-xr-x  8 keithb  keithb  272 Dec 26 16:51 ruby-1.9.3-p362
 
 # Destination
-&gt;ls -l
+>ls -l
 total 0
 drwxr-xr-x  8 kbennett  staff  272 Dec 28 22:12 1.9
 drwxr-xr-x  8 kbennett  staff  272 Dec 28 22:19 default
 drwxr-xr-x  8 kbennett  staff  272 Dec 28 22:24 ruby-1.9.3-p362
-</pre>
+```
 
 Entries with the letter &#8220;l&#8221; in the leftmost position of the line are symbolic links, and their listings show the &#8220;real&#8221; directories to which they refer. In this case, those links were created by the first two rvm commands below:
 
-<pre class="brush: plain; title: ; notranslate" title="">&gt;rvm alias create 1.9 1.9.3-p362
+```
+>>rvm alias create 1.9 1.9.3-p362
 Creating alias 1.9 for ruby-1.9.3-p362.
 Recording alias 1.9 for ruby-1.9.3-p362.
 
-&gt;rvm --default 1.9              
+>rvm --default 1.9              
 
-&gt;rvm alias list
-1.9 =&gt; ruby-1.9.3-p362
-default =&gt; ruby-1.9.3-p362
-</pre>
+>rvm alias list
+1.9 => ruby-1.9.3-p362
+default => ruby-1.9.3-p362
+```
 
 Because scp ignores the alias&#8217; symbolic link status, all the links above have a &#8220;_d_&#8221; signifying a real directory in the destination listing rather than the &#8220;_l_&#8221; signifying a link. After doing a little research I could not find any way to change this scp behavior. That being the case, I decided this approach was unacceptable.
 
