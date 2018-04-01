@@ -11,11 +11,12 @@ categories:
 ---
 In my daily work, I often connect to Linux boxes from my Mac. With several terminal windows open, it&#8217;s nice to easily see which ones are connected to my local Mac, and which ones are connected to other machines. One can certainly insert the host name into the system prompt. Here&#8217;s an example that contains the time, host name, and current directory:
 
-<pre class="brush: bash; title: ; notranslate" title="">export PS1="\n\t \h:\w\n&gt; "
+```
+>export PS1="\n\t \h:\w\n&gt; "
 
 21:02:45 my_host_name:~
-&gt; 
-</pre>
+>
+```
 
 [http://blog.twistedcode.org/2008/03/customizing-your-bash-prompt.html](http://blog.twistedcode.org/2008/03/customizing-your-bash-prompt.html "http://blog.twistedcode.org/2008/03/customizing-your-bash-prompt.html") has a lot of information about customized bash prompts.
 

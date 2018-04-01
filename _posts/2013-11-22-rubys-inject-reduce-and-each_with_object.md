@@ -15,37 +15,41 @@ In the examples below, I&#8217;ll use trivial sum methods to illustrate. Assume 
 
 `each`, `map`, and `select` were simple to understand and implement, but `inject` (`reduce`) took a little more effort. When I see code like the example below, I remember the times when I was inject-phobic:
 
-<pre class="brush: ruby; title: ; notranslate" title="">def verbose_sum(numbers)
+```ruby
+def verbose_sum(numbers)
   sum = 0
   numbers.each { |n| sum += n }
   sum
 end
-</pre>
+```
 
 This is way more verbose than it needs to be. Consider the equivalent inject method:
 
-<pre class="brush: ruby; title: ; notranslate" title="">def concise_sum(numbers)
+```ruby
+def concise_sum(numbers)
   numbers.inject(0) { |sum, n| sum += n }
 end
-</pre>
-
+```
 &#8230;which can be reduced even further, since we&#8217;re calling a method on each object that takes no arguments (the `+` method):
 
-<pre class="brush: ruby; title: ; notranslate" title="">def more_concise_sum(numbers)
+```ruby
+def more_concise_sum(numbers)
   numbers.inject(0, :+)
 end
-</pre>
+```
 
 One can even omit the zero and it will be inferred:
 
-<pre class="brush: ruby; title: ; notranslate" title="">def even_more_concise_sum(numbers)
+```ruby
+def even_more_concise_sum(numbers)
   numbers.inject(:+)
 end
-</pre>
+```
 
-Nice, eh? However, let&#8217;s revisit the block variant of the method and see what happens if we add a `puts` statement at the end of such a block, and then call it:
+Nice, eh? However, let's revisit the block variant of the method and see what happens if we add a `puts` statement at the end of such a block, and then call it:```ruby
 
-<pre class="brush: ruby; title: ; notranslate" title="">def concise_sum(numbers)
+```ruby
+def concise_sum(numbers)
   numbers.inject(0) do |sum, n|
     sum += n
     puts "sum is now #{sum}."
@@ -53,16 +57,18 @@ Nice, eh? However, let&#8217;s revisit the block variant of the method and see w
 end
 
 # produces: NoMethodError: undefined method `+' for nil:NilClass
-</pre>
+```
+
 
 What happened? When using `inject`, the value returned by the block is the value `inject` will use as the memo for the next iteration. Since `puts` returns `nil`, and it was the last expression in the block, it was used as the memo in the next iteration, and the error occurred.
 
 Enter `each_with_object`. Instead of using the block&#8217;s return value as the memo for the next iteration, `each_with_object` unconditionally passes the object with which it was initialized. It relies on you to modify that object as per your needs in the block. So the `each_with_object` version of `sum` would look like this:
 
-<pre class="brush: ruby; title: ; notranslate" title="">def ewo_sum(numbers)
+```ruby
+def ewo_sum(numbers)
   numbers.each_with_object(0) { |n, sum| sum += n }
 end
-</pre>
+```
 
 Note that the order of the parameters is reversed, compared with inject. I remember the order by remembering that it&#8217;s the same order listed in the method name itself &#8212; _each_ is the object for each iteration and comes first, and _with_object_ is the memo object and comes next.
 
@@ -70,56 +76,61 @@ When we run this code, we get&#8230;zero. WTF!?!?!?!?
 
 Let&#8217;s see if it works using a hash instead. For the example, this hash will contain each number as a key, with the key&#8217;s `to_s` representation as the value:
 
-<pre class="brush: ruby; title: ; notranslate" title="">def stringified_key_hash(numbers)
+```ruby
+def stringified_key_hash(numbers)
   numbers.each_with_object({}) do |n, hsh|
     hsh[n] = n.to_s
   end
 end
-</pre>
+```
 
 When we run this, we get:
 
-<pre class="brush: ruby; title: ; notranslate" title="">=&gt; {1=&gt;"1", 2=&gt;"2", 3=&gt;"3"}
+<pre class="brush: ruby; title: ; notranslate" title="">=> {1=>"1", 2=>"2", 3=>"3"}
 </pre>
 
 This worked! So how are the two different? As previously mentioned, the block must modify the object initially passed to the `each_with_object` method. In the case of `stringified_key_hash`, we&#8217;re fine because we&#8217;ve passed in a `Hash` instance, and when we modify it using `[]=` in every iteration, we&#8217;re always dealing with that same hash instance.
 
 In contrast, when we used `each_with_object` in `ewo_sum`, the initial value was a `Fixnum` whose value was 0. The expression &#8220;`sum += n`&#8221; assigned and returned _a different instance_ of `Fixnum`. Note that the object id&#8217;s for `sum` differ before and after this expression is evaluated:
 
-<pre class="brush: ruby; title: ; notranslate" title="">[21] pry(main)&gt; sum = 0
-=&gt; 0
-[22] pry(main)&gt; sum.object_id
-=&gt; 1
-[23] pry(main)&gt; sum += 3
-=&gt; 3
-[24] pry(main)&gt; sum.object_id
-=&gt; 7
-</pre>
+```ruby
+[21] pry(main)> sum = 0
+=> 0
+[22] pry(main)> sum.object_id
+=> 1
+[23] pry(main)> sum += 3
+=> 3
+[24] pry(main)> sum.object_id
+=> 7
+```
 
 Since, as we said, the initial value is unconditionally passed to the block in each iteration, the revised value created in the block was discarded. So, when using `each_with_object`, be sure that the modifications are being made to the original memo instance.
 
 Now let&#8217;s go back to the earlier point about having to return the memo as the last expression of the block. Since `each_with_object` unconditionally passes the initial object, there is no need for the block to return it. If we add a puts to `stringified_key_hash`, we still get the correct result:
 
-<pre class="brush: ruby; title: ; notranslate" title="">def stringified_key_hash(numbers)
+```ruby
+def stringified_key_hash(numbers)
   numbers.each_with_object({}) do |n, hsh|
     hsh[n] = n.to_s
     puts "Hash is now #{hsh}."
   end
 end
 
-Hash is now {1=&gt;"1"}.
-Hash is now {1=&gt;"1", 2=&gt;"2"}.
-Hash is now {1=&gt;"1", 2=&gt;"2", 3=&gt;"3"}.
-=&gt; {1=&gt;"1", 2=&gt;"2", 3=&gt;"3"}
-</pre>
+Hash is now {1=>"1"}.
+Hash is now {1=>"1", 2=>"2"}.
+Hash is now {1=>"1", 2=>"2", 3=>"3"}.
+=> {1=>"1", 2=>"2", 3=>"3"}
+```
+
 
 A minor point about my choice of `hsh` as a variable name&#8230;it&#8217;s a good idea not to use `hash` as a variable name, because, in any object that is a class that includes `Kernel` in its ancestors, `hash` will be a method name:
 
-<pre class="brush: ruby; title: ; notranslate" title="">[36] pry(main)&gt; hash
-=&gt; -1606748642386923196
-[37] pry(main)&gt; Object.new.hash
-=&gt; 4200367341767882288
-</pre>
+```ruby
+>[36] pry(main)> hash
+=> -1606748642386923196
+[37] pry(main)> Object.new.hash
+=> 4200367341767882288
+```
 
 While it&#8217;s unlikely that this name collision would bite you, it&#8217;s not impossible. Better to avoid the possibility altogether.
 
