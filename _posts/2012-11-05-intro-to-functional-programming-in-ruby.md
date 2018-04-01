@@ -21,12 +21,13 @@ We&#8217;ll start with some simple examples and work up to creating the executio
 
 * * *
 
-##### An &#8220;Add&#8221; Function
+### An &#8220;Add&#8221; Function
 
 First, here&#8217;s a simple function that returns the sum of two numbers.
 
-<pre class="brush: ruby; title: ; notranslate" title="">add = -&gt;(x, y) { x + y }
-</pre>
+```ruby
+>add = ->(x, y) { x + y }
+```
 
 The lvalue is `add`, and is a variable that will contain a reference to the lambda, or function.
 
@@ -36,154 +37,174 @@ The `->()` indicates that this a function, and the terms inside the parentheses 
 
 This is called like a regular function, except that we need a dot after the variable name to tell the Ruby interpreter that this is a proc and not a class&#8217; member function. Another way of looking at it is that the dot is a shorthand for `.call`, which was required for calling a lambda in pre-1.9 versions of Ruby. This is how it would look in irb:
 
-<pre class="brush: ruby; title: ; notranslate" title="">1.9.3-p286 :001 &gt; add = -&gt;(x, y) { x + y }
- =&gt; #&lt;Proc:0x007fdddb25c680@(irb):1 (lambda)&gt; 
-1.9.3-p286 :002 &gt; add.(3,4)
- =&gt; 7 
-</pre>
+```ruby
+>1.9.3-p286 :001 > add = ->(x, y) { x + y }
+ => #<Proc:0x007fdddb25c680@(irb):1 (lambda)> 
+1.9.3-p286 :002 > add.(3,4)
+ => 7 
+```
 
 A better implementation of add, that would take a variable number of arguments is:
 
-<pre class="brush: ruby; title: ; notranslate" title="">add = -&gt;(*numbers) { numbers.inject(:+) }
-</pre>
+```ruby
+>add = ->(*numbers) { numbers.inject(:+) }
+```
 
 * * *
 
-##### A &#8220;Multiple&#8221; Function
+### A &#8220;Multiple&#8221; Function
 
 Now, let&#8217;s create a function that returns a function that will return multiples of a number:
 
-<pre class="brush: ruby; title: ; notranslate" title="">mult = -&gt;(multiplier) { -&gt;(n) { multiplier * n } }
-</pre>
+```ruby
+>mult = ->(multiplier) { ->(n) { multiplier * n } }
+```
 
 The function will be stored in the `mult` variable. We can then call `mult` to get a function that will double its argument:
 
-<pre class="brush: ruby; title: ; notranslate" title="">double = mult.(2)
-</pre>
+```ruby
+>double = mult.(2)
+```
 
 `mult` and `double` are instances of class `Proc`. We can now call double:
 
-<pre class="brush: ruby; title: ; notranslate" title="">double.(111)  # 222
-</pre>
+```ruby
+>double.(111)  # 222
+```
 
 Similarly, we can create a function named `power` that raises a number to a specified power, and then, using `power`, create functions `square` and `square_root` that return the square and square root of a number, respectively:
 
-<pre class="brush: ruby; title: ; notranslate" title="">power = -&gt;(exponent) { -&gt;(n) { n ** exponent } }
+```ruby
+>power = ->(exponent) { ->(n) { n ** exponent } }
 square = power.(2)
 square_root = power.(0.5)
-</pre>
+```
 
 This practice of calling a function that takes `n` parameters to create a new function that only requires `< n` (some of) those parameters is called _currying_.
 
 * * *
 
-##### A "Hypotenuse" Function
+### A "Hypotenuse" Function
 
 We can now assemble a hypoteneuse function like this:
 
-<pre class="brush: ruby; title: ; notranslate" title="">hypoteneuse = -&gt;(a, b) { square_root.(square.(a) + square.(b)) }
-</pre>
+```ruby
+>hypoteneuse = ->(a, b) { square_root.(square.(a) + square.(b)) }
+```
 
 * * *
 
-##### A "Chain" Function
+### A "Chain" Function
 
 Now let's compose a function that will chain functions together:
 
-<pre class="brush: ruby; title: ; notranslate" title="">chain = -&gt;(*procs) { -&gt;(x) { procs.inject(x) { |x, proc| proc.(x) } } }
-</pre>
+```ruby
+>chain = ->(*procs) { ->(x) { procs.inject(x) { |x, proc| proc.(x) } } }
+```
 
 It's a little complex, but if we go from the inside out it's more manageable:
 
-<pre class="brush: ruby; title: ; notranslate" title="">procs.inject(x) { |x, proc| proc.(x) }
-</pre>
+```ruby
+>procs.inject(x) { |x, proc| proc.(x) }
+```
 
 `procs` is an array of functions. We call `inject` to successively call each function with the value returned by the previous one. Finally, the last return value (stored in `x`) is returned.
 
-<pre class="brush: ruby; title: ; notranslate" title="">-&gt;(x) { *** }
-</pre>
+```ruby
+>->(x) { *** }
+```
 
 In the code above I've replaced the previous code example with `***` so you can see what was added to it. We've wrapped the expression in a lambda that expects a single argument that will be referred to in the lambda as `x`.
 
-<pre class="brush: ruby; title: ; notranslate" title="">chain = -&gt;(*procs) { *** }
-</pre>
+```ruby
+>chain = ->(*procs) { *** }
+```
 
 Here, we define a function named `chain` that will take 0 or more arguments and assemble them into an array named `procs`, which will then be accessible to the `inject` in the inner code. Using the chain function, we can create a function that doubles then squares an argument:
 
-<pre class="brush: ruby; title: ; notranslate" title="">double_then_square = chain.(double, square)
-</pre>
+```ruby
+>double_then_square = chain.(double, square)
+```
 
 * * *
 
-##### A File Writer and CSV Parser
+### A File Writer and CSV Parser
 
 For later examples, we'll need a file containing the text "fruit,mango". Let's write a lambda that will do that, and then call it:
 
-<pre class="brush: ruby; title: ; notranslate" title="">write_file = -&gt;(filespec, contents) { File.write(filespec, contents) }
+```ruby
+>write_file = ->(filespec, contents) { File.write(filespec, contents) }
 write_file.('favorites.txt', 'fruit,mango')
-</pre>
+```
 
 Now let's write a trivially simple (and admittedly inadequate for real world use) CSV (comma separated values) parser lambda:
 
-<pre class="brush: ruby; title: ; notranslate" title="">parse_csv = -&gt;(string) { string.split(',') }
-</pre>
+```ruby
+>parse_csv = ->(string) { string.split(',') }
+```
 
 * * *
 
-##### A "Favorite" Class
+### A "Favorite" Class
 
 For the purposes of this example, we'll need a `Favorite` class and a formatter and a parser for it:
 
-<pre class="brush: ruby; title: ; notranslate" title="">Favorite = Struct.new(:type, :instance)
+```ruby
+>Favorite = Struct.new(:type, :instance)
 
-format_favorite = -&gt;(favorite) { "Favorite #{favorite.type} is #{favorite.instance}" }
+format_favorite = ->(favorite) { "Favorite #{favorite.type} is #{favorite.instance}" }
 
-parse_favorite = -&gt;(string) {
+parse_favorite = ->(string) {
   fav = Favorite.new
   fav.type, fav.instance = *parse_csv.(string)
   fav
 }
-</pre>
+```
 
 * * *
 
-##### Assembling a Workflow
+### Assembling a Workflow
 
 First let's write a couple of utility functions:
 
-<pre class="brush: ruby; title: ; notranslate" title="">read_file_lines = -&gt;(filespec) { File.readlines(filespec) }
-first = -&gt;(object) { object.first }
-</pre>
+```ruby
+>read_file_lines = ->(filespec) { File.readlines(filespec) }
+first = ->(object) { object.first }
+```
 
 Here is the workflow we have defined. Note that although it is executable code, it is implemented as an array of objects.
 
-<pre class="brush: ruby; title: ; notranslate" title="">transformations = [
+```ruby
+>transformations = [
   read_file_lines,
   first,
   parse_favorite,
   format_favorite
 ]
-</pre>
+```
 
 Now we curry `chain` to create a function `transform_chain` that will execute the transformations we want:
 
-<pre class="brush: ruby; title: ; notranslate" title="">transform_chain = chain.(*transformations)
-</pre>
+```ruby
+>transform_chain = chain.(*transformations)
+```
 
 Then, we call the function to get the final result:
 
-<pre class="brush: ruby; title: ; notranslate" title="">result = transform_chain.('favorites.txt')
+```ruby
+>result = transform_chain.('favorites.txt')
 # Result will be: "Favorite fruit is mango."
-</pre>
+```
 
 This could also have been expressed more succinctly by removing the `transform_chain` intermediate variable:
 
-<pre class="brush: ruby; title: ; notranslate" title="">result = chain.(*transformations).('favorites.txt')
-</pre>
+```ruby
+>result = chain.(*transformations).('favorites.txt')
+```
 
 * * *
 
-##### Conclusion
+### Conclusion
 
 You may be wondering about the value of functional programming, thinking that it's merely an alternate implementation, maybe even a regression from object oriented programming. Unfortunately, I'm not that knowledgeable about it and don't have too much wisdom to offer. However, I can guess at these advantages:
 
@@ -197,4 +218,4 @@ As always, it depends.
 
 Feel free to comment, enlighten, correct, etc.
 
-- [Keith Bennett](http://about.me/keithrbennett)
+\- [Keith Bennett](http://about.me/keithrbennett)

@@ -29,11 +29,12 @@ Mysqldump&#8217;s parameters include user id, password, host, and data base name
 
 With this as a goal, I wrote the _wordpress\_config\_parser_ gem, which reads the wp-config.php file and makes its values accessible in a trivially simple way:
 
-<pre class="brush: ruby; title: ; notranslate" title="">require 'wordpress_config_parser'
+```ruby
+>require 'wordpress_config_parser'
 parser = WCParser.new('/Users/me/public_html/blog')
 db_name = parser.db_name
 # ...
-</pre>
+```
 
 This approach is then used to build the mysqldump command line dynamically.
 
@@ -45,9 +46,10 @@ It turns out that mysqladmin will include a date/time stamp in the SQL output fi
 
 The script I&#8217;m currently using is in the project&#8217;s sample_scripts directory [here](https://github.com/keithrbennett/wordpress_config_parser/blob/master/sample_scripts/backup-wordpress-db.rb "https://github.com/keithrbennett/wordpress_config_parser/blob/master/sample_scripts/backup-wordpress-db.rb"). It&#8217;s a bit bare, but illustrates how to get things done. If you want to run it, be sure to read the _Assumptions_ section in the comments, and change your environment or the script as necessary. Don&#8217;t forget to gem install the gem:
 
-<pre class="brush: plain; title: ; notranslate" title="">gem install wordpress_config_parser
-</pre>
+```ruby
+>gem install wordpress_config_parser
+```
 
 Next on the to do list is automating the periodic running of this script with cron or a Ruby equivalent.
 
-&#8211; Keith
+\- Keith
