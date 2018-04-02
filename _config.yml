@@ -30,6 +30,20 @@ markdown: kramdown
 theme: minima
 
 
+#theme: jekyll-theme-architect
+#theme: jekyll-theme-cayman
+#theme: jekyll-theme-dinky
+#theme: jekyll-theme-hacker
+#theme: jekyll-theme-leap-day
+#theme: jekyll-theme-merlot
+#theme: jekyll-theme-midnight
+#theme: jekyll-theme-minimal
+#theme: jekyll-theme-modernist
+#theme: jekyll-theme-primer
+#theme: jekyll-theme-slate
+#theme: jekyll-theme-tactile
+
+
 plugins:
   - jekyll-feed
   - jekyll-remote-theme
