@@ -3,7 +3,6 @@ id: 1327
 title: "Ruby's inject/reduce and each_with_object"
 date: 2013-11-22T01:18:48+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=1327
 permalink: /index.php/2013/11/22/rubys-injectreduce-and-each_with_object/
 categories:

@@ -3,7 +3,6 @@ id: 787
 title: Stealth Conditionals in Ruby
 date: 2012-09-16T07:24:04+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=787
 permalink: /index.php/2012/09/16/stealth-conditionals-in-ruby/
 categories:

@@ -3,7 +3,6 @@ id: 300
 title: Sun Java Coding Conventions Revisited
 date: 2010-03-06T16:10:16+00:00
 author: keithrbennett
-layout: post
 guid: http://krbtech.wordpress.com/?p=300
 permalink: /index.php/2010/03/06/sun-java-coding-conventions-revisited/
 email_notification:

@@ -3,7 +3,6 @@ id: 815
 title: WordPress Administration with Ruby
 date: 2012-09-23T06:25:44+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=815
 permalink: /index.php/2012/09/23/wordpress-administration-with-ruby/
 categories:

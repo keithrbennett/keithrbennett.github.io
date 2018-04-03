@@ -3,7 +3,6 @@ id: 197
 title: 'GPartEd -- Free and Open Source Disk Partitioner'
 date: 2009-07-01T13:18:50+00:00
 author: keithrbennett
-layout: post
 guid: http://krbtech.wordpress.com/?p=197
 permalink: /index.php/2009/07/01/gparted-free-and-open-source-disk-partitioner/
 categories:

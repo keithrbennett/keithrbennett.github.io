@@ -3,7 +3,6 @@ id: 388
 title: Singapore and Its Red Dot RubyConf
 date: 2011-05-10T01:45:56+00:00
 author: keithrbennett
-layout: post
 guid: http://krbtech.wordpress.com/?p=388
 permalink: /index.php/2011/05/10/singapore-and-its-red-dot-rubyconf/
 jabber_published:

@@ -3,7 +3,6 @@ id: 190
 title: "The Loss of One's Adopted Country: Another Result of the Economic Crisis"
 date: 2009-03-30T13:20:33+00:00
 author: keithrbennett
-layout: post
 guid: http://krbtech.wordpress.com/?p=190
 permalink: /index.php/2009/03/30/the-loss-of-ones-adopted-country-another-result-of-the-economic-crisis/
 categories:

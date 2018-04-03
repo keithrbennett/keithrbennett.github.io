@@ -3,7 +3,6 @@ id: 847
 title: Intro to Functional Programming in Ruby
 date: 2012-11-05T17:03:15+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=847
 permalink: /index.php/2012/11/05/intro-to-functional-programming-in-ruby/
 categories:

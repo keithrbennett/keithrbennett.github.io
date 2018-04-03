@@ -3,7 +3,6 @@ id: 1138
 title: Copying (RVM) Data Between Hosts Using ssh, scp, and netcat
 date: 2012-12-29T14:24:04+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=1135
 permalink: /index.php/2012/12/29/copying-rvm-data-between-hosts-using-ssh-scp-and-netcat/
 categories:

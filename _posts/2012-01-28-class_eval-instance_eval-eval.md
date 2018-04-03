@@ -3,7 +3,6 @@ id: 508
 title: class_eval, instance_eval, eval
 date: 2012-01-28T16:17:08+00:00
 author: keithrbennett
-layout: post
 guid: http://krbtech.wordpress.com/?p=508
 permalink: /index.php/2012/01/28/class_eval-instance_eval-eval/
 jabber_published:

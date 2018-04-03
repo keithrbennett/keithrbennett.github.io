@@ -3,7 +3,6 @@ id: 450
 title: Design by Contract, Ruby Style
 date: 2011-06-15T23:22:49+00:00
 author: keithrbennett
-layout: post
 guid: http://krbtech.wordpress.com/?p=450
 permalink: /index.php/2011/06/15/dependency-inversion-ruby-style/
 jabber_published:

@@ -3,7 +3,6 @@ id: 698
 title: "Ruby's Forwardable"
 date: 2012-09-13T11:02:24+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=698
 permalink: /index.php/2012/09/13/rubys-forwardable/
 categories:

@@ -3,7 +3,6 @@ id: 1344
 title: The Case for Nested Methods in Ruby
 date: 2015-11-07T16:13:15+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=1344
 permalink: /index.php/2015/11/07/the-case-for-nested-methods-in-ruby/
 categories:

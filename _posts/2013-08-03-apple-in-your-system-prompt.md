@@ -3,7 +3,6 @@ id: 1320
 title:  in Your System Prompt
 date: 2013-08-03T21:08:34+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=1320
 permalink: '/index.php/2013/08/03/%ef%a3%bf-in-your-system-prompt/'
 categories:

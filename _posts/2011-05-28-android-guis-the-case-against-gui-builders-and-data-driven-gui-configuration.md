@@ -3,7 +3,6 @@ id: 436
 title: "Android GUI's: The Case Against GUI Builders and Data Driven GUI Configuration"
 date: 2011-05-28T21:20:27+00:00
 author: keithrbennett
-layout: post
 guid: http://krbtech.wordpress.com/?p=436
 permalink: /index.php/2011/05/28/android-guis-the-case-against-gui-builders-and-data-driven-gui-configuration/
 jabber_published:

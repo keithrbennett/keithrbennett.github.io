@@ -3,7 +3,6 @@ id: 216
 title: "Bangspace's Bangkok Hackerspace"
 date: 2010-03-02T13:58:27+00:00
 author: keithrbennett
-layout: post
 guid: http://krbtech.wordpress.com/?p=216
 permalink: /index.php/2010/03/02/bangspace-bangkok-hackerspace/
 categories:

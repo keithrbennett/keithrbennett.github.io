@@ -3,7 +3,6 @@ id: 536
 title: Mailing Files Programmatically with GMail
 date: 2012-07-25T13:06:10+00:00
 author: keithrbennett
-layout: post
 guid: http://krbtech.wordpress.com/?p=536
 permalink: /index.php/2012/07/25/mailing-files-programmatically-with-gmail/
 jabber_published:

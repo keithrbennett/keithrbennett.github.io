@@ -3,7 +3,6 @@ id: 1221
 title: Using Oracle in JRuby with Rails and Sequel
 date: 2013-01-09T01:03:13+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=1221
 permalink: /index.php/2013/01/09/using-oracle-in-jruby-and-rails/
 categories:

@@ -3,7 +3,6 @@ id: 743
 title: Hello, Nailgun; Goodbye, JVM Startup Delays
 date: 2012-09-15T02:04:10+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=743
 permalink: /index.php/2012/09/15/hello-nailgun-goodbye-jvm-startup-delays/
 categories:

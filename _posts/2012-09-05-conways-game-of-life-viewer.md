@@ -3,7 +3,6 @@ id: 584
 title: "Conway's Game of Life Viewer"
 date: 2012-09-05T23:30:57+00:00
 author: keithrbennett
-layout: post
 guid: http://www.bbs-software.com/blog/?p=584
 permalink: /index.php/2012/09/05/conways-game-of-life-viewer/
 categories:
