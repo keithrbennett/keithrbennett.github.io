@@ -13,21 +13,28 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Keith Bennett's Tech Blog
+title: "Keith R. Bennett's Technical Blog"
+name:  "Keith R. Bennett's Technical Blog"
+
 email: keithrbennett@gmail.com
-description: >- # this means to ignore newlines until "baseurl:"
-  Technical Explorations
-#baseurl: "/blog" # the subpath of your site, e.g. /blog
+
 #url: "http://www.bbs-software.com" # the base hostname & protocol for your site, e.g. http://example.com
+#url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: http://blog.bbs-software.com
+
+description: Technical Explorations
+
+#description: >- # this means to ignore newlines until "baseurl:"
+#  Technical Explorations
+#baseurl: "/blog" # the subpath of your site, e.g. /blog
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: keithrbennett
 github_username:  keithrbennett
 
 # Build settings
 markdown: kramdown
 
-theme: minima
+#theme: minima
 
 
 #theme: jekyll-theme-architect
@@ -36,7 +43,7 @@ theme: minima
 #theme: jekyll-theme-hacker
 #theme: jekyll-theme-leap-day
 #theme: jekyll-theme-merlot
-#theme: jekyll-theme-midnight
+theme: jekyll-theme-midnight
 #theme: jekyll-theme-minimal
 #theme: jekyll-theme-modernist
 #theme: jekyll-theme-primer
@@ -61,10 +68,6 @@ plugins:
 #   - vendor/ruby/
 
 
-defaults:
-  -
-    scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: "post"
+
+
+#source: _posts
