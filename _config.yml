@@ -19,8 +19,8 @@ name:  "Keith R. Bennett's Technical Blog"
 email: keithrbennett@gmail.com
 
 #url: "http://www.bbs-software.com" # the base hostname & protocol for your site, e.g. http://example.com
-#url: "" # the base hostname & protocol for your site, e.g. http://example.com
-url: http://blog.bbs-software.com
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+#url: http://blog.bbs-software.com
 
 description: Technical Explorations
 
@@ -58,15 +58,15 @@ plugins:
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
-# exclude:
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
-
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - .idea/
 
 
 
