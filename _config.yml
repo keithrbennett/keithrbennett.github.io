@@ -40,16 +40,19 @@ markdown: kramdown
 #theme: jekyll-theme-architect
 #theme: jekyll-theme-cayman
 #theme: jekyll-theme-dinky
-#theme: jekyll-theme-hacker
+theme: jekyll-theme-hacker
 #theme: jekyll-theme-leap-day
 #theme: jekyll-theme-merlot
-theme: jekyll-theme-midnight
+#theme: jekyll-theme-midnight
 #theme: jekyll-theme-minimal
 #theme: jekyll-theme-modernist
 #theme: jekyll-theme-primer
 #theme: jekyll-theme-slate
 #theme: jekyll-theme-tactile
 
+#remote-theme: niklasbuschmann/contrast
+#remote-theme: holman/left
+#remote-theme: jasoncostello/slate
 
 plugins:
   - jekyll-feed
@@ -69,5 +72,8 @@ exclude:
   - .idea/
 
 
+#Fix suggested at https://github.com/github/pages-gem/issues/399 for error:
+# GitHub Metadata: No GitHub API authentication could be found. Some fields may be missing or have incorrect data.
+github: [metadata]
 
 #source: _posts
