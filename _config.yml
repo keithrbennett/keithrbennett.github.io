@@ -18,46 +18,22 @@ name:  "Keith R. Bennett's Technical Blog"
 
 email: keithrbennett@gmail.com
 
-#url: "http://www.bbs-software.com" # the base hostname & protocol for your site, e.g. http://example.com
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-#url: http://blog.bbs-software.com
+url: "http://keithrbennett.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 description: Technical Explorations
 
-#description: >- # this means to ignore newlines until "baseurl:"
-#  Technical Explorations
-#baseurl: "/blog" # the subpath of your site, e.g. /blog
-baseurl: "" # the subpath of your site, e.g. /blog
+description: >- # this means to ignore newlines until "baseurl:"
+  Technical Explorations
+baseurl: "/blog" # the subpath of your site, e.g. /blog
 twitter_username: keithrbennett
 github_username:  keithrbennett
 
 # Build settings
 markdown: kramdown
 
-#theme: minima
-
-
-#theme: jekyll-theme-architect
-#theme: jekyll-theme-cayman
-#theme: jekyll-theme-dinky
-theme: jekyll-theme-hacker
-#theme: jekyll-theme-leap-day
-#theme: jekyll-theme-merlot
-#theme: jekyll-theme-midnight
-#theme: jekyll-theme-minimal
-#theme: jekyll-theme-modernist
-#theme: jekyll-theme-primer
-#theme: jekyll-theme-slate
-#theme: jekyll-theme-tactile
-
-#remote-theme: niklasbuschmann/contrast
-#remote-theme: holman/left
-#remote-theme: jasoncostello/slate
-
 plugins:
   - jekyll-feed
-  - jekyll-remote-theme
-  
+
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
@@ -75,5 +51,3 @@ exclude:
 #Fix suggested at https://github.com/github/pages-gem/issues/399 for error:
 # GitHub Metadata: No GitHub API authentication could be found. Some fields may be missing or have incorrect data.
 github: [metadata]
-
-#source: _posts
