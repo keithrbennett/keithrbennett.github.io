@@ -41,7 +41,7 @@ For the output SQL file, since my whole hosting directory tree is one large git 
 
 Since I'm scripting this task, after the SQL file is generated, I might as well include the git _add_, _commit_, and _push_ commands as well.
 
-It turns out that mysqladmin will include a date/time stamp in the SQL output file, so even if there are no changes in the data base, two successive runs will produce nonidentical files. At first, this seemed like an annoyance, but on further thought I realized that wouldn't be such a bad thing --; it would demonstrate that at that later time, the data was _still_ the same as at the earlier time, something that could be guessed at without the extra commit but never proven.
+It turns out that mysqladmin will include a date/time stamp in the SQL output file, so even if there are no changes in the data base, two successive runs will produce nonidentical files. At first, this seemed like an annoyance, but on further thought I realized that wouldn't be such a bad thing -- it would demonstrate that at that later time, the data was _still_ the same as at the earlier time, something that could be guessed at without the extra commit but never proven.
 
 The script I'm currently using is in the project's sample_scripts directory [here](https://github.com/keithrbennett/wordpress_config_parser/blob/master/sample_scripts/backup-wordpress-db.rb "https://github.com/keithrbennett/wordpress_config_parser/blob/master/sample_scripts/backup-wordpress-db.rb"). It's a bit bare, but illustrates how to get things done. If you want to run it, be sure to read the _Assumptions_ section in the comments, and change your environment or the script as necessary. Don't forget to gem install the gem:
 

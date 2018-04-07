@@ -20,8 +20,8 @@ tags:
 ---
 A powerful synergy results when combining the power, reliability, portability, and rich library set of the Java platform with the power and flexibility of JRuby.  This article will discuss a couple of ways in which JRuby surpasses Java as a programming language for the JVM:
 
-  1. _Code as first class objects_ &#8211; code blocks, lambdas, and procs can exist and be passed around for the most part like any other objects. There is no need to create a class to contain them as there is in Java.
-  2. _Syntactic sugar for the specification of hash values as parameters_ &#8211; hash (map, in Java lingo) key/value pairs can be passed to a function literally, and the function will receive them as a single hash. In other words, they can be passed without the need for the programmer to create and populate a hash instance.
+  1. _Code as first class objects_ -- code blocks, lambdas, and procs can exist and be passed around for the most part like any other objects. There is no need to create a class to contain them as there is in Java.
+  2. _Syntactic sugar for the specification of hash values as parameters_ -- hash (map, in Java lingo) key/value pairs can be passed to a function literally, and the function will receive them as a single hash. In other words, they can be passed without the need for the programmer to create and populate a hash instance.
 
 In order to contrast Java and JRuby, and showcase the above features, we will implement a Fahrenheit/Celsius temperature converter in both Java and JRuby that uses Java Swing as its GUI library. The source code can be found at <a title="http://is.gd/n3Je" href="http://is.gd/n3Je" target="_blank">http://is.gd/n3Je</a>. (The Git repo main page for this project is at <http://github.com/keithrbennett/multilanguage-swing>. The README file has instructions for how to run the Java, Ruby, and Clojure versions.
 

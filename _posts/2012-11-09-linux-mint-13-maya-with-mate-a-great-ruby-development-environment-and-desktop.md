@@ -44,27 +44,27 @@ Update by clicking the shield icon on the lower right of the desktop. _Select Al
 
 Linux Mint is based on Ubuntu and therefore uses apt-get/aptitude/synaptic for software package management. I use the command line apt-get for simplicity. I install the following extra software:
 
-  * **ant** &#8211; for building Clojure and other Java based software
-  * **chromium-browser** &#8211; for an alternative to Firefox, this is the browser on which Google's Chrome is based
-  * **curl** &#8211; for RVM installation and general use
-  * **fldiff** &#8211; graphical diff tool for files and directories 
-      * **g++** &#8211; for compiling C++ source code
-      * **gedit** &#8211; a simple graphical editor
-      * **gftp** &#8211; excellent graphical app for ftp operations, can do sftp too
-      * **gitk** &#8211; graphical Git repo visualizer
-      * **gnome-alsamixer** &#8211; volume control; this enabled me to increase maximum volume for tv
-      * **libreadline-dev** &#8211; for command line history editing
-      * **libyaml-0-2** &#8211; YAML support
-      * **MySQL, Postgres, SQLite** &#8211; plus supplementary software and Postgres admin app
-      * **ncftp** &#8211; an excellent full screen but text mode ftp client, can use this when logging into the system with ssh in a terminal
-      * **openssh-server** &#8211; for SSH access to this machine
-      * **parcellite** &#8211; multi-entry clipboard
-      * **rlwrap** &#8211; adds readline support, used for Clojure REPL
+  * **ant** - for building Clojure and other Java based software
+  * **chromium-browser** - for an alternative to Firefox, this is the browser on which Google's Chrome is based
+  * **curl** - for RVM installation and general use
+  * **fldiff** - graphical diff tool for files and directories 
+      * **g++** - for compiling C++ source code
+      * **gedit** - a simple graphical editor
+      * **gftp** - excellent graphical app for ftp operations, can do sftp too
+      * **gitk** - graphical Git repo visualizer
+      * **gnome-alsamixer** - volume control; this enabled me to increase maximum volume for tv
+      * **libreadline-dev** - for command line history editing
+      * **libyaml-0-2** - YAML support
+      * **MySQL, Postgres, SQLite** - plus supplementary software and Postgres admin app
+      * **ncftp** - an excellent full screen but text mode ftp client, can use this when logging into the system with ssh in a terminal
+      * **openssh-server** - for SSH access to this machine
+      * **parcellite** - multi-entry clipboard
+      * **rlwrap** - adds readline support, used for Clojure REPL
       * **skype**
-      * **stopwatch** &#8211; a stopwatch/timer with lap field
-      * **vim-gnome** &#8211; for a VIM editor with graphical abilities, run as `gvim`
-      * **virtualbox** &#8211; for virtual machines
-      * **zsh** &#8211; my preferred shell</ul> 
+      * **stopwatch** - a stopwatch/timer with lap field
+      * **vim-gnome** - for a VIM editor with graphical abilities, run as `gvim`
+      * **virtualbox** - for virtual machines
+      * **zsh** - my preferred shell</ul> 
     Here's the command to install them:
     
 ```
@@ -311,7 +311,7 @@ For vim, install the [Janus](https://github.com/carlhuda/janus) extensions, whic
 
 ### VMWare Fusion
 
-If you&#8217;re installing this as a VMWare virtual machine, download and install the VMWare Tools:
+If you're installing this as a VMWare virtual machine, download and install the VMWare Tools:
 
 Go to the VMWare "Virtual Machine" menu, select "Install VMWare Tools". This will download them to your Mac, and make them available to your VM as a logical mounted CD. Do this to install them:
     
@@ -354,7 +354,7 @@ Android developer tools can be downloaded from <http://developer.android.com/sdk
 
 ### Erlang OTP
 
-If you&#8217;d like to download Erlang, you can do it at <https://www.erlang-solutions.com/downloads/download-erlang-otp>. You&#8217;ll need to know which Ubuntu distribution you&#8217;re downloading for; Linux Mint 13 is Ubuntu 12.04, and 14 is 12.10. [Update, 2018-04: download from <https://community.linuxmint.com/software/view/erlang>]
+If you'd like to download Erlang, you can do it at <https://www.erlang-solutions.com/downloads/download-erlang-otp>. You'll need to know which Ubuntu distribution you're downloading for; Linux Mint 13 is Ubuntu 12.04, and 14 is 12.10. [Update, 2018-04: download from <https://community.linuxmint.com/software/view/erlang>]
 
 * * *
 

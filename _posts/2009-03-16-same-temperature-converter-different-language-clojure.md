@@ -36,7 +36,7 @@ If you can access the REPL interactive Clojure command line, you can issue the f
 (.setVisible temp-converter/main-frame false) ; illustrates that it can be manipulated
 ```
 
-The strengths of Clojure are many, and a Swing application is not the best program with which to showcase them. Therefore, it would not be fair to judge Clojure based solely on the content of this article, because I am intentionally excluding its greatest strengths --; they are outside of the scope of porting this Swing application, and I am not yet expert enough to be qualified to teach about them. However, this article _is_ useful in illustrating some of the mechanics and philosophy of the language that can be used in general programming.
+The strengths of Clojure are many, and a Swing application is not the best program with which to showcase them. Therefore, it would not be fair to judge Clojure based solely on the content of this article, because I am intentionally excluding its greatest strengths -- they are outside of the scope of porting this Swing application, and I am not yet expert enough to be qualified to teach about them. However, this article _is_ useful in illustrating some of the mechanics and philosophy of the language that can be used in general programming.
 
 Firstly, Clojure (and, by extension, Lisp) struck me as a language that easily enables the writing of clear, concise, and logically structured code. I'm a big fan of this, as you will know if you have read my [Applying User Interface Design to Source Code]({% post_url 2008-11-28-applying-user-interface-design-to-source-code %}) article.
 
@@ -63,7 +63,7 @@ reported by the Java runtime."
   component)
 ```
 
-The `let` clause above leaves no doubt 1) that those terms are inaccessible outside of the `let` clause, and 2) that all terms are colocated at the beginning of the `let` clause. The first feature is available in other languages such as Java, though it is (unfortunately) rarely used --; I'm speaking of nesting some of a method's code in curly braces without any enclosing for, if, do, or while, for the sole purpose of limiting the scope of the local variables used therein.
+The `let` clause above leaves no doubt 1) that those terms are inaccessible outside of the `let` clause, and 2) that all terms are colocated at the beginning of the `let` clause. The first feature is available in other languages such as Java, though it is (unfortunately) rarely used -- I'm speaking of nesting some of a method's code in curly braces without any enclosing for, if, do, or while, for the sole purpose of limiting the scope of the local variables used therein.
 
 Variables in the `let` clause can use preceding variables, so it easily facilitates the use of intermediate variables for simplicity and clarity. For example, the screen-width and screen-height variables above use the screen-size variable defined before them.
 

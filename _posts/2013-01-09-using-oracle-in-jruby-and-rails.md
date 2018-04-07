@@ -50,7 +50,7 @@ The solution I chose was to:
 
 1) download it to a directory outside of my project (/opt/oracle-jdbc/ojdbc6.jar)
 
-2) have an environment variable point to it --; I added this to my ~/.zshrc file (you might use ~/.bashrc instead):
+2) have an environment variable point to it -- I added this to my ~/.zshrc file (you might use ~/.bashrc instead):
 
 ```
 >export ORACLE_JDBC_JAR=/opt/oracle-jdbc/ojdbc6.jar
@@ -59,7 +59,7 @@ The solution I chose was to:
 
 3) use that variable at runtime to locate it (separate solutions for Rails and Sequel below).
 
-### Oracle and Rails &#8211; environment.rb and database.yml
+### Oracle and Rails - environment.rb and database.yml
 
 For Rails, you'll need this in your config/initializers/environment.rb so that the JDBC jar file can be found at runtime:
 

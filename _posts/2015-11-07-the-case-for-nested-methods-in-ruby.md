@@ -36,7 +36,7 @@ Furthermore, the lambdas can be passed elsewhere in the program and modify those
 from afar! So using methods would be cleaner and safer.
 
 Another weakness of using lambdas for this purpose is that, unlike methods
-that are created at interpret time, lambdas are objects created at runtime --; 
+that are created at interpret time, lambdas are objects created at runtime -- 
 so if a method creating 2 lambdas is called a million times in a loop, 
 you'll need to create and garbage collect another 2 million objects. 
 (This can be circumvented by defining the lambdas as class constants or assigning them

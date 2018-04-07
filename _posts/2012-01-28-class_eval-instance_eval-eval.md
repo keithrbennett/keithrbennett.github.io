@@ -14,15 +14,15 @@ email_notification:
 categories:
   - Uncategorized
 ---
-A couple of days ago I attended an interesting discussion of metaprogramming by Arild Shirazi at a meeting of the Northern Virginia Ruby User Group. Arild showed how he used metaprogramming (_class_eval_ in particular) to generate functions whose names would only be known at runtime. His talk was very effective at reminding me that I don&#8217;t know as much about metaprogramming as I thought!
+A couple of days ago I attended an interesting discussion of metaprogramming by Arild Shirazi at a meeting of the Northern Virginia Ruby User Group. Arild showed how he used metaprogramming (_class_eval_ in particular) to generate functions whose names would only be known at runtime. His talk was very effective at reminding me that I don't know as much about metaprogramming as I thought!
 
-(Feel free to offer suggestions and corrections, and I&#8217;ll try to update the article accordingly.)
+(Feel free to offer suggestions and corrections, and I'll try to update the article accordingly.)
 
 Dave Thomas, in his excellent Advanced Ruby training, emphasizes the value of knowing just who _self_ is at any point in the code. (For a good time, bounce around an rspec source file and try to guess what _self_ is in various places...).
 
 _class_eval_ provides an alternate way to define characteristics of a class. It should be used only when absolutely necessary. The only legitimate use I can think of is when the necessary code cannot be known until runtime.
 
-Knowing very little about _class_eval_, I assumed that it changed self to be the class of the current value of self. I was wrong. class_eval doesn&#8217;t change self at all; in fact, in this respect it functions identically to eval:
+Knowing very little about _class_eval_, I assumed that it changed self to be the class of the current value of self. I was wrong. class_eval doesn't change self at all; in fact, in this respect it functions identically to eval:
 
 ```ruby
 >> class ClassEvalExample
@@ -57,7 +57,7 @@ NoMethodError: private method `eval' called for C2:Class
 	from :0
 ```
 
-If class_eval could be used to define an instance method on a class in a class definition _outside_ a function, what would happen if it were used _inside_ a function, where self is no longer the class, but the instance of the class? Would it define a method on the singleton class (a.k.a. _eigenclass_)? Let&#8217;s try it:
+If class_eval could be used to define an instance method on a class in a class definition _outside_ a function, what would happen if it were used _inside_ a function, where self is no longer the class, but the instance of the class? Would it define a method on the singleton class (a.k.a. _eigenclass_)? Let's try it:
 
 ```ruby
 >:001 > class D
@@ -77,7 +77,7 @@ NoMethodError: undefined method `class_eval' for #
 	from :0
 ```
 
-No, this didn&#8217;t work...but wait a minute, isn&#8217;t class_eval a Kernel method? Let&#8217;s find out:
+No, this didn't work...but wait a minute, isn't class_eval a Kernel method? Let's find out:
 
 ```ruby
 > Kernel.methods.include? 'class_eval'
@@ -91,7 +91,7 @@ Alas, I was asking the wrong question. I should have asked if Kernel had an _ins
 => false
 ```
 
-It doesn&#8217;t, but _Class_ does:
+It doesn't, but _Class_ does:
 
 ```ruby
 > Class.instance_methods.include? 'class_eval'
@@ -100,7 +100,7 @@ It doesn&#8217;t, but _Class_ does:
 
 ...which is why the Kernel.methods.include? above worked.
 
-Although _class_eval_ didn&#8217;t work, _instance_eval_ will work:
+Although _class_eval_ didn't work, _instance_eval_ will work:
 
 ```ruby
 > class F
@@ -126,7 +126,7 @@ To illustrate that foo has not been created as a class or member function on cla
  => true
 ```
 
-Could _eval_ be substituted for _instance_eval_ in the same way as it was for _class_eval_? Let&#8217;s find out...
+Could _eval_ be substituted for _instance_eval_ in the same way as it was for _class_eval_? Let's find out...
 
 ```ruby
 >>   class F2
@@ -174,6 +174,6 @@ Hmmm, I wonder, if we can define a _function_ using the eval methods, can we als
 @var = 456
 ```
 
-What&#8217;s interesting is that we created instance variable _var_ in instance _o_, but its class Object knows nothing about this new variable. In the data storage world, this would be analogous to using a document store such as MongoDB and adding a variable to a single document, unlike in an RDBMS where you would have to add it to the table definition and include it in all rows of the table.
+What's interesting is that we created instance variable _var_ in instance _o_, but its class Object knows nothing about this new variable. In the data storage world, this would be analogous to using a document store such as MongoDB and adding a variable to a single document, unlike in an RDBMS where you would have to add it to the table definition and include it in all rows of the table.
 
 Techniques such as these are cool and powerful, but are not without cost. If your code accesses a function or variable that is not defined in a standard class definition, the reader may have a hard time tracking down the creation and meaning of that function or variable. We should be kind to our fellow developers and use these techniques only when absolutely necessary.

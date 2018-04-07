@@ -8,21 +8,21 @@ permalink: /index.php/2012/11/05/intro-to-functional-programming-in-ruby/
 categories:
   - Uncategorized
 ---
-Ruby is a flexible and versatile language. Although it&#8217;s almost always used as an object oriented language, it can be used for functional programming as well.
+Ruby is a flexible and versatile language. Although it's almost always used as an object oriented language, it can be used for functional programming as well.
 
 In versions prior to Ruby 1.8, doing so was more awkward because there would be a lot of `lambda`s cluttering the code. In 1.9, however, we have the `->` shorthand, which makes functional style code more concise and more similar to traditional FP languages.
 
-This post is inspired by [Jim Weirich's keynote at RubyConf in Denver last Friday (Nov. 2, 2012)](https://confreaks.tv/videos/rubyconf2012-y-not-adventures-in-functional-programming), in which he abundantly illustrated Ruby&#8217;s FP abilities. His code looked so different from most Ruby code that one attendee entering late whispered to the person next to him, _what language is that?_
+This post is inspired by [Jim Weirich's keynote at RubyConf in Denver last Friday (Nov. 2, 2012)](https://confreaks.tv/videos/rubyconf2012-y-not-adventures-in-functional-programming), in which he abundantly illustrated Ruby's FP abilities. His code looked so different from most Ruby code that one attendee entering late whispered to the person next to him, _what language is that?_
 
-Here&#8217;s a walk through some basic functional programming in Ruby. A file containing the source code for this article, and some `puts` statements to illustrate the code, is [here](https://github.com/keithrbennett/fp-playground/blob/master/fp-intro.rb).
+Here's a walk through some basic functional programming in Ruby. A file containing the source code for this article, and some `puts` statements to illustrate the code, is [here](https://github.com/keithrbennett/fp-playground/blob/master/fp-intro.rb).
 
-We&#8217;ll start with some simple examples and work up to creating the execution of a workflow defined as an array of lambdas.
+We'll start with some simple examples and work up to creating the execution of a workflow defined as an array of lambdas.
 
 * * *
 
 ### An "Add" Function
 
-First, here&#8217;s a simple function that returns the sum of two numbers.
+First, here's a simple function that returns the sum of two numbers.
 
 ```ruby
 >add = ->(x, y) { x + y }
@@ -32,9 +32,9 @@ The lvalue is `add`, and is a variable that will contain a reference to the lamb
 
 The rvalue is `->(x, y) { x + y }`, and represents a function.
 
-The `->()` indicates that this a function, and the terms inside the parentheses are the arguments it expects. The code within the curly braces is the body of the function. A very important thing to keep in mind is that the function is created and returned, but not evaluated (called). It could be considered a function literal, as we have array, hash, and regex literals in Ruby. In this case, we&#8217;re assigning it to the variable `add`.
+The `->()` indicates that this a function, and the terms inside the parentheses are the arguments it expects. The code within the curly braces is the body of the function. A very important thing to keep in mind is that the function is created and returned, but not evaluated (called). It could be considered a function literal, as we have array, hash, and regex literals in Ruby. In this case, we're assigning it to the variable `add`.
 
-This is called like a regular function, except that we need a dot after the variable name to tell the Ruby interpreter that this is a proc and not a class&#8217; member function. Another way of looking at it is that the dot is a shorthand for `.call`, which was required for calling a lambda in pre-1.9 versions of Ruby. This is how it would look in irb:
+This is called like a regular function, except that we need a dot after the variable name to tell the Ruby interpreter that this is a proc and not a class' member function. Another way of looking at it is that the dot is a shorthand for `.call`, which was required for calling a lambda in pre-1.9 versions of Ruby. This is how it would look in irb:
 
 ```ruby
 >1.9.3-p286 :001 > add = ->(x, y) { x + y }
@@ -53,7 +53,7 @@ A better implementation of add, that would take a variable number of arguments i
 
 ### A "Multiple" Function
 
-Now, let&#8217;s create a function that returns a function that will return multiples of a number:
+Now, let's create a function that returns a function that will return multiples of a number:
 
 ```ruby
 >mult = ->(multiplier) { ->(n) { multiplier * n } }

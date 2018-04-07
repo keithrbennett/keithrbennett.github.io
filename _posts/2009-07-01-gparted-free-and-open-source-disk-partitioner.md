@@ -21,7 +21,7 @@ Although I have not done any thorough or systematic comparison of GPartEd and Pa
 
 GPartEd runs natively on Linux, but if you are using other operating systems such as Windows or OS X, you can put it on a bootable medium such as a CD or USB drive and boot from that medium. More information on this is at <http://gparted.sourceforge.net/livecd.php>.
 
-When the bootable medium starts up, it boots Linux, but you don't need to care about that --; it's got an attractive and intuitive GUI. It's aware of a multitude of partition types, including types used by Windows, OS X, Linux, and Solaris, so it's not likely that the one you want will be missing. You can see all the supported partition types at <http://gparted.sourceforge.net/features.php>.
+When the bootable medium starts up, it boots Linux, but you don't need to care about that -- it's got an attractive and intuitive GUI. It's aware of a multitude of partition types, including types used by Windows, OS X, Linux, and Solaris, so it's not likely that the one you want will be missing. You can see all the supported partition types at <http://gparted.sourceforge.net/features.php>.
 
 ### Using GPartEd to Add an Operating System to Your Drive
 
@@ -33,8 +33,8 @@ Although I used it to have Linux and Windows share the same drive, you could hav
 
 Another handy use of GPartEd is to create a partition for data that can be shared by multiple OS's on the drive. For example, you may have documents, photos, and/or music files that you want to access regardless of which OS you boot. All you need to do is to create the partition in a format recognized by all the OS's on your system. I use fat32 for this. 
 
-GPartEd is just one of a multitude of free open source software products that can make our technical lives easier --; and cheaper. Kudos to the developers and other contributors that made it possible.
+GPartEd is just one of a multitude of free open source software products that can make our technical lives easier -- and cheaper. Kudos to the developers and other contributors that made it possible.
 
 Feel free to comment with any feedback or experiences.
 
-&#8211; Keith
+- Keith

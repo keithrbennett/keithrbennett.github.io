@@ -12,7 +12,7 @@ Bennett Business Solutions, Inc. is a small corporation through which I, Keith B
   * Mentoring and Tutoring
   * Firefighting (Troubleshooting)
   * Refactoring
-  * Consultations &#8211; Strategy and Architecture
+  * Consultations - Strategy and Architecture
 
 My LinkedIn profile is at http://linkedin.com/in/keithrbennett.
 
