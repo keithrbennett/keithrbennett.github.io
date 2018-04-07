@@ -24,7 +24,7 @@ of our software&#8217;s complexity. The number of possible instance method inter
 is `(method_count * (method_count) - 1)`. Using this formula, a class with 10 methods
 will have a complexity of 90. If 4 of those methods are used by only 1 other method,
 and we could move them inside those methods, the complexity would plummet 
-to 30 `(6 * (6 - 1))`, a third of the original amount!
+to 30 (`6 * (6 - 1)`), a third of the original amount!
 
 While it is possible to extract subsets of these methods into new smaller classes,
 this is not always practical, especially in the case of methods called only by the constructor.

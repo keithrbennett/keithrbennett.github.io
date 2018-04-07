@@ -8,7 +8,7 @@ permalink: /index.php/2012/09/05/conways-game-of-life-viewer/
 categories:
   - Uncategorized
 ---
-Later this month I&#8217;ll be joining dozens of other coders at [Ruby DCamp](http://www.rubydcamp.org), where we&#8217;ll spend three days talking, coding, and camping. The first day is usually code katas (exercises), and often one of them is the implementation of [Conway&#8217;s Game of Life](http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
+Later this month I&#8217;ll be joining dozens of other coders at [Ruby DCamp](http://rubydcamp.org/), where we&#8217;ll spend three days talking, coding, and camping. The first day is usually code katas (exercises), and often one of them is the implementation of [Conway&#8217;s Game of Life](http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 
 By design, there&#8217;s not enough time to do a complete implementation with viewer, so I thought it would be cool to write a viewer into which you could plug your own model implementation and &#8220;play&#8221; that model visually.
 
@@ -18,11 +18,10 @@ We often have poor or nonexistent Internet connectivity, and client/server seeme
 
 Here&#8217;s a screen shot:
 
-[<img src="http://www.bbs-software.com/blog/wp-content/uploads/2012/09/life-game-viewer7.png" alt="Life Game Viewer Screenshot" title="life-game-viewer" width="799" height="637" class="aligncenter size-full wp-image-666" />](http://www.bbs-software.com/blog/wp-content/uploads/2012/09/life-game-viewer7.png)
+![screenshot]({{ site.url }}/assets/life-game-viewer7.png)
 
-<div>
+
   In case you don&#8217;t recognize the face, it&#8217;s Alfred E. Neuman, made famous by Mad magazine, but, as I just learned this minute from Wikipedia (I read it there so it <em>must</em> be true), &#8220;[his] face had drifted through American pictography for decades before being claimed and named by <em>Mad</em>&#8230;&#8221;&#8230;but I digress&#8230;
-</div>
 
 You can install the gem in the usual way (make sure you&#8217;re in JRuby when you do):
 

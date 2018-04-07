@@ -203,7 +203,7 @@ You might want to check the [RVM web site](https://rvm.io/rvm/install/) for the 
     
 This will install RVM and a current stable MRI Ruby. Below we&#8217;ll do some other things:
 
-  * install [JRuby](http://jruby.org/), Ruby implementation for the Java Virtual Machine, my user group presentation slides and audio [here](http://www.bbs-software.com/blog/2012/09/04/jruby-presentation-northern-virginia-ruby-user-group/))</a>
+  * install [JRuby](http://jruby.org/), Ruby implementation for the Java Virtual Machine
   * install Rails for both MRI Ruby and JRuby
   * create aliases 1.9 and jruby for easier typing
   * make MRI Ruby 1.9 the default Ruby for new shells
@@ -354,7 +354,7 @@ Android developer tools can be downloaded from <http://developer.android.com/sdk
 
 ### Erlang OTP
 
-If you&#8217;d like to download Erlang, you can do it at <https://www.erlang-solutions.com/downloads/download-erlang-otp>. You&#8217;ll need to know which Ubuntu distribution you&#8217;re downloading for; Linux Mint 13 is Ubuntu 12.04, and 14 is 12.10.
+If you&#8217;d like to download Erlang, you can do it at <https://www.erlang-solutions.com/downloads/download-erlang-otp>. You&#8217;ll need to know which Ubuntu distribution you&#8217;re downloading for; Linux Mint 13 is Ubuntu 12.04, and 14 is 12.10. [Update, 2018-04: download from <https://community.linuxmint.com/software/view/erlang>]
 
 * * *
 

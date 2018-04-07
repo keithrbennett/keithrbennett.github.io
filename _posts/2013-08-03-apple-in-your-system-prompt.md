@@ -17,8 +17,6 @@ In my daily work, I often connect to Linux boxes from my Mac. With several termi
 >
 ```
 
-[http://blog.twistedcode.org/2008/03/customizing-your-bash-prompt.html](http://blog.twistedcode.org/2008/03/customizing-your-bash-prompt.html "http://blog.twistedcode.org/2008/03/customizing-your-bash-prompt.html") has a lot of information about customized bash prompts.
-
 Wait a minute, I thought, I wonder if there&#8217;s a Unicode character that can be included in the prompt that will jump out at me to tell me where I am&#8230;so I searched the web, and on [http://hea-www.harvard.edu/~fine/OSX/unicode\_apple\_logo.html](http://hea-www.harvard.edu/~fine/OSX/unicode_apple_logo.html "http://hea-www.harvard.edu/~fine/OSX/unicode_apple_logo.html") was the apple logo!
 
 So I now have the Apple logo as the very first character of my system prompt. A picture grabs the eye more effectively than a letter, so it&#8217;s much easier now to tell that this terminal is connected to my Mac:

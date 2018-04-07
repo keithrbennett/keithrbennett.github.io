@@ -177,9 +177,9 @@ One could say that `inject` and `each_with_object` are different methods that be
 and one should choose which one to use based on the use case. 
 However, in my (perhaps limited) experience, I have never encountered the need to return instances
 different from the initial instance in a block, and I find myself _always_ using `each_with_object`
-these days. The only reason I even discovered the `each_with_object Fixnum` issue was that 
+these days. The only reason I even discovered the `each_with_object` `Fixnum` issue was that 
 I was involved in a discussion about `each_with_object` and wanted to produce a minimal example of it.
 
 That said, isn&#8217;t it great how many choices we have? More than any other piece of code I know of,
-the Enumerable ([1.9](http://apidock.com/ruby/v1_9_3_392/Enumerable), [2.0](http://ruby-doc.org/core-2.0.0/Enumerable.html "Enumerable 2.0")) 
+the Enumerable ([2.5](https://ruby-doc.org/core-2.5.0/Enumerable.html), [2.0](http://ruby-doc.org/core-2.0.0/Enumerable.html "Enumerable 2.0")) 
 module is a treasure trove that perpetually pleases.

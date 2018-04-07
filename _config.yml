@@ -13,12 +13,13 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: "Keith R. Bennett's Technical Blog"
-name:  "Keith R. Bennett's Technical Blog"
+title: "Keith R. Bennett's Tech Blog"
+name:  "Keith R. Bennett's Tech Blog"
 
 email: keithrbennett@gmail.com
 
-url: "http://keithrbennett.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+#url: "http://keithrbennett.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "/"
 
 description: Technical Explorations
 
@@ -51,6 +52,7 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
   - .idea/
+  - implementation_notes.md
 
 
 #Fix suggested at https://github.com/github/pages-gem/issues/399 for error:

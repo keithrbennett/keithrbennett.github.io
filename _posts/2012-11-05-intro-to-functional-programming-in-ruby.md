@@ -12,7 +12,7 @@ Ruby is a flexible and versatile language. Although it&#8217;s almost always use
 
 In versions prior to Ruby 1.8, doing so was more awkward because there would be a lot of `lambda`s cluttering the code. In 1.9, however, we have the `->` shorthand, which makes functional style code more concise and more similar to traditional FP languages.
 
-This post is inspired by [Jim Weirich](https://github.com/jimweirich)&#8216;s keynote at RubyConf in Denver last Friday (Nov. 2, 2012), in which he abundantly illustrated Ruby&#8217;s FP abilities. His code looked so different from most Ruby code that one attendee entering late whispered to the person next to him, _what language is that?_
+This post is inspired by [Jim Weirich's keynote at RubyConf in Denver last Friday (Nov. 2, 2012)](https://confreaks.tv/videos/rubyconf2012-y-not-adventures-in-functional-programming), in which he abundantly illustrated Ruby&#8217;s FP abilities. His code looked so different from most Ruby code that one attendee entering late whispered to the person next to him, _what language is that?_
 
 Here&#8217;s a walk through some basic functional programming in Ruby. A file containing the source code for this article, and some `puts` statements to illustrate the code, is [here](https://github.com/keithrbennett/fp-playground/blob/master/fp-intro.rb).
 

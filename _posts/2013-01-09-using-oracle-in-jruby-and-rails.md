@@ -24,7 +24,7 @@ The JVM typically communicates with data bases using
 
 ### JDBC Jar Files
 
-A JDBC jar (jar = _**j**_ava _**ar**_chive) file is provided for each data base product, 
+A JDBC jar (jar = **j**ava **ar**chive) file is provided for each data base product, 
 typically by the vendor, and contains the code needed to implement the JDBC contract 
 for that target data base. Since MySQL and Postgres are open source, their jar files 
 can be freely copied around, and as a result, are included in the respective JDBC gems. 

@@ -8,7 +8,7 @@ permalink: /index.php/2012/09/13/rubys-forwardable/
 categories:
   - Uncategorized
 ---
-Last night I had the pleasure of attending the [Arlington Ruby User Group](http://www.meetup.com/Arlington-Ruby/) meeting in Arlington, Virginia. Marius Pop, a new Rubyist, presented on Ruby&#8217;s [Forwardable](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/forwardable/rdoc/Forwardable.html) module. Forwardable allows you to very succinctly specify that you want to define a method that simply calls (that is, delegates to) a method on one of the object&#8217;s instance variables, and returns its return value, if there is one. Here is an example file that illustrates this:
+Last night I had the pleasure of attending the [Arlington Ruby User Group](http://www.meetup.com/Arlington-Ruby/) meeting in Arlington, Virginia. [Marius Pop](https://twitter.com/mlpinit), a new Rubyist, presented on Ruby&#8217;s [Forwardable](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/forwardable/rdoc/Forwardable.html) module. Forwardable allows you to very succinctly specify that you want to define a method that simply calls (that is, delegates to) a method on one of the object&#8217;s instance variables, and returns its return value, if there is one. Here is an example file that illustrates this:
 
 ```ruby
 >require 'forwardable'
@@ -36,7 +36,7 @@ After the meeting I thought of a class I had been working on recently that would
 
 It turned out that almost half the methods were minimal enough to be replaced with Forwardable calls. The diff is shown here:
 
-[gist id=3713110]
+{% gist 3713110 %}
 
 The modified class is viewable on Github [here](https://github.com/keithrbennett/life_game_viewer/blob/6a44806a15e708068258f30b45c60c36a2142d87/lib/life_game_viewer/view/life_table_model.rb).
 
@@ -54,6 +54,6 @@ a) It determines whether or not the delegate object can handle the message by ca
 
 b) The delegating object will itself not contain the method. (Maybe the method\_missing handling adds a function to the class, but even if it does, that function will not be present when the class is first loaded.) So it too will return a misleading false if respond\_to is called on it.
 
-c) In addition to not communicating its capabilities to objects of other classes, it does not communicate to the human reader what methods are available on the class. One has to look at the class definition of the delegate object, and given Ruby&#8217;s duck typing, that may be difficult to find. It could even be impossible if users of your code are passing in their own custom objects. This may not be problematic, but it&#8217;s something to consider. (I talk more about duck typing&#8217;s occasional challenges at [Design by Contract, Ruby Style](http://www.bbs-software.com/blog/2011/06/15/dependency-inversion-ruby-style/).)
+c) In addition to not communicating its capabilities to objects of other classes, it does not communicate to the human reader what methods are available on the class. One has to look at the class definition of the delegate object, and given Ruby&#8217;s duck typing, that may be difficult to find. It could even be impossible if users of your code are passing in their own custom objects. This may not be problematic, but it&#8217;s something to consider. (I talk more about duck typing&#8217;s occasional challenges in another article, [Design by Contract, Ruby Style]({% post_url 2011-06-15-dependency-inversion-ruby-style %}).
 
 It was an interesting subject. Thank you Marius!
