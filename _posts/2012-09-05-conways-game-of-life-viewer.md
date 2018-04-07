@@ -18,7 +18,7 @@ We often have poor or nonexistent Internet connectivity, and client/server seeme
 
 Here&#8217;s a screen shot:
 
-{% include image.html img="/assets/life-game-viewer7.png" caption="This is an image." title="Game of Life Viewer" %}
+{% include image.html img="/assets/life-game-viewer7.png" caption="Game of Life Viewer" title="Game of Life Viewer" %}
 
   In case you don&#8217;t recognize the face, it&#8217;s Alfred E. Neuman, made famous by Mad magazine, but, as I just learned this minute from Wikipedia (I read it there so it <em>must</em> be true), &#8220;[his] face had drifted through American pictography for decades before being claimed and named by <em>Mad</em>&#8230;&#8221;&#8230;but I digress&#8230;
 
@@ -43,8 +43,9 @@ end
 LifeGameViewer::Main.view(model)
 ```
 
-<figure id="attachment_688" class="thumbnail wp-caption aligncenter" style="width: 810px">
 
-[<img src="http://www.bbs-software.com/blog/wp-content/uploads/2012/09/life-game-viewer-x-board1.png" alt="Board initialized with: (row + col == 11) || (row == col)" title="life-game-viewer-x-board" width="800" height="565" class="size-full wp-image-688" />](http://www.bbs-software.com/blog/wp-content/uploads/2012/09/life-game-viewer-x-board1.png)<figcaption class="caption wp-caption-text">Board initialized with: (row + col == 11) || (row == col)</figcaption></figure> 
+{% include image.html img="/assets/life-game-viewer-x-board1.png" title="Game of Life Viewer" %}
+
+In the image above, the board is initialized with `(row + col == 11) || (row == col)`.
 
 There&#8217;s a lot more information, including instructions and troubleshooting, on the [Life Game Viewer project page](https://github.com/keithrbennett/life_game_viewer), and in comments in the source code.

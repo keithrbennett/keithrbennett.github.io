@@ -20,4 +20,4 @@ I&#8217;ve tried to trim out anything not relating to the actual sending of the 
 
 &#8211; Keith
 
-[gist id=3605940]
+{% gist 3605940 %}

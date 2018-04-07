@@ -5,12 +5,14 @@
     {% if include.url %}
     <a href="{{ include.url }}" title="{{ include.title }}" target="_blank">
         {% endif %}
-        <img src="{{ site.url }}/{{ include.img }}" alt="{{ include.title }}"/>
+        <img src="{{ site.url }}/{{ include.img }}" alt="{{ include.title }}" style="margin: 0px 0px 0px 0px "/>
         {% if include.url %}
     </a>
     {% endif %}
     {% if include.caption %}
-    <p class="image-caption" style="color:maroon; text-align: center;">{{ include.caption }}</p>
+    <p class="image-caption" style="color:maroon; text-align: center; margin-top:3px">
+        {{ include.caption }}
+    </p>
     {% endif %}
 </div>
 
