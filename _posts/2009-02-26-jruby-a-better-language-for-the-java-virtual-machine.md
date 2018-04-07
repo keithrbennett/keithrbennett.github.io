@@ -20,8 +20,8 @@ tags:
 ---
 A powerful synergy results when combining the power, reliability, portability, and rich library set of the Java platform with the power and flexibility of JRuby.  This article will discuss a couple of ways in which JRuby surpasses Java as a programming language for the JVM:
 
-  1. Code as first class objects &#8211; code blocks, lambdas, and procs can exist and be passed around for the most part like any other objects. There is no need to create a class to contain them as there is in Java.
-  2. Syntactic sugar for the specification of hash values as parameters &#8211; hash (map, in Java lingo) key/value pairs can be passed to a function literally, and the function will receive them as a single hash. In other words, they can be passed without the need for the programmer to create and populate a hash instance.
+  1. _Code as first class objects_ &#8211; code blocks, lambdas, and procs can exist and be passed around for the most part like any other objects. There is no need to create a class to contain them as there is in Java.
+  2. _Syntactic sugar for the specification of hash values as parameters_ &#8211; hash (map, in Java lingo) key/value pairs can be passed to a function literally, and the function will receive them as a single hash. In other words, they can be passed without the need for the programmer to create and populate a hash instance.
 
 In order to contrast Java and JRuby, and showcase the above features, we will implement a Fahrenheit/Celsius temperature converter in both Java and JRuby that uses Java Swing as its GUI library. The source code can be found at <a title="http://is.gd/n3Je" href="http://is.gd/n3Je" target="_blank">http://is.gd/n3Je</a>. (The Git repo main page for this project is at <http://github.com/keithrbennett/multilanguage-swing>. The README file has instructions for how to run the Java, Ruby, and Clojure versions.
 
@@ -44,7 +44,7 @@ Unfortunately, the Swing `DocumentListener` interface requires implementing beha
 The Java adapter is implemented here as the `SimpleDocumentListener` that implements `DocumentListener`.  It has a single abstract method that must be implemented by its subclasses, and delegates to that method from all three `DocumentListener` interface methods.  Note that it is necessary to create a new class inheriting from `SimpleDocumentListener` in order to use it. Here is the code:
 
 ```java
->import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
@@ -79,7 +79,7 @@ public abstract class SimpleDocumentListener implements DocumentListener {
 Here&#8217;s how the class is used to enable the Fahrenheit to Celsius conversion only when there is a number in the Fahrenheit text field:
 
 ```java
->fahrTextField.getDocument().addDocumentListener(new SimpleDocumentListener() {
+fahrTextField.getDocument().addDocumentListener(new SimpleDocumentListener() {
             public void handleDocumentEvent(DocumentEvent event) {
                 f2cAction.setEnabled(doubleStringIsValid(fahrTextField.getText()));
             }
@@ -127,7 +127,7 @@ end
 And here&#8217;s how it is used:
 
 ```ruby
->fahr_text_field.getDocument.addDocumentListener(
+fahr_text_field.getDocument.addDocumentListener(
         SimpleDocumentListener.new do
           f2c_action.setEnabled double_string_valid?(fahr_text_field.getText)
         end)
@@ -136,19 +136,17 @@ And here&#8217;s how it is used:
 Note that unlike Java, where it is necessary to subclass the abstract Java class `SimpleDocumentListener`, we merely create an instance of the Ruby `SimpleDocumentListener` with the behavior we want executed when a DocumentEvent occurs. Specifying the code block parameter in the function definition with the ampersand enables passing a code block inline (as above), or passing code in the form of a lambda or proc object as in:
 
 ```ruby
->f2c_enabler = lambda do
+f2c_enabler = lambda do
       f2c_action.setEnabled double_string_valid?(fahr_text_field.getText)
     end
     fahr_text_field.getDocument.addDocumentListener(
             SimpleDocumentListener.new(&f2c_enabler))
 ```
 
-* * *As with Swing listeners, Swing actions written in Java are implemented as classes, although usually the only thing that differs among them is the behavior specified in the actionPeformed method.  (One could argue that a separate class 
-
-_is_ the appropriate way to express nontrivial processing, but then again if it is nontrivial the bulk of the processing might really belong in a model type class and not the action. This not only makes testing easier, it also makes it much easier to provide an alternate or replacement user or scripting interface; otherwise put, it increases code coherence.) We can therefore employ the same strategy as we did with the document listener. Here is how the exit action is specified in Java:</p> 
+As with Swing listeners, Swing actions written in Java are implemented as classes, although usually the only thing that differs among them is the behavior specified in the actionPeformed method.  (One could argue that a separate class _is_ the appropriate way to express nontrivial processing, but then again if it is nontrivial the bulk of the processing might really belong in a model type class and not the action. This not only makes testing easier, it also makes it much easier to provide an alternate or replacement user or scripting interface; otherwise put, it increases code coherence.) We can therefore employ the same strategy as we did with the document listener. Here is how the exit action is specified in Java: 
 
 ```java
->private class ExitAction extends AbstractAction {
+private class ExitAction extends AbstractAction {
 
         ExitAction() {
             super("Exit");
@@ -168,7 +166,7 @@ As you see, putValue is used to store key/value pairs in the action. There are m
 In Ruby, we create an adapter class that allows specifying the action&#8217;s name, options (tooltip text and keyboard accelerator in this case), and behavior:
 
 ```ruby
->require 'java'
+require 'java'
 
 # When running FrameInRuby, this will generate a warning because
 # it is already imported in FrameInRuby.  In JRuby, unfortunately,
@@ -234,7 +232,7 @@ Note the initialize method. The options parameter default to nil, but if any key
 Here&#8217;s how the exit action is specified in the JRuby program:
 
 ```ruby
->self.exit_action = SwingAction.new("Exit",
+self.exit_action = SwingAction.new("Exit",
         Action::SHORT_DESCRIPTION => "Exit this program",
         Action::ACCELERATOR_KEY =>
             KeyStroke.getKeyStroke(KeyEvent::VK_X, Event::CTRL_MASK))
