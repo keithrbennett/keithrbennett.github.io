@@ -12,7 +12,7 @@ The Ruby culture prefers open source technologies, and when it comes to relation
 MySQL and Postgres are commonly used. However, there are times when the Rubyist will not be in a position
  to choose technologies and must inherit legacy decisions. For example, a common issue 
  in the enterprise is the need to integrate with Oracle. 
- In this article, I&#8217;ll talk about integrating Oracle and JRuby (1), using both 
+ In this article, I'll talk about integrating Oracle and JRuby (1), using both 
  Active Record (Ruby on Rails) and the Sequel gem.
 
 ### JDBC
@@ -33,15 +33,15 @@ providing the location of the JDBC jar file.
 
 The activerecord-jdbc-adapter gem includes several JDBC jar files. 
 The complete list can be found by looking at the directory names beginning 
-with &#8220;jdbc-&#8221; on the activerecord-jdbc-adapter GitHub page 
+with "jdbc-" on the activerecord-jdbc-adapter GitHub page 
 [here](https://github.com/jruby/activerecord-jdbc-adapter "https://github.com/jruby/activerecord-jdbc-adapter"),
 and, at the time of this writing, consists of Derby, H2, Hypersonic, jTDS (SQL Server and Sybase),
 MySQL, Postgres, and SQLite.
 
 ### Dealing with the Oracle JDBC Jar File
 
-With Oracle, it&#8217;s a different story. Oracle does not permit freely coping their JDBC jar file,
-and in order to download it, you&#8217;ll probably need to go to the Oracle
+With Oracle, it's a different story. Oracle does not permit freely coping their JDBC jar file,
+and in order to download it, you'll probably need to go to the Oracle
 [web site](http://www.oracle.com/technetwork/database/enterprise-edition/jdbc-112010-090769.html "http://www.oracle.com/technetwork/database/enterprise-edition/jdbc-112010-090769.html")
 and log in first. It would not be legal to write an Oracle JDBC gem that packaged this jar file,
 so, unfortunately, extra work is required.
@@ -61,13 +61,13 @@ The solution I chose was to:
 
 ### Oracle and Rails &#8211; environment.rb and database.yml
 
-For Rails, you&#8217;ll need this in your config/initializers/environment.rb so that the JDBC jar file can be found at runtime:
+For Rails, you'll need this in your config/initializers/environment.rb so that the JDBC jar file can be found at runtime:
 
 ```
 >$CLASSPATH << ENV['ORACLE_JDBC_JAR']
 ```
 
-Now you&#8217;ll need to provide the appropriate values in the database.yml file (test and production groups are omitted for brevity):
+Now you'll need to provide the appropriate values in the database.yml file (test and production groups are omitted for brevity):
 
 ```
 ><%
@@ -89,13 +89,13 @@ development:
 
 ```
 
-As you can see, I used environment variables beginning with &#8220;OJTEST\_DB\_&#8221; to provide the required values, although that is not important and you can use any approach that works for you.
+As you can see, I used environment variables beginning with "OJTEST\_DB\_" to provide the required values, although that is not important and you can use any approach that works for you.
 
-More importantly, note that I am translating the Oracle host&#8217;s name to its IP address. This was necessary due to an apparent bug in Oracle&#8217;s driver.
+More importantly, note that I am translating the Oracle host's name to its IP address. This was necessary due to an apparent bug in Oracle's driver.
 
 ### Oracle and the Sequel Gem
 
-There is also the excellent [Sequel](https://github.com/jeremyevans/sequel "https://github.com/jeremyevans/sequel") gem that can be used for general data base access, even (perhaps especially) in a minimal script. Here&#8217;s a sample script that worked succesfully for me:
+There is also the excellent [Sequel](https://github.com/jeremyevans/sequel "https://github.com/jeremyevans/sequel") gem that can be used for general data base access, even (perhaps especially) in a minimal script. Here's a sample script that worked succesfully for me:
 
 ```ruby
 >#!/usr/bin/env ruby
@@ -159,7 +159,7 @@ show_records(DB[:artists])
 ### Conclusion
 
 This setup took me some time to figure out, but after I did, things went smoothly.  
-I&#8217;d like to hear if the approaches described here worked for you or if you have any problems with them.
+I'd like to hear if the approaches described here worked for you or if you have any problems with them.
 
 * * *
 

@@ -24,7 +24,7 @@ Bangspace is a bit of a pun; on the one hand, it is an abbreviation for Bangkok 
 
 Meetings are usually 8:00 PM to midnight or so. Currently, Monday is Drupal night, Tuesday is Android night, and Wednesday is Hardware Hacking night. Every other week is Beercamp, which is a general social evening including, in addition to the human attendees, beer. Unfortunately for me, my time in Bangkok did not include one of these days, so I never got to experience Beercamp.
 
-Bangspace has a membership fee of 500 baht (about $15 US) per month, but you don&#8217;t have to join to participate. Ben elaborates: &#8220;You don&#8217;t have to be a member to participate in !_ but you do have to have a member there willing to be &#8220;responsible&#8221; for you. Membership gets you a key and voting rights as to what to do when we decide money issues or other things requiring consensus. People join !_ because they want to support it.&#8221;
+Bangspace has a membership fee of 500 baht (about $15 US) per month, but you don&#8217;t have to join to participate. Ben elaborates: "You don&#8217;t have to be a member to participate in !_ but you do have to have a member there willing to be "responsible" for you. Membership gets you a key and voting rights as to what to do when we decide money issues or other things requiring consensus. People join !_ because they want to support it."
 
 Getting to know the Bangspace folks was one of the major highlights of my stay in Bangkok. Others were:
 

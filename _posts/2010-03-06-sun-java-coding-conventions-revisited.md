@@ -21,7 +21,7 @@ The Sun Java Code Conventions document, written in 1997, and [_no longer_] avail
 
 _The frequency of comments sometimes reflects poor quality of code. When you feel compelled to add a comment, consider rewriting the code to make it clearer._
   
-I've recently been asked to participate on a committee that will come up with a set of coding standards. These standards will be used by several teams, so it&#8217;s especially important that they be good and not overly restrictive. The Sun conventions are a reasonable place we may start. On the whole, I think they&#8217;re great, but I do have some reservations about a few points. Below are some notes regarding the Sun conventions, listed by section in the original document to which they refer. Quotes from the Sun document are indicated in italics, except for source code. I invite your feedback. This article may be modified based on your comments or my own &#8220;clearer thinking and better information&#8221;.
+I've recently been asked to participate on a committee that will come up with a set of coding standards. These standards will be used by several teams, so it's especially important that they be good and not overly restrictive. The Sun conventions are a reasonable place we may start. On the whole, I think they're great, but I do have some reservations about a few points. Below are some notes regarding the Sun conventions, listed by section in the original document to which they refer. Quotes from the Sun document are indicated in italics, except for source code. I invite your feedback. This article may be modified based on your comments or my own "clearer thinking and better information".
 
 **3.1.1 Beginning Comments**
 
@@ -36,11 +36,11 @@ All source files should begin with a c-style comment that lists the programmer(s
 */
 ```
 
-Although the paragraph mentions a date, the code refers to a version. In any case, regarding the inclusion of either one in the source code, I believe this should be flexible, taking into account team practices. On most projects I&#8217;ve worked on in recent years, this inclusion has not been necessary, and requiring it would have been a burden and would have degraded the signal to noise ratio of the code.
+Although the paragraph mentions a date, the code refers to a version. In any case, regarding the inclusion of either one in the source code, I believe this should be flexible, taking into account team practices. On most projects I've worked on in recent years, this inclusion has not been necessary, and requiring it would have been a burden and would have degraded the signal to noise ratio of the code.
 
 In addition, including version information usually embeds dependency on a specific version control system in the source code, and thereby increases the cost of switching version control systems. Even worse is manual modification of version numbers, which is highly error prone (I hope no one actually does this). In my experience in recent years, source code is rarely printed, and developers rarely have confusion over whether they are working on the head of the trunk or some other version. In the unusual case that the developer has any confusion about the version number, he/she can consult the IDE or version control system.
 
-Regarding the author information (which is included in the paragraph but not the example code), I have mixed feelings about that. It&#8217;s nice to know who to consult, but on the other hand, it&#8217;s a very rough and potentially outdated piece of information. Much more information can be found, quite easily, by doing a version control annotate. Also, these author comments are biased toward the original author. Does anyone have any hard and fast rules about at what point a new author should be added? It may be done inconsistently within a team, or over time. So the author information included in the header may not be as accurate as it seems.
+Regarding the author information (which is included in the paragraph but not the example code), I have mixed feelings about that. It's nice to know who to consult, but on the other hand, it&#8217;s a very rough and potentially outdated piece of information. Much more information can be found, quite easily, by doing a version control annotate. Also, these author comments are biased toward the original author. Does anyone have any hard and fast rules about at what point a new author should be added? It may be done inconsistently within a team, or over time. So the author information included in the header may not be as accurate as it seems.
 
 **4. Indentation**
   
@@ -137,7 +137,7 @@ Variable names should be short yet meaningful.
   
 I&#8217;d like to add:
 
-&#8220;In cases where making a variable name longer eliminates the need for an explanatory comment, this guideline may be relaxed somewhat.&#8221;
+"In cases where making a variable name longer eliminates the need for an explanatory comment, this guideline may be relaxed somewhat."
 
 
 
@@ -145,7 +145,7 @@ I&#8217;d like to add:
 
 Use XXX in a comment to flag something that is bogus but works. Use FIXME to flag something that is bogus and broken.
 
-I think &#8220;KLUDGE&#8221; is more expressive and universal than &#8220;XXX&#8221;. &#8220;KLUDGE&#8221; can successfully be looked up on Google. &#8220;XXX&#8221; can be also, but you wouldn&#8217;t find anything about software. 😉
+I think "KLUDGE" is more expressive and universal than "XXX". "KLUDGE" can successfully be looked up on Google. "XXX" can be also, but you wouldn&#8217;t find anything about software. 😉
 
 **11.1 Java Source Code Example** 
 

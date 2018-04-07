@@ -10,7 +10,7 @@ categories:
 ---
 When I first encountered the Ruby language in 2001, after working with Java, C++, and C for several years, I fell in love with it. How expressive, concise, clear, and malleable it is. A few years ago I even named a slide show [What I Love About Ruby.](https://speakerdeck.com/u/keithrbennett/p/what-i-love-about-ruby) I use it for presentations on beginning Ruby for novices.
 
-But there&#8217;s one thing in Ruby I haven&#8217;t gotten used to&#8230;the widespread use of what I call _stealth conditionals_, conditionals that are &#8220;hidden&#8221; in the middle of a one line statement, as in:
+But there&#8217;s one thing in Ruby I haven&#8217;t gotten used to&#8230;the widespread use of what I call _stealth conditionals_, conditionals that are "hidden" in the middle of a one line statement, as in:
 
 ```ruby
 do_something(foo, bar, baz) if some_condition

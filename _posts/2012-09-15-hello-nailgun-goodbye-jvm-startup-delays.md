@@ -28,7 +28,7 @@ To start the server, just run:
 >jruby --ng-server  # 'jruby' can be replaced with 'ruby' if running in rvm
 ```
 
-To connect to it, all you need to do is add &#8220;&#8211;ng&#8221; to the JRuby command or the JRUBY\_OPTS environment variable&#8217;s value. If you always wanted to use it, you could just include &#8220;&#8211;ng&#8221; in the export of JRUBY\_OPTS in your startup script (.bashrc, .zshrc, etc.). However, this may not be a good idea. The Nailgun web site says &#8220;&#8230;it&#8217;s not secure. Not even close&#8221;. In addition, you probably want longer running tasks to have their own JVM&#8217;s. This being the case, it can be better to default to _not_ use Nailgun, instead specifying the use of it when needed.
+To connect to it, all you need to do is add "&#8211;ng" to the JRuby command or the JRUBY\_OPTS environment variable&#8217;s value. If you always wanted to use it, you could just include "&#8211;ng" in the export of JRUBY\_OPTS in your startup script (.bashrc, .zshrc, etc.). However, this may not be a good idea. The Nailgun web site says "&#8230;it&#8217;s not secure. Not even close". In addition, you probably want longer running tasks to have their own JVM&#8217;s. This being the case, it can be better to default to _not_ use Nailgun, instead specifying the use of it when needed.
 
 In my work, I found that I always wanted to use Nailgun with utilities (rspec, irb, etc.), but that I couldn&#8217;t use it with my gem&#8217;s bin executable running in 1.9 mode. (I believe this is fixed in a 1.7 version of JRuby.) So here&#8217;s what I did&#8230;
 
@@ -42,7 +42,7 @@ _ngs_, to run the Nailgun server:
 >JRUBY_OPTS="" ruby --ng-server
 ```
 
-I set JRUBY\_OPTS to the empty string because my default setting is &#8220;&#8211;1.9&#8221;, and at this version, the Nailgun server will not start when JRUBY\_OPTS is nonempty or when certain options are specified on its command line. (See issues [6246](http://jira.codehaus.org/browse/JRUBY-6246), [5611](http://jira.codehaus.org/browse/JRUBY-5611), and [6251](http://jira.codehaus.org/browse/JRUBY-6251)).
+I set JRUBY\_OPTS to the empty string because my default setting is "&#8211;1.9", and at this version, the Nailgun server will not start when JRUBY\_OPTS is nonempty or when certain options are specified on its command line. (See issues [6246](http://jira.codehaus.org/browse/JRUBY-6246), [5611](http://jira.codehaus.org/browse/JRUBY-5611), and [6251](http://jira.codehaus.org/browse/JRUBY-6251)).
 
 * * *
 

@@ -114,7 +114,7 @@ In the case of `stringified_key_hash`, we&#8217;re fine because we&#8217;ve pass
 and when we modify it using `[]=` in every iteration, we&#8217;re always dealing with that same hash instance.
 
 In contrast, when we used `each_with_object` in `ewo_sum`, the initial value was a `Fixnum` whose value was 0.
-The expression &#8220;`sum += n`&#8221; assigned and returned _a different instance_ of `Fixnum`. 
+The expression "`sum += n`" assigned and returned _a different instance_ of `Fixnum`. 
 Note that the object id&#8217;s for `sum` differ before and after this expression is evaluated:
 
 ```ruby

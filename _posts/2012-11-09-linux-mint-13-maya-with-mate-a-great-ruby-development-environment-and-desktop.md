@@ -10,13 +10,13 @@ categories:
 ---
 The purpose of this article is to provide for you a clear and simple guide to setting up a nice Linux environment for Ruby software development and more. 
 
-I&#8217;ve been using Linux as a development environment on and off for a decade. In recent years I&#8217;ve leaned towards Mac OS, partly because I&#8217;ve been very disappointed in the Linux desktops&#8217; progress (or lack of it). Nevertheless, I use Linux on all my old PC laptops, and in VM&#8217;s on my Macs. Enter Linux Mint, version 13&#8230;
+I've been using Linux as a development environment on and off for a decade. In recent years I've leaned towards Mac OS, partly because I've been very disappointed in the Linux desktops' progress (or lack of it). Nevertheless, I use Linux on all my old PC laptops, and in VM's on my Macs. Enter Linux Mint, version 13&#8230;
 
-I really like the new Linux Mint 13 Mate distro and decided to install it on several systems. The desktop is simple, intuitive, and clean, and underneath it&#8217;s Ubuntu. Unlike the Ubuntu distro, however, Mint includes codecs that are needed for multimedia play. More information about multimedia software and the Mint installation itself is at <http://www.howtoforge.com/the-perfect-desktop-linux-mint-13-maya>. Besides functioning as a software development environment, another use for my Mint systems is to drive my HDTV with content from TV web sites, Hulu Plus, YouTube, Vimeo, etc. Unfortunately, Netflix streaming video does not work on Linux.
+I really like the new Linux Mint 13 Mate distro and decided to install it on several systems. The desktop is simple, intuitive, and clean, and underneath it's Ubuntu. Unlike the Ubuntu distro, however, Mint includes codecs that are needed for multimedia play. More information about multimedia software and the Mint installation itself is at <http://www.howtoforge.com/the-perfect-desktop-linux-mint-13-maya>. Besides functioning as a software development environment, another use for my Mint systems is to drive my HDTV with content from TV web sites, Hulu Plus, YouTube, Vimeo, etc. Unfortunately, Netflix streaming video does not work on Linux.
 
-At some point I&#8217;d like to take the time to learn Chef and automate the process, but until then, I figured I&#8217;d at least document everything I did to reduce the time and effort with each new installation. 
+At some point I'd like to take the time to learn Chef and automate the process, but until then, I figured I'd at least document everything I did to reduce the time and effort with each new installation. 
 
-This article describes the development environment I settled on for now, and how to replicate it. It&#8217;s intended to enable you to get a high quality system up to speed as quickly as possible. A lot of my choices are subjective (e.g. `zsh` rather than `bash`), so feel free to skip or modify anything. I assume you have a minimal understanding of Linux, and I omit some detail that might be needed by Linux beginners. Where version numbers are embedded in file names, those versions may differ at the time of your installation, so modify the names accordingly.
+This article describes the development environment I settled on for now, and how to replicate it. It's intended to enable you to get a high quality system up to speed as quickly as possible. A lot of my choices are subjective (e.g. `zsh` rather than `bash`), so feel free to skip or modify anything. I assume you have a minimal understanding of Linux, and I omit some detail that might be needed by Linux beginners. Where version numbers are embedded in file names, those versions may differ at the time of your installation, so modify the names accordingly.
 
 Following is a step by step guide. Although I installed Linux Mint, most or all of these steps should work on standard Ubuntu distributions too.
 
@@ -45,7 +45,7 @@ Update by clicking the shield icon on the lower right of the desktop. _Select Al
 Linux Mint is based on Ubuntu and therefore uses apt-get/aptitude/synaptic for software package management. I use the command line apt-get for simplicity. I install the following extra software:
 
   * **ant** &#8211; for building Clojure and other Java based software
-  * **chromium-browser** &#8211; for an alternative to Firefox, this is the browser on which Google&#8217;s Chrome is based
+  * **chromium-browser** &#8211; for an alternative to Firefox, this is the browser on which Google's Chrome is based
   * **curl** &#8211; for RVM installation and general use
   * **fldiff** &#8211; graphical diff tool for files and directories 
       * **g++** &#8211; for compiling C++ source code
@@ -65,7 +65,7 @@ Linux Mint is based on Ubuntu and therefore uses apt-get/aptitude/synaptic for s
       * **vim-gnome** &#8211; for a VIM editor with graphical abilities, run as `gvim`
       * **virtualbox** &#8211; for virtual machines
       * **zsh** &#8211; my preferred shell</ul> 
-    Here&#8217;s the command to install them:
+    Here's the command to install them:
     
 ```
 >sudo apt-get install \
@@ -129,13 +129,13 @@ Configure git, replacing the dummy data in the example commands with your real n
 
 ### Adobe Acrobat Reader
 
-Go to the Acrobat Reader &#8220;Other Downloads&#8221; page at <http://get.adobe.com/reader/otherversions/>. Select Linux, your preferred language, and then the .deb file. Download it, then open it to install the software.
+Go to the Acrobat Reader "Other Downloads" page at <http://get.adobe.com/reader/otherversions/>. Select Linux, your preferred language, and then the .deb file. Download it, then open it to install the software.
 
 * * *
 
 ### Postgres Configuration
 
-I use Postgres because it&#8217;s a great open source data base, and so that I&#8217;m using the same data base as Heroku. The script below will initialize Postgres with what I need to run a sample Rails app. Provide values for the environment variables at the top of the code fragment below. (Of course, use whatever `create database` commands you need; you might need more, or none, or no production data base, or want a different naming convention, etc.) 
+I use Postgres because it's a great open source data base, and so that I'm using the same data base as Heroku. The script below will initialize Postgres with what I need to run a sample Rails app. Provide values for the environment variables at the top of the code fragment below. (Of course, use whatever `create database` commands you need; you might need more, or none, or no production data base, or want a different naming convention, etc.) 
     
 ```
 ># Fill in the appropriate values to the right of the equal signs below.
@@ -167,7 +167,7 @@ echo $PSQL_CMD | sudo -u postgres psql
 
 ### Downcase Directory Names
 
-I have an aversion to capitalized directory names, since I spend a lot of time on the command line and don&#8217;t really need or want the minimal readability improvement of capitalized names. I&#8217;m always downloading stuff, so I rename the `Downloads` folder to `downloads`. I also use the `documents` directory a lot, so I downcased that as well.
+I have an aversion to capitalized directory names, since I spend a lot of time on the command line and don't really need or want the minimal readability improvement of capitalized names. I'm always downloading stuff, so I rename the `Downloads` folder to `downloads`. I also use the `documents` directory a lot, so I downcased that as well.
     
 ```
 >mkdir ~/downloads
@@ -201,7 +201,7 @@ You might want to check the [RVM web site](https://rvm.io/rvm/install/) for the 
 >\curl -L https://get.rvm.io | bash -s stable --ruby
 ```
     
-This will install RVM and a current stable MRI Ruby. Below we&#8217;ll do some other things:
+This will install RVM and a current stable MRI Ruby. Below we'll do some other things:
 
   * install [JRuby](http://jruby.org/), Ruby implementation for the Java Virtual Machine
   * install Rails for both MRI Ruby and JRuby
@@ -225,7 +225,7 @@ gem install rails
 
 ### Java
 
-Mint has an open source Java implementation, but I find the Oracle JDK&#8217;s to be more problem-free. If you want to install Oracle&#8217;s Java, download the JDK from: <http://www.oracle.com/technetwork/java/javase/downloads/index.html>. Then, install it in `/opt` and create a symbolic link to it named `current`.
+Mint has an open source Java implementation, but I find the Oracle JDK's to be more problem-free. If you want to install Oracle's Java, download the JDK from: <http://www.oracle.com/technetwork/java/javase/downloads/index.html>. Then, install it in `/opt` and create a symbolic link to it named `current`.
     
 ```
 >sudo mkdir /opt/java
@@ -237,7 +237,7 @@ sudo ln -s /opt/java/jdk1.7.0_09 current
     
 (Note: Due to recent security concerns with running Java in browsers, the following instructions should be avoided unless you really need it.)
 
-For Java support in Firefox, create a symbolic link in the Firefox installation&#8217;s `plugins` directory to the appropriate library. On my system that would look like this:
+For Java support in Firefox, create a symbolic link in the Firefox installation's `plugins` directory to the appropriate library. On my system that would look like this:
     
 ```
 >sudo ln -s /opt/java/current/jre/lib/amd64/libnpjp2.so /usr/lib/mozilla/plugins
@@ -313,7 +313,7 @@ For vim, install the [Janus](https://github.com/carlhuda/janus) extensions, whic
 
 If you&#8217;re installing this as a VMWare virtual machine, download and install the VMWare Tools:
 
-Go to the VMWare &#8220;Virtual Machine&#8221; menu, select &#8220;Install VMWare Tools&#8221;. This will download them to your Mac, and make them available to your VM as a logical mounted CD. Do this to install them:
+Go to the VMWare "Virtual Machine" menu, select "Install VMWare Tools". This will download them to your Mac, and make them available to your VM as a logical mounted CD. Do this to install them:
     
 ```
 >cd /opt

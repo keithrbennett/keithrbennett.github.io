@@ -30,7 +30,7 @@ Even if the rework were done with a GUI builder it would have been a lot of repe
 
 However, this could work much better by assembling pre-built custom project components. These project components would configure and combine framework components and conform to the project-wide settings without the need for any attention by the developer that uses them.
 
-The Android platform has some features that enable the developer to extract duplicated configuration in an application into shareable fragments.  In addition, across applications, it supports the creation of shared &#8220;libraries&#8221; containing both configuration and code that can be statically linked into an Android application&#8217;s .apk file. This enables the use of standard configurations across applications (or even across the paid and free version of the same application). See Marc Lester Tan&#8217;s excellent post about the available options [here](http://groups.google.com/group/philippine-android-developers/browse_thread/thread/7b2444dbeefd3045 "Marc Lester-Tan's Post About Android Anti-Duplication Features").
+The Android platform has some features that enable the developer to extract duplicated configuration in an application into shareable fragments.  In addition, across applications, it supports the creation of shared "libraries" containing both configuration and code that can be statically linked into an Android application&#8217;s .apk file. This enables the use of standard configurations across applications (or even across the paid and free version of the same application). See Marc Lester Tan&#8217;s excellent post about the available options [here](http://groups.google.com/group/philippine-android-developers/browse_thread/thread/7b2444dbeefd3045 "Marc Lester-Tan's Post About Android Anti-Duplication Features").
 
 Creating a component could be done either by creating an XML file for it, or by creating a custom component class in the framework&#8217;s programming language (Java in our case) and making it available to the GUI builder.
 
@@ -42,7 +42,7 @@ As the size of the UI grows, it&#8217;s almost inevitable that duplication will 
 
 #### Why Not Just XML?
 
-So, if using both code and XML present a problematic disconnect, why not use only XML? Because XML is a suitable language for computers, but a miserable language for humans. A wise man once said &#8220;XML is like lye; very useful to humans, but they should never touch it.&#8221;
+So, if using both code and XML present a problematic disconnect, why not use only XML? Because XML is a suitable language for computers, but a miserable language for humans. A wise man once said "XML is like lye; very useful to humans, but they should never touch it."
 
 While formatting and color coding XML code help make it a little more readable, it is nevertheless not very efficient at communicating. Consider, for example, a twenty line element repeated twenty times, where all elements vary only in the value of a single integer. Source code could easily communicate the similarities and differences, whereas XML would hide them.
 

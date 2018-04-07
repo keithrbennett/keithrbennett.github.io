@@ -16,7 +16,7 @@ Bennett Business Solutions, Inc. is a small corporation through which I, Keith B
 
 My LinkedIn profile is at http://linkedin.com/in/keithrbennett.
 
-Feel free to contact me if you have any needs for which I might be helpful. The best way to reach me is by email: kbennett at bbs-software.com (replace &#8221; at &#8221; with &#8220;@&#8221;).
+Feel free to contact me if you have any needs for which I might be helpful. The best way to reach me is by email: kbennett at bbs-software.com (replace " at " with "@").
 
 &nbsp;
 

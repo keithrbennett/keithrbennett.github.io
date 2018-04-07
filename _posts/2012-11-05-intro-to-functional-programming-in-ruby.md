@@ -20,7 +20,7 @@ We&#8217;ll start with some simple examples and work up to creating the executio
 
 * * *
 
-### An &#8220;Add&#8221; Function
+### An "Add" Function
 
 First, here&#8217;s a simple function that returns the sum of two numbers.
 
@@ -51,7 +51,7 @@ A better implementation of add, that would take a variable number of arguments i
 
 * * *
 
-### A &#8220;Multiple&#8221; Function
+### A "Multiple" Function
 
 Now, let&#8217;s create a function that returns a function that will return multiples of a number:
 

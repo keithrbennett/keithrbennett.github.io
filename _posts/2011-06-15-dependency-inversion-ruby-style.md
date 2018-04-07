@@ -188,7 +188,7 @@ class ReverseEncrypter
 end
 ```
 
-In a pluggable framework as described above, it can be helpful to validate all &#8220;foreign&#8221; (that is, not provided by the framework authors) components as thoroughly as possible. The approach above enables the validation to be done at will, either in unit tests or at runtime. It&#8217;s a trivial function call and takes virtually no time to execute.
+In a pluggable framework as described above, it can be helpful to validate all "foreign" (that is, not provided by the framework authors) components as thoroughly as possible. The approach above enables the validation to be done at will, either in unit tests or at runtime. It&#8217;s a trivial function call and takes virtually no time to execute.
 
 Another benefit of using this approach is that it naturally results in more thought given to the public interface. Do we really need all those methods? Do I need to change any method names so they don&#8217;t hint at implementation? Do I need to use a higher level object in my calling code to better insulate myself from the implementation?
 

@@ -8,7 +8,7 @@ permalink: /index.php/2009/03/30/the-loss-of-ones-adopted-country-another-result
 categories:
   - Uncategorized
 ---
-At a recent technical meeting I met a colleague with whom I&#8217;ve spoken from time to time. He is from India and has been working on an H-1 visa after getting his Masters degree at a state university here in the U.S. He, his wife, and his children have been here together for thirteen years, and consider this country their home.
+At a recent technical meeting I met a colleague with whom I've spoken from time to time. He is from India and has been working on an H-1 visa after getting his Masters degree at a state university here in the U.S. He, his wife, and his children have been here together for thirteen years, and consider this country their home.
 
 Now, because of the economic crisis, he is having a hard time finding work to keep his visa active. He told me that if he cannot find work within a couple of weeks, he will have to return to India. This would be a huge, sudden, and unwelcome upheaval for his family.
 
