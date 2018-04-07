@@ -1,8 +1,5 @@
 <!--From https://superdevresources.com/image-caption-jekyll/. -->
 
-
-<link rel="stylesheet" href="/css/image.css">
-
 <!-- _includes/image.html -->
 <div class="image-wrapper" >
     {% if include.url %}
@@ -13,7 +10,7 @@
     </a>
     {% endif %}
     {% if include.caption %}
-    <p class="image-caption">{{ include.caption }}</p>
+    <p class="image-caption" style="color:maroon; text-align: center;">{{ include.caption }}</p>
     {% endif %}
 </div>
 
