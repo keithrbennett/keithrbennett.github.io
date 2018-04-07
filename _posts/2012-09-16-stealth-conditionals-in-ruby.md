@@ -10,7 +10,7 @@ categories:
 ---
 When I first encountered the Ruby language in 2001, after working with Java, C++, and C for several years, I fell in love with it. How expressive, concise, clear, and malleable it is. A few years ago I even named a slide show [What I Love About Ruby.](https://speakerdeck.com/u/keithrbennett/p/what-i-love-about-ruby) I use it for presentations on beginning Ruby for novices.
 
-But there&#8217;s one thing in Ruby I haven&#8217;t gotten used to&#8230;the widespread use of what I call _stealth conditionals_, conditionals that are "hidden" in the middle of a one line statement, as in:
+But there's one thing in Ruby I haven't gotten used to...the widespread use of what I call _stealth conditionals_, conditionals that are "hidden" in the middle of a one line statement, as in:
 
 ```ruby
 do_something(foo, bar, baz) if some_condition
@@ -38,7 +38,7 @@ if some_condition; do_something(foo, bar, baz) end
 
 This is 50 characters long, while the original was 45 characters long. For an extra 5 characters, we get to see the conditional nature of the statement on the left margin of the line. To me, this is a cost that is small compared with its benefit.
 
-That said, sometimes the stealth placement is clearer. For example, below I use the two different strategies in the two unless sections to illustrate. I&#8217;ve intentionally disabled the Ruby color coding because we cannot count on it being present, and we want our code to be maximally understandable either way.
+That said, sometimes the stealth placement is clearer. For example, below I use the two different strategies in the two unless sections to illustrate. I've intentionally disabled the Ruby color coding because we cannot count on it being present, and we want our code to be maximally understandable either way.
 
 ```ruby
 # Process the row above
@@ -56,6 +56,6 @@ That said, sometimes the stealth placement is clearer. For example, below I use 
     end
 ```
 
-In this case, I prefer the lower approach. The special status of the left margin is best used to communicate the commonality of the three lines&#8217; operations. The _unless_ modifier clause is pretty clear, especially since I&#8217;ve added an extra space to set it apart from the expression before it. By the way, the adding of an extra space or two before a stealth conditional would probably be a good convention to follow.
+In this case, I prefer the lower approach. The special status of the left margin is best used to communicate the commonality of the three lines' operations. The _unless_ modifier clause is pretty clear, especially since I've added an extra space to set it apart from the expression before it. By the way, the adding of an extra space or two before a stealth conditional would probably be a good convention to follow.
 
-I do believe the case above to be the exception rather than the rule. Often, the line containing the stealth conditional is one of several in a method, and those lines don&#8217;t have much in common. In those cases, I recommend putting the _if_ or _unless_ first.
+I do believe the case above to be the exception rather than the rule. Often, the line containing the stealth conditional is one of several in a method, and those lines don't have much in common. In those cases, I recommend putting the _if_ or _unless_ first.

@@ -32,7 +32,7 @@ Therefore, I propose the following:
 
 A good presentation can offer cues and clues that assist the reader in quickly learning and understanding the content; a bad presentation is an obstacle rather than an aid.
 
-Individuals have differing degrees of sensitivity to presentation. Those who have no problem transcending lack of organization and visual cues find it difficult to understand those of us who do. This can cause tension among colleagues with differing attitudes and expectations. Which brings me to&#8230;
+Individuals have differing degrees of sensitivity to presentation. Those who have no problem transcending lack of organization and visual cues find it difficult to understand those of us who do. This can cause tension among colleagues with differing attitudes and expectations. Which brings me to...
 
 **Principle #2: Human minds differ greatly.**
 
@@ -68,7 +68,7 @@ is better as:
 for(int i = 0; i < max && (! foo) && (! bar); i++)
 ```
 
-&#8230;or some variation thereof.
+...or some variation thereof.
 
 ### Right Margins
 

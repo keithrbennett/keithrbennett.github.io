@@ -10,7 +10,7 @@ categories:
 ---
 The purpose of this article is to provide for you a clear and simple guide to setting up a nice Linux environment for Ruby software development and more. 
 
-I've been using Linux as a development environment on and off for a decade. In recent years I've leaned towards Mac OS, partly because I've been very disappointed in the Linux desktops' progress (or lack of it). Nevertheless, I use Linux on all my old PC laptops, and in VM's on my Macs. Enter Linux Mint, version 13&#8230;
+I've been using Linux as a development environment on and off for a decade. In recent years I've leaned towards Mac OS, partly because I've been very disappointed in the Linux desktops' progress (or lack of it). Nevertheless, I use Linux on all my old PC laptops, and in VM's on my Macs. Enter Linux Mint, version 13...
 
 I really like the new Linux Mint 13 Mate distro and decided to install it on several systems. The desktop is simple, intuitive, and clean, and underneath it's Ubuntu. Unlike the Ubuntu distro, however, Mint includes codecs that are needed for multimedia play. More information about multimedia software and the Mint installation itself is at <http://www.howtoforge.com/the-perfect-desktop-linux-mint-13-maya>. Besides functioning as a software development environment, another use for my Mint systems is to drive my HDTV with content from TV web sites, Hulu Plus, YouTube, Vimeo, etc. Unfortunately, Netflix streaming video does not work on Linux.
 
@@ -259,9 +259,9 @@ I use a `~/bin` directory for miscellaneous executables that I want to keep in m
 >mkdir ~/bin
 ```
     
-We&#8217;ll want to modify the PATH to contain this directory and the Java executable directory. Also, we define JAVA\_HOME and JDK\_HOME to be the Java software root; some software may look for these variables.
+We'll want to modify the PATH to contain this directory and the Java executable directory. Also, we define JAVA\_HOME and JDK\_HOME to be the Java software root; some software may look for these variables.
 
-In addition, you&#8217;ll probably want to redefine the terminal prompt to at least display the current directory. I define a prompt (`PS1` variable) below, but this PS1 syntax may not work for bash, and you may want to customize it to your own taste. Mine displays the previous command&#8217;s return value (0 for success, nonzero for failure), the time, the host name (convenient to differentiate from other hosts to which you may be logged in with ssh, etc.), and the current directory.
+In addition, you'll probably want to redefine the terminal prompt to at least display the current directory. I define a prompt (`PS1` variable) below, but this PS1 syntax may not work for bash, and you may want to customize it to your own taste. Mine displays the previous command's return value (0 for success, nonzero for failure), the time, the host name (convenient to differentiate from other hosts to which you may be logged in with ssh, etc.), and the current directory.
 
 Edit `~/.zshrc` to make the above changes:
     
@@ -280,7 +280,7 @@ export PS1="
 
 ### SSH Keys
 
-Create ssh keys, then upload them to anywhere you&#8217;ll need them (e.g. Github and Bitbucket). You can provide a passphrase when asked, but it&#8217;s not absolutely necessary.
+Create ssh keys, then upload them to anywhere you'll need them (e.g. Github and Bitbucket). You can provide a passphrase when asked, but it's not absolutely necessary.
     
 ```
 >ssh-keygen -t rsa
@@ -332,7 +332,7 @@ Flash is already installed, but an upgrade is available. Check <http://www.adobe
 
 ### Clojure
 
-Download from <http://clojure.org/downloads>. Then&#8230;
+Download from <http://clojure.org/downloads>. Then...
 
 ```
 >cd /opt

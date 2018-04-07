@@ -20,7 +20,7 @@ The fact that some of these methods are used only by one other method
 is never communicated by the code; the reader has to discover that for him/herself.
 
 The number of possible interactions among the instance methods is one of many measures
-of our software&#8217;s complexity. The number of possible instance method interactions
+of our software's complexity. The number of possible instance method interactions
 is `(method_count * (method_count) - 1)`. Using this formula, a class with 10 methods
 will have a complexity of 90. If 4 of those methods are used by only 1 other method,
 and we could move them inside those methods, the complexity would plummet 
@@ -38,7 +38,7 @@ from afar! So using methods would be cleaner and safer.
 Another weakness of using lambdas for this purpose is that, unlike methods
 that are created at interpret time, lambdas are objects created at runtime --; 
 so if a method creating 2 lambdas is called a million times in a loop, 
-you&#8217;ll need to create and garbage collect another 2 million objects. 
+you'll need to create and garbage collect another 2 million objects. 
 (This can be circumvented by defining the lambdas as class constants or assigning them
 to instance variables, but then they might as well be instance methods.)
 

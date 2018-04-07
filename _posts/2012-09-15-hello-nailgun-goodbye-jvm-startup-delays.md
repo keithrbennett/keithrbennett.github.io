@@ -16,7 +16,7 @@ One of the frustrations of working with JRuby is that every single time you run 
 jruby -e 'puts(123)'  1.94s user 0.11s system 178% cpu 1.144 total
 ```
 
-If you&#8217;re using JRuby, and working with gem, rspec, irb, and other JRuby tools, this waiting time adds up and can be frustrating.
+If you're using JRuby, and working with gem, rspec, irb, and other JRuby tools, this waiting time adds up and can be frustrating.
 
 ### Enter Nailgun
 
@@ -28,11 +28,11 @@ To start the server, just run:
 >jruby --ng-server  # 'jruby' can be replaced with 'ruby' if running in rvm
 ```
 
-To connect to it, all you need to do is add "&#8211;ng" to the JRuby command or the JRUBY\_OPTS environment variable&#8217;s value. If you always wanted to use it, you could just include "&#8211;ng" in the export of JRUBY\_OPTS in your startup script (.bashrc, .zshrc, etc.). However, this may not be a good idea. The Nailgun web site says "&#8230;it&#8217;s not secure. Not even close". In addition, you probably want longer running tasks to have their own JVM&#8217;s. This being the case, it can be better to default to _not_ use Nailgun, instead specifying the use of it when needed.
+To connect to it, all you need to do is add "&#8211;ng" to the JRuby command or the JRUBY\_OPTS environment variable's value. If you always wanted to use it, you could just include "&#8211;ng" in the export of JRUBY\_OPTS in your startup script (.bashrc, .zshrc, etc.). However, this may not be a good idea. The Nailgun web site says "...it's not secure. Not even close". In addition, you probably want longer running tasks to have their own JVM's. This being the case, it can be better to default to _not_ use Nailgun, instead specifying the use of it when needed.
 
-In my work, I found that I always wanted to use Nailgun with utilities (rspec, irb, etc.), but that I couldn&#8217;t use it with my gem&#8217;s bin executable running in 1.9 mode. (I believe this is fixed in a 1.7 version of JRuby.) So here&#8217;s what I did&#8230;
+In my work, I found that I always wanted to use Nailgun with utilities (rspec, irb, etc.), but that I couldn't use it with my gem's bin executable running in 1.9 mode. (I believe this is fixed in a 1.7 version of JRuby.) So here's what I did...
 
-I created the scripts below in my ~/bin directory. (I use a ~/bin directory for home grown scripts and such that I don&#8217;t want to bother installing in a root-owned directory.)
+I created the scripts below in my ~/bin directory. (I use a ~/bin directory for home grown scripts and such that I don't want to bother installing in a root-owned directory.)
 
 * * *
 
@@ -86,7 +86,7 @@ _nirb_:
 
 * * *
 
-This can also be done with rails, of course, but I haven&#8217;t tested it thoroughly, so I suggest keeping an eye on things to make sure it works ok.
+This can also be done with rails, of course, but I haven't tested it thoroughly, so I suggest keeping an eye on things to make sure it works ok.
 
 _nrails_:
 
@@ -114,9 +114,9 @@ rehash
 
 It would probably be simpler to create aliases instead of shell scripts, but I like being able to easily modify these kinds of scripts, sometimes with multiple lines, so this works well for me.
 
-If you&#8217;ll be executing the code below, make sure you&#8217;ve started the Nailgun server, either using the _ngs_ script we created, or the command shown at the top of the article.
+If you'll be executing the code below, make sure you've started the Nailgun server, either using the _ngs_ script we created, or the command shown at the top of the article.
 
-The scripts will not _always_ work. When the arguments include quoted strings that include spaces, things may get messed up. Here&#8217;s an example:
+The scripts will not _always_ work. When the arguments include quoted strings that include spaces, things may get messed up. Here's an example:
 
 ```
 >>nruby -e "puts 123"  # (produces blank string)
@@ -133,7 +133,7 @@ Running the same trivial Ruby script as before, but with Nailgun this time, we g
 nruby -e 'puts(123)'  0.00s user 0.01s system 3% cpu 0.197 total
 ```
 
-I recently needed to do some cycles of delete gem; build gem; install gem. This was easy to put together on a single line so I could just scroll up my history to repeat the process. Here are the timings, first without, and then with, Nailgun. I&#8217;ve removed irrelevant output for brevity&#8217;s sake.
+I recently needed to do some cycles of delete gem; build gem; install gem. This was easy to put together on a single line so I could just scroll up my history to repeat the process. Here are the timings, first without, and then with, Nailgun. I've removed irrelevant output for brevity's sake.
 
 _Without_ Nailgun:
 

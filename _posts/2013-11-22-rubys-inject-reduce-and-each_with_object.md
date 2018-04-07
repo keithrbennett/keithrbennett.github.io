@@ -34,7 +34,7 @@ def concise_sum(numbers)
   numbers.inject(0) { |sum, n| sum += n }
 end
 ```
-&#8230;which can be reduced even further, since we&#8217;re calling a method on each object
+...which can be reduced even further, since we&#8217;re calling a method on each object
 that takes no arguments (the `+` method):
 
 ```ruby
@@ -88,7 +88,7 @@ I remember the order by remembering that it&#8217;s the same order listed
 in the method name itself --; _each_ is the object for each iteration and comes first,
 and _with_object_ is the memo object and comes next.
 
-When we run this code, we get&#8230;zero. WTF!?!?!?!?
+When we run this code, we get...zero. WTF!?!?!?!?
 
 Let&#8217;s see if it works using a hash instead. For the example, 
 this hash will contain each number as a key, with the key&#8217;s `to_s` 
@@ -151,7 +151,7 @@ Hash is now {1=>"1", 2=>"2", 3=>"3"}.
 ```
 
 
-A minor point about my choice of `hsh` as a variable name&#8230;it&#8217;s a good idea not to use `hash` 
+A minor point about my choice of `hsh` as a variable name...it&#8217;s a good idea not to use `hash` 
 as a variable name, because, in any object that is a class that includes `Kernel` in its ancestors,
 `hash` will be a method name:
 

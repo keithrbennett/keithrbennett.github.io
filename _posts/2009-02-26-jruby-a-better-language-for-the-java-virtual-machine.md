@@ -25,19 +25,19 @@ A powerful synergy results when combining the power, reliability, portability, a
 
 In order to contrast Java and JRuby, and showcase the above features, we will implement a Fahrenheit/Celsius temperature converter in both Java and JRuby that uses Java Swing as its GUI library. The source code can be found at <a title="http://is.gd/n3Je" href="http://is.gd/n3Je" target="_blank">http://is.gd/n3Je</a>. (The Git repo main page for this project is at <http://github.com/keithrbennett/multilanguage-swing>. The README file has instructions for how to run the Java, Ruby, and Clojure versions.
 
-Here is an image of the application&#8217;s sole window.  There are text fields for entering the temperature, and buttons and menu items to perform the conversions, clear the text fields, and exit the program.
+Here is an image of the application's sole window.  There are text fields for entering the temperature, and buttons and menu items to perform the conversions, clear the text fields, and exit the program.
 
 {% include image.html img="/assets/fahrenheit-celsius-converter.png" title="Fahrenheit-Celsius Converter" %}
 
-We&#8217;ll get to JRuby soon, but first a little about the Swing issues we&#8217;ll be addressing in comparing JRuby with Java.
+We'll get to JRuby soon, but first a little about the Swing issues we'll be addressing in comparing JRuby with Java.
 
 Swing enables the sharing of behavior among visual components such as menu items and buttons via the sharing of Action objects (or, to be precise, implementations of the `javax.swing.Action` interface).  So, for example, in this app there is a single Exit action object shared by both the Exit button and the Exit item of the File Menu (that is, both the button and menu item contain references to the same action).
 
-When an action is modified, as, for example, to enable or disable it, then all components expressing that action modify their state and appearance accordingly.  When the program starts up, the conversion and clear buttons&#8217; actions are not appropriate given that both text fields are empty; therefore, those actions are disabled.  Although you can&#8217;t see it in this picture, in addition to the buttons being disabled, the corresponding menu items are disabled as well.
+When an action is modified, as, for example, to enable or disable it, then all components expressing that action modify their state and appearance accordingly.  When the program starts up, the conversion and clear buttons' actions are not appropriate given that both text fields are empty; therefore, those actions are disabled.  Although you can't see it in this picture, in addition to the buttons being disabled, the corresponding menu items are disabled as well.
 
 Swing is pretty good about conforming to the MVC (model/view/controller) principle.  Even the lowly text field contains a reference to a model, which is an implementation of the `javax.swing.text.Document` interface.  You can attach listeners to this model, so that when the text changes you can inspect the contents and respond accordingly.  (A common Swing programming mistake is to listen to keyboard events instead, but this does not catch some cut and paste events, nor the programmatic setting of the content.)
 
-These two Swing features enable the effective, clean, and dry implementation of enabling and disabling of action components based on the program&#8217;s state at any given time.  We merely attach document listeners to the text fields that hook into text changes, and enable or disable the actions as appropriate when they are called.
+These two Swing features enable the effective, clean, and dry implementation of enabling and disabling of action components based on the program's state at any given time.  We merely attach document listeners to the text fields that hook into text changes, and enable or disable the actions as appropriate when they are called.
 
 Unfortunately, the Swing `DocumentListener` interface requires implementing behavior for three different types of text events (change, insert, and remove), and provides no way to simply specify a single behavior that will be applied to all three. (In fact, in several years of Swing programming I never encountered a case where the respective events needed to be handled differently, for performance or any other reason.)  We will therefore create an adapter that remedies this.  The implementations of this adapter in Java and JRuby will highlight the greater flexibility of JRuby through its support of code blocks as first class objects and its syntactic sugar that makes passing hash entries more natural.
 
@@ -76,7 +76,7 @@ public abstract class SimpleDocumentListener implements DocumentListener {
 }
 ```
 
-Here&#8217;s how the class is used to enable the Fahrenheit to Celsius conversion only when there is a number in the Fahrenheit text field:
+Here's how the class is used to enable the Fahrenheit to Celsius conversion only when there is a number in the Fahrenheit text field:
 
 ```java
 fahrTextField.getDocument().addDocumentListener(new SimpleDocumentListener() {
@@ -88,7 +88,7 @@ fahrTextField.getDocument().addDocumentListener(new SimpleDocumentListener() {
 
 Although the anonymous inner class specification is concise, you are still creating another class. Furthermore, because the behavior must live within a class, it is more difficult to reuse the functionality in multiple places.
 
-In contrast, JRuby supports code blocks and objects such as lambdas that enable specifying the behavior by itself, without requiring the ceremony of creating an entire class to contain it. We exploit this by implementing the JRuby adapter as a class that is instantiated with such a code block or object. Here&#8217;s the JRuby implementation of `SimpleDocumentListener`:
+In contrast, JRuby supports code blocks and objects such as lambdas that enable specifying the behavior by itself, without requiring the ceremony of creating an entire class to contain it. We exploit this by implementing the JRuby adapter as a class that is instantiated with such a code block or object. Here's the JRuby implementation of `SimpleDocumentListener`:
 
 ```ruby
 # Simple implementation of javax.swing.event.DocumentListener that
@@ -124,7 +124,7 @@ class SimpleDocumentListener
 end
 ```
 
-And here&#8217;s how it is used:
+And here's how it is used:
 
 ```ruby
 fahr_text_field.getDocument.addDocumentListener(
@@ -163,7 +163,7 @@ private class ExitAction extends AbstractAction {
 
 As you see, putValue is used to store key/value pairs in the action. There are multiple options; they are listed in a table at <http://java.sun.com/javase/6/docs/api/javax/swing/Action.html>.
 
-In Ruby, we create an adapter class that allows specifying the action&#8217;s name, options (tooltip text and keyboard accelerator in this case), and behavior:
+In Ruby, we create an adapter class that allows specifying the action's name, options (tooltip text and keyboard accelerator in this case), and behavior:
 
 ```ruby
 require 'java'
@@ -229,7 +229,7 @@ end
 
 Note the initialize method. The options parameter default to nil, but if any key value pairs are specified, they will be contained in a hash instance named _options_. The _options.each_ line illustrates a small part of the power of functional programming in Ruby. Iterating over the contents of the hash is clear and concise. For each key value pair, _putValue_ is called with the key and the value, in that order. The whole thing is done only if _options_ is not nil.
 
-Here&#8217;s how the exit action is specified in the JRuby program:
+Here's how the exit action is specified in the JRuby program:
 
 ```ruby
 self.exit_action = SwingAction.new("Exit",
@@ -241,8 +241,8 @@ self.exit_action = SwingAction.new("Exit",
         end
 ```
 
-While this may seem a bit crowded at first glance, notice that you are passing the name, options, and behavior, in that order. In that sense it is a logical and legible call. The _=>_ operator aids in visual recognition of the key/value pairs, so it&#8217;s easy for the eye to identify the various parts of this call.
+While this may seem a bit crowded at first glance, notice that you are passing the name, options, and behavior, in that order. In that sense it is a logical and legible call. The _=>_ operator aids in visual recognition of the key/value pairs, so it's easy for the eye to identify the various parts of this call.
 
 You can see that the two hash entries are passed as if they were two separate parameters. However, the function to which they are passed will see them as a single hash instance containing those two key/value pairs. The _do/end_ pair specifies a literal code block which will be seen by the function as the behavior parameter. We could also have passed a variable containing a lambda or a proc.
 
-Although the JRuby features described here require some learning for the Java programmer, that learning is, in my opinion, well worth the cost. The greater conciseness, power, and flexibility of JRuby make writing Swing apps shorter, easier, and of higher quality. And we&#8217;ve only scratched the surface of JRuby -- there&#8217;s much, much more.
+Although the JRuby features described here require some learning for the Java programmer, that learning is, in my opinion, well worth the cost. The greater conciseness, power, and flexibility of JRuby make writing Swing apps shorter, easier, and of higher quality. And we've only scratched the surface of JRuby -- there's much, much more.

@@ -18,7 +18,7 @@ A couple of days ago I attended an interesting discussion of metaprogramming by 
 
 (Feel free to offer suggestions and corrections, and I&#8217;ll try to update the article accordingly.)
 
-Dave Thomas, in his excellent Advanced Ruby training, emphasizes the value of knowing just who _self_ is at any point in the code. (For a good time, bounce around an rspec source file and try to guess what _self_ is in various places&#8230;).
+Dave Thomas, in his excellent Advanced Ruby training, emphasizes the value of knowing just who _self_ is at any point in the code. (For a good time, bounce around an rspec source file and try to guess what _self_ is in various places...).
 
 _class_eval_ provides an alternate way to define characteristics of a class. It should be used only when absolutely necessary. The only legitimate use I can think of is when the necessary code cannot be known until runtime.
 
@@ -77,7 +77,7 @@ NoMethodError: undefined method `class_eval' for #
 	from :0
 ```
 
-No, this didn&#8217;t work&#8230;but wait a minute, isn&#8217;t class_eval a Kernel method? Let&#8217;s find out:
+No, this didn&#8217;t work...but wait a minute, isn&#8217;t class_eval a Kernel method? Let&#8217;s find out:
 
 ```ruby
 > Kernel.methods.include? 'class_eval'
@@ -98,7 +98,7 @@ It doesn&#8217;t, but _Class_ does:
 => true
 ```
 
-&#8230;which is why the Kernel.methods.include? above worked.
+...which is why the Kernel.methods.include? above worked.
 
 Although _class_eval_ didn&#8217;t work, _instance_eval_ will work:
 
@@ -126,7 +126,7 @@ To illustrate that foo has not been created as a class or member function on cla
  => true
 ```
 
-Could _eval_ be substituted for _instance_eval_ in the same way as it was for _class_eval_? Let&#8217;s find out&#8230;
+Could _eval_ be substituted for _instance_eval_ in the same way as it was for _class_eval_? Let&#8217;s find out...
 
 ```ruby
 >>   class F2

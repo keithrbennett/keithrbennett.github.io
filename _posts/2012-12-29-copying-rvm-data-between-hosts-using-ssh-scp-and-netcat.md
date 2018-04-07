@@ -24,7 +24,7 @@ A very simple way to do this is to use `scp` (secure copy, over ssh) with the `-
 >scp -r source_spec destination_spec
 ```
 
-&#8230;where source\_spec and destination\_spec can be local or remote file or directory specifications. (I'll use the term _filespec_ to refer to both.) Remote filespecs should be in the format _user@host:filespec_. Don't forget the colon, or the copy will be saved to the local host with a strange name! Here is an example that works correctly:
+...where source\_spec and destination\_spec can be local or remote file or directory specifications. (I'll use the term _filespec_ to refer to both.) Remote filespecs should be in the format _user@host:filespec_. Don't forget the colon, or the copy will be saved to the local host with a strange name! Here is an example that works correctly:
 
 ```
 ># To create ~/.rvm on the destination:

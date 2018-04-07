@@ -40,11 +40,11 @@ Although the paragraph mentions a date, the code refers to a version. In any cas
 
 In addition, including version information usually embeds dependency on a specific version control system in the source code, and thereby increases the cost of switching version control systems. Even worse is manual modification of version numbers, which is highly error prone (I hope no one actually does this). In my experience in recent years, source code is rarely printed, and developers rarely have confusion over whether they are working on the head of the trunk or some other version. In the unusual case that the developer has any confusion about the version number, he/she can consult the IDE or version control system.
 
-Regarding the author information (which is included in the paragraph but not the example code), I have mixed feelings about that. It's nice to know who to consult, but on the other hand, it&#8217;s a very rough and potentially outdated piece of information. Much more information can be found, quite easily, by doing a version control annotate. Also, these author comments are biased toward the original author. Does anyone have any hard and fast rules about at what point a new author should be added? It may be done inconsistently within a team, or over time. So the author information included in the header may not be as accurate as it seems.
+Regarding the author information (which is included in the paragraph but not the example code), I have mixed feelings about that. It's nice to know who to consult, but on the other hand, it's a very rough and potentially outdated piece of information. Much more information can be found, quite easily, by doing a version control annotate. Also, these author comments are biased toward the original author. Does anyone have any hard and fast rules about at what point a new author should be added? It may be done inconsistently within a team, or over time. So the author information included in the header may not be as accurate as it seems.
 
 **4. Indentation**
   
-I suggest spaces, never tab characters; the tab setting of 8 is in that case irrelevant. On the other hand, if there is any possibility of a tab character sneaking in, I&#8217;d suggest setting tab width to 4.
+I suggest spaces, never tab characters; the tab setting of 8 is in that case irrelevant. On the other hand, if there is any possibility of a tab character sneaking in, I'd suggest setting tab width to 4.
 
 
 **4.1. Line Length**
@@ -135,7 +135,7 @@ I suggest permitting (or even suggesting) two blank lines as method separators. 
 Variable names should be short yet meaningful.
  
   
-I&#8217;d like to add:
+I'd like to add:
 
 "In cases where making a variable name longer eliminates the need for an explanatory comment, this guideline may be relaxed somewhat."
 
@@ -145,7 +145,7 @@ I&#8217;d like to add:
 
 Use XXX in a comment to flag something that is bogus but works. Use FIXME to flag something that is bogus and broken.
 
-I think "KLUDGE" is more expressive and universal than "XXX". "KLUDGE" can successfully be looked up on Google. "XXX" can be also, but you wouldn&#8217;t find anything about software. 😉
+I think "KLUDGE" is more expressive and universal than "XXX". "KLUDGE" can successfully be looked up on Google. "XXX" can be also, but you wouldn't find anything about software. 😉
 
 **11.1 Java Source Code Example** 
 
@@ -161,4 +161,4 @@ The tokens are probably meant for substitution by a version control system. I su
 
 * * *
 
-That&#8217;s what I think, but my beliefs are a function of my finite knowledge and experience. There may be other ways of viewing these issues. What do _you_ think?
+That's what I think, but my beliefs are a function of my finite knowledge and experience. There may be other ways of viewing these issues. What do _you_ think?

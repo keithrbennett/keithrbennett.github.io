@@ -20,7 +20,7 @@ Here's a screen shot:
 
 {% include image.html img="/assets/life-game-viewer7.png" caption="Game of Life Viewer" title="Game of Life Viewer" %}
 
-  In case you don't recognize the face, it's Alfred E. Neuman, made famous by Mad magazine, but, as I just learned this minute from Wikipedia (I read it there so it <em>must</em> be true), "[his] face had drifted through American pictography for decades before being claimed and named by <em>Mad</em>&#8230;"&#8230;but I digress&#8230;
+  In case you don't recognize the face, it's Alfred E. Neuman, made famous by Mad magazine, but, as I just learned this minute from Wikipedia (I read it there so it _must_ be true), "[his] face had drifted through American pictography for decades before being claimed and named by _Mad_..."...but I digress...
 
 You can install the gem in the usual way (make sure you're in JRuby when you do):
 
