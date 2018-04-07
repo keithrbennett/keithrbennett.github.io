@@ -18,8 +18,9 @@ We often have poor or nonexistent Internet connectivity, and client/server seeme
 
 Here&#8217;s a screen shot:
 
-![screenshot]({{ site.url }}/assets/life-game-viewer7.png)
+`![screenshot]({{ site.url }}/assets/life-game-viewer7.png)`
 
+{% include image.html img="/assets/life-game-viewer7.png" caption="This is an image." %}
 
   In case you don&#8217;t recognize the face, it&#8217;s Alfred E. Neuman, made famous by Mad magazine, but, as I just learned this minute from Wikipedia (I read it there so it <em>must</em> be true), &#8220;[his] face had drifted through American pictography for decades before being claimed and named by <em>Mad</em>&#8230;&#8221;&#8230;but I digress&#8230;
 
