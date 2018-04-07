@@ -50,7 +50,7 @@ The solution I chose was to:
 
 1) download it to a directory outside of my project (/opt/oracle-jdbc/ojdbc6.jar)
 
-2) have an environment variable point to it &#8212; I added this to my ~/.zshrc file (you might use ~/.bashrc instead):
+2) have an environment variable point to it --; I added this to my ~/.zshrc file (you might use ~/.bashrc instead):
 
 ```
 >export ORACLE_JDBC_JAR=/opt/oracle-jdbc/ojdbc6.jar

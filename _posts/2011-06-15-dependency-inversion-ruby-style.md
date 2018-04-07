@@ -14,7 +14,7 @@ categories:
 ---
 I recently encountered a situation in which I was writing data to a key/value data store. There was a code layer that insulated the business logic layer from the data store internals. I wanted to be able to unit test this business logic without needing access to the data store.
 
-I could mock the data access layer, but I wanted something more functional &#8212; something that would _behave_ like the data store layer, and possibly even be used to test it. I decided to write something mimicking the production data store layer that used a Ruby Hash for storage. How could I use the language to help me know that I had faithfully reproduced all the functions in the original object?
+I could mock the data access layer, but I wanted something more functional --; something that would _behave_ like the data store layer, and possibly even be used to test it. I decided to write something mimicking the production data store layer that used a Ruby Hash for storage. How could I use the language to help me know that I had faithfully reproduced all the functions in the original object?
   
 ### Dependency Inversion
 
@@ -38,11 +38,11 @@ If you&#8217;ve coded in Java, you&#8217;ll recognize that this principle is wha
 
 ### Ruby&#8217;s Duck Typing
 
-Ruby uses duck typing, which eliminates the need for #1. Unlike Java with its compile time checking, Ruby doesn&#8217;t verify the existence of the method before it&#8217;s actually called &#8212; it trusts the method to be there, and calls it, raising an error if it doesn&#8217;t exist, and is not handled by a method_missing function. In addition, in Ruby, references are not typed, eliminating the need for #2. 
+Ruby uses duck typing, which eliminates the need for #1. Unlike Java with its compile time checking, Ruby doesn&#8217;t verify the existence of the method before it&#8217;s actually called --; it trusts the method to be there, and calls it, raising an error if it doesn&#8217;t exist, and is not handled by a method_missing function. In addition, in Ruby, references are not typed, eliminating the need for #2. 
 
 In this way, Ruby makes dependency inversion effortless and automatic. 
 
-Many Ruby developers believe the Java interface approach to be obtrusive and verbose. However, there can be issues with Ruby&#8217;s permissive approach as well. For example, while relying on duck typing is convenient, we want noncompliant implementations to fail quickly and gracefully. Using duck typing alone, the absence of a method will be detected only when it is called &#8212; and in the absence of adequate unit testing (which could be beyond one&#8217;s control), this could result in premature termination of a long job, or the detection of the error months after its introduction. 
+Many Ruby developers believe the Java interface approach to be obtrusive and verbose. However, there can be issues with Ruby&#8217;s permissive approach as well. For example, while relying on duck typing is convenient, we want noncompliant implementations to fail quickly and gracefully. Using duck typing alone, the absence of a method will be detected only when it is called --; and in the absence of adequate unit testing (which could be beyond one&#8217;s control), this could result in premature termination of a long job, or the detection of the error months after its introduction. 
 
 In addition, it would be helpful to show the user _all_ the methods that are missing, not just the one that was called. Duck typing will not do that; it will throw a NoMethodError only for the method called.
 
@@ -52,7 +52,7 @@ There are other problems with relying exclusively on duck typing. Where can the 
 
 For the same reason that self documenting code is better than comments, these required methods should be expressed as executable code rather than included in some documentation file. Further, this promise is such an important part of the class&#8217; existence, that it makes sense to include it somewhere inside the class definition. (The promise could live here even if we only validate the class&#8217; adherence to the contract during unit testing.)
 
-Sometimes this will be overkill &#8212; if we have complete control over our source code, then we can unit test to our heart&#8217;s delight, and guarantee that only thoroughly tested code makes it to production. However, there are some situations in which more verification would be helpful.
+Sometimes this will be overkill --; if we have complete control over our source code, then we can unit test to our heart&#8217;s delight, and guarantee that only thoroughly tested code makes it to production. However, there are some situations in which more verification would be helpful.
 
 ### An Illustrative Example
 

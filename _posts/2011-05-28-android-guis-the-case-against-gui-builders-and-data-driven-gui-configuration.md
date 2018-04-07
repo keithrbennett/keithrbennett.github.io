@@ -26,7 +26,7 @@ Consider what would have happened, though, if our GUI configurations had been en
 
 Even if the rework were done with a GUI builder it would have been a lot of repetitive work. Note too, that in all the cases above, the work involved to make a change does not decrease very much with each successive change. Because of the huge cost of change, the natural result is a fierce resistance to proposed improvements by developers and management alike.
 
-#### Mitigating the Damage &#8212; Using Custom Components instead of Framework Components
+#### Mitigating the Damage --; Using Custom Components instead of Framework Components
 
 However, this could work much better by assembling pre-built custom project components. These project components would configure and combine framework components and conform to the project-wide settings without the need for any attention by the developer that uses them.
 
@@ -46,7 +46,7 @@ So, if using both code and XML present a problematic disconnect, why not use onl
 
 While formatting and color coding XML code help make it a little more readable, it is nevertheless not very efficient at communicating. Consider, for example, a twenty line element repeated twenty times, where all elements vary only in the value of a single integer. Source code could easily communicate the similarities and differences, whereas XML would hide them.
 
-#### Android &#8212; Java and XML
+#### Android --; Java and XML
 
 The Android development team encourages the use of XML rather than Java code for defining user interface elements. The Java language is verbose, rigid, and ceremonial, so defining the user interfaces in code is not that dramatic an improvement over XML.
 

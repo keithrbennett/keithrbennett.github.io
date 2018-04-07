@@ -85,7 +85,7 @@ end
 
 Note that the order of the parameters is reversed, compared with inject. 
 I remember the order by remembering that it&#8217;s the same order listed 
-in the method name itself &#8212; _each_ is the object for each iteration and comes first,
+in the method name itself --; _each_ is the object for each iteration and comes first,
 and _with_object_ is the memo object and comes next.
 
 When we run this code, we get&#8230;zero. WTF!?!?!?!?

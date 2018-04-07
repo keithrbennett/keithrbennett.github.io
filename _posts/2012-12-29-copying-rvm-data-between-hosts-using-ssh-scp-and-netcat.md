@@ -14,7 +14,7 @@ As test data, I decided to use RVM's hidden control directory, `~/.rvm`. I delet
 
 I haven't tested this, but I imagine that for installing rvm on multiple similar systems (e.g. those with compatible native compilers, libraries, etc.), it may be possible to save a lot of time by a full install of rubies and gems on only one machine, then on the others doing a minimal install of rvm and then copying the fully populated .rvm directory.
 
-## Not So Good &#8212; Using scp
+## Not So Good --; Using scp
 
 _Note: This approach requires that the ssh port (22) be open on the destination host, and sshd is running. On the Mac, this is done by enabling "Remote Login" in the Sharing Preferences._ 
 
@@ -82,7 +82,7 @@ Because scp ignores the alias' symbolic link status, all the links above have a 
 
 * * *
 
-## Better &#8212; Using tar with nc
+## Better --; Using tar with nc
 
 _nc_, also known as _netcat_, is a utility that, at its simplest, merely simulates _cat_ over a network. That is, nc reads from sockets and writes to sockets where cat reads from stdin and writes to stdout. Execute `man nc` to find out more about it. Combining the netcat and tar commands on both the source and destination, you can:
 
@@ -126,7 +126,7 @@ This approach results in the correct handling of symbolic links. In addition, it
 
 * * *
 
-## Best &#8212; Using tar with ssh
+## Best --; Using tar with ssh
 
 _Note: This approach assumes that the source host's ssh port is open and sshd is running._ 
   
