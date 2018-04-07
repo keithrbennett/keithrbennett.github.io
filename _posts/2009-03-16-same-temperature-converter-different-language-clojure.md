@@ -20,7 +20,7 @@ Code written in Lisp or Clojure may appear to the uninitiated to be a confusing 
 
 The Clojure community is a bright and helpful bunch; I often consulted them on the _#clojure_ IRC channel, and the Google group at <http://groups.google.com/group/clojure> has had some very useful information as well.
 
-The previous article ([JRuby — A Better Language for the Java Virtual Machine](http://krbtech.wordpress.com/2009/02/26/jruby-a-better-language-for-the-java-virtual-machine/)) discussed using JRuby as a better language for programming on the JVM, and used as an example a Fahrenheit/Celsius temperature conversion Swing program. I&#8217;ve ported this program to Clojure so that we can contrast Clojure with Java and JRuby using a known quantity.
+The previous article ([JRuby — A Better Language for the Java Virtual Machine]({% post_url 2009-02-26-jruby-a-better-language-for-the-java-virtual-machine %})) discussed using JRuby as a better language for programming on the JVM, and used as an example a Fahrenheit/Celsius temperature conversion Swing program. I&#8217;ve ported this program to Clojure so that we can contrast Clojure with Java and JRuby using a known quantity.
 
 Here is an image of the application&#8217;s sole window. There are text fields for entering the temperature, and buttons and menu items to perform the conversions, clear the text fields, and exit the program.<figure id="attachment_13" class="thumbnail wp-caption aligncenter" style="width: 509px">
 
@@ -38,11 +38,11 @@ If you can access the REPL interactive Clojure command line, you can issue the f
 
 The strengths of Clojure are many, and a Swing application is not the best program with which to showcase them. Therefore, it would not be fair to judge Clojure based solely on the content of this article, because I am intentionally excluding its greatest strengths &#8212; they are outside of the scope of porting this Swing application, and I am not yet expert enough to be qualified to teach about them. However, this article _is_ useful in illustrating some of the mechanics and philosophy of the language that can be used in general programming.
 
-Firstly, Clojure (and, by extension, Lisp) struck me as a language that easily enables the writing of clear, concise, and logically structured code. I&#8217;m a big fan of this, as you will know if you have read my [Applying User Interface Design to Source Code](http://krbtech.wordpress.com/2008/11/28/applying-user-interface-design-to-source-code/) article.
+Firstly, Clojure (and, by extension, Lisp) struck me as a language that easily enables the writing of clear, concise, and logically structured code. I&#8217;m a big fan of this, as you will know if you have read my [Applying User Interface Design to Source Code]({% post_url 2008-11-28-applying-user-interface-design-to-source-code %}) article.
 
 # Let
 
-For example, _let_ (see <http://clojure.org/special_forms#let>) is a construct that formalizes the definition of terms and their scope. Here&#8217;s an example of a function that uses it:
+For example, `let` (see <http://clojure.org/special_forms#let>) is a construct that formalizes the definition of terms and their scope. Here&#8217;s an example of a function that uses it:
 
 ```clojure
 (defn center-on-screen
@@ -63,11 +63,11 @@ reported by the Java runtime."
   component)
 ```
 
-The let clause above leaves no doubt 1) that those terms are inaccessible outside of the let clause, and 2) that all terms are colocated at the beginning of the let clause. The first feature is available in other languages such as Java, though it is (unfortunately) rarely used &#8212; I&#8217;m speaking of nesting some of a method&#8217;s code in curly braces without any enclosing for, if, do, or while, for the sole purpose of limiting the scope of the local variables used therein.
+The `let` clause above leaves no doubt 1) that those terms are inaccessible outside of the `let` clause, and 2) that all terms are colocated at the beginning of the `let` clause. The first feature is available in other languages such as Java, though it is (unfortunately) rarely used &#8212; I&#8217;m speaking of nesting some of a method&#8217;s code in curly braces without any enclosing for, if, do, or while, for the sole purpose of limiting the scope of the local variables used therein.
 
-Variables in the let clause can use preceding variables, so it easily facilitates the use of intermediate variables for simplicity and clarity. For example, the screen-width and screen-height variables above use the screen-size variable defined before them.
+Variables in the `let` clause can use preceding variables, so it easily facilitates the use of intermediate variables for simplicity and clarity. For example, the screen-width and screen-height variables above use the screen-size variable defined before them.
 
-In the above function, the let clause is the only content of this function. However, when this is not the case, and the function contains other code, the let clause clearly and cleanly displays for the writer a refactoring opportunity, namely the opportunity to extract the let clause into a function by itself.
+In the above function, the `let` clause is the only content of this function. However, when this is not the case, and the function contains other code, the `let` clause clearly and cleanly displays for the writer a refactoring opportunity, namely the opportunity to extract the `let` clause into a function by itself.
 
 # Lambdas
 
@@ -88,7 +88,7 @@ As a functional language, the creation of a chunk of behavior that can be assign
   ;; ...
 ```
 
-In the code above, a minimal lambda is created (the code between _#(_ and _)_), and then used to create two panels immediately below. In Java you would need to create a method to do this, probably either another instance method of the same class, or a static utility method of the same or another class. The Clojure approach is superior because a) the lambda&#8217;s code is invisible outside of the function (and even the let clause) in which it is used, and b) it appears in the code immediately adjacent to its use.
+In the code above, a minimal lambda is created (the code between _#(_ and _)_), and then used to create two panels immediately below. In Java you would need to create a method to do this, probably either another instance method of the same class, or a static utility method of the same or another class. The Clojure approach is superior because a) the lambda&#8217;s code is invisible outside of the function (and even the `let` clause) in which it is used, and b) it appears in the code immediately adjacent to its use.
 
 # Macros
 

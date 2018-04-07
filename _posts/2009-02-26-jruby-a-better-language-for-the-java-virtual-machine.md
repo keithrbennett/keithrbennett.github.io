@@ -25,23 +25,23 @@ A powerful synergy results when combining the power, reliability, portability, a
 
 In order to contrast Java and JRuby, and showcase the above features, we will implement a Fahrenheit/Celsius temperature converter in both Java and JRuby that uses Java Swing as its GUI library. The source code can be found at <a title="http://is.gd/n3Je" href="http://is.gd/n3Je" target="_blank">http://is.gd/n3Je</a>. (The Git repo main page for this project is at <http://github.com/keithrbennett/multilanguage-swing>. The README file has instructions for how to run the Java, Ruby, and Clojure versions.
 
-Here is an image of the application&#8217;s sole window.  There are text fields for entering the temperature, and buttons and menu items to perform the conversions, clear the text fields, and exit the program.<figure id="attachment_13" class="thumbnail wp-caption aligncenter" style="width: 509px">
+Here is an image of the application&#8217;s sole window.  There are text fields for entering the temperature, and buttons and menu items to perform the conversions, clear the text fields, and exit the program.
 
-<img class="size-full wp-image-13" title="converter-window" src="http://www.bbs-software.com/blog/wp-content/uploads/2009/02/converter-window.png" alt="The Fahrenheit  Celsius temperature conversion Swing app window" width="499" height="148" /><figcaption class="caption wp-caption-text">the temperature conversion Swing app window</figcaption></figure> 
+{% include image.html img="/assets/fahrenheit-celsius-converter.png" title="Fahrenheit-Celsius Converter" %}
 
 We&#8217;ll get to JRuby soon, but first a little about the Swing issues we&#8217;ll be addressing in comparing JRuby with Java.
 
-Swing enables the sharing of behavior among visual components such as menu items and buttons via the sharing of Action objects (or, to be precise, implementations of the javax.swing.Action interface).  So, for example, in this app there is a single Exit action object shared by both the Exit button and the Exit item of the File Menu (that is, both the button and menu item contain references to the same action).
+Swing enables the sharing of behavior among visual components such as menu items and buttons via the sharing of Action objects (or, to be precise, implementations of the `javax.swing.Action` interface).  So, for example, in this app there is a single Exit action object shared by both the Exit button and the Exit item of the File Menu (that is, both the button and menu item contain references to the same action).
 
 When an action is modified, as, for example, to enable or disable it, then all components expressing that action modify their state and appearance accordingly.  When the program starts up, the conversion and clear buttons&#8217; actions are not appropriate given that both text fields are empty; therefore, those actions are disabled.  Although you can&#8217;t see it in this picture, in addition to the buttons being disabled, the corresponding menu items are disabled as well.
 
-Swing is pretty good about conforming to the MVC (model/view/controller) principle.  Even the lowly text field contains a reference to a model, which is an implementation of the javax.swing.text.Document interface.  You can attach listeners to this model, so that when the text changes you can inspect the contents and respond accordingly.  (A common Swing programming mistake is to listen to keyboard events instead, but this does not catch some cut and paste events, nor the programmatic setting of the content.)
+Swing is pretty good about conforming to the MVC (model/view/controller) principle.  Even the lowly text field contains a reference to a model, which is an implementation of the `javax.swing.text.Document` interface.  You can attach listeners to this model, so that when the text changes you can inspect the contents and respond accordingly.  (A common Swing programming mistake is to listen to keyboard events instead, but this does not catch some cut and paste events, nor the programmatic setting of the content.)
 
 These two Swing features enable the effective, clean, and dry implementation of enabling and disabling of action components based on the program&#8217;s state at any given time.  We merely attach document listeners to the text fields that hook into text changes, and enable or disable the actions as appropriate when they are called.
 
-Unfortunately, the Swing DocumentListener interface requires implementing behavior for three different types of text events (change, insert, and remove), and provides no way to simply specify a single behavior that will be applied to all three. (In fact, in several years of Swing programming I never encountered a case where the respective events needed to be handled differently, for performance or any other reason.)  We will therefore create an adapter that remedies this.  The implementations of this adapter in Java and JRuby will highlight the greater flexibility of JRuby through its support of code blocks as first class objects and its syntactic sugar that makes passing hash entries more natural.
+Unfortunately, the Swing `DocumentListener` interface requires implementing behavior for three different types of text events (change, insert, and remove), and provides no way to simply specify a single behavior that will be applied to all three. (In fact, in several years of Swing programming I never encountered a case where the respective events needed to be handled differently, for performance or any other reason.)  We will therefore create an adapter that remedies this.  The implementations of this adapter in Java and JRuby will highlight the greater flexibility of JRuby through its support of code blocks as first class objects and its syntactic sugar that makes passing hash entries more natural.
 
-The Java adapter is implemented here as the SimpleDocumentListener that implements DocumentListener.  It has a single abstract method that must be implemented by its subclasses, and delegates to that method from all three DocumentListener interface methods.  Note that it is necessary to create a new class inheriting from SimpleDocumentListener in order to use it. Here is the code:
+The Java adapter is implemented here as the `SimpleDocumentListener` that implements `DocumentListener`.  It has a single abstract method that must be implemented by its subclasses, and delegates to that method from all three `DocumentListener` interface methods.  Note that it is necessary to create a new class inheriting from `SimpleDocumentListener` in order to use it. Here is the code:
 
 ```java
 >import javax.swing.event.DocumentEvent;
@@ -88,10 +88,10 @@ Here&#8217;s how the class is used to enable the Fahrenheit to Celsius conversio
 
 Although the anonymous inner class specification is concise, you are still creating another class. Furthermore, because the behavior must live within a class, it is more difficult to reuse the functionality in multiple places.
 
-In contrast, JRuby supports code blocks and objects such as lambdas that enable specifying the behavior by itself, without requiring the ceremony of creating an entire class to contain it. We exploit this by implementing the JRuby adapter as a class that is instantiated with such a code block or object. Here&#8217;s the JRuby implementation of SimpleDocumentListener:
+In contrast, JRuby supports code blocks and objects such as lambdas that enable specifying the behavior by itself, without requiring the ceremony of creating an entire class to contain it. We exploit this by implementing the JRuby adapter as a class that is instantiated with such a code block or object. Here&#8217;s the JRuby implementation of `SimpleDocumentListener`:
 
-```java
-># Simple implementation of javax.swing.event.DocumentListener that
+```ruby
+# Simple implementation of javax.swing.event.DocumentListener that
 # enables specifying a single code block that will be called
 # when any of the three DocumentListener methods are called.
 #
@@ -126,16 +126,16 @@ end
 
 And here&#8217;s how it is used:
 
-```java
+```ruby
 >fahr_text_field.getDocument.addDocumentListener(
         SimpleDocumentListener.new do
           f2c_action.setEnabled double_string_valid?(fahr_text_field.getText)
         end)
 ```
 
-Note that unlike Java, where it is necessary to subclass the abstract Java class SimpleDocumentListener, we merely create an instance of the Ruby SimpleDocumentListener with the behavior we want executed when a DocumentEvent occurs. Specifying the code block parameter in the function definition with the ampersand enables passing a code block inline (as above), or passing code in the form of a lambda or proc object as in:
+Note that unlike Java, where it is necessary to subclass the abstract Java class `SimpleDocumentListener`, we merely create an instance of the Ruby `SimpleDocumentListener` with the behavior we want executed when a DocumentEvent occurs. Specifying the code block parameter in the function definition with the ampersand enables passing a code block inline (as above), or passing code in the form of a lambda or proc object as in:
 
-```java
+```ruby
 >f2c_enabler = lambda do
       f2c_action.setEnabled double_string_valid?(fahr_text_field.getText)
     end
@@ -167,7 +167,7 @@ As you see, putValue is used to store key/value pairs in the action. There are m
 
 In Ruby, we create an adapter class that allows specifying the action&#8217;s name, options (tooltip text and keyboard accelerator in this case), and behavior:
 
-```java
+```ruby
 >require 'java'
 
 # When running FrameInRuby, this will generate a warning because
@@ -233,7 +233,7 @@ Note the initialize method. The options parameter default to nil, but if any key
 
 Here&#8217;s how the exit action is specified in the JRuby program:
 
-```java
+```ruby
 >self.exit_action = SwingAction.new("Exit",
         Action::SHORT_DESCRIPTION => "Exit this program",
         Action::ACCELERATOR_KEY =>
