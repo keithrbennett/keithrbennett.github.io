@@ -64,8 +64,7 @@ pbpaste | transform | pbcopy
 
 I wanted to put the `pbpaste/pbcopy` handling in the script to simplify calling it, and that made the script a bit more complex. Here it is, with some nonessential code added for clearer and more informative output:
 
-```ruby
-#!/usr/bin/env ruby
+{% highlight ruby linenos %}#!/usr/bin/env ruby
 
 require 'nokogiri'
 require 'trick_bag'
@@ -120,7 +119,18 @@ input = `pbpaste`
 output = transform(input)
 output_results(input, output)
 copy_result_to_clipboard(output)
-```
+ {% endhighlight %}
+ 
+Incidentally, notice the use of the `sandwich` lambda in the `output_results` method.
+This is one of my favorite use cases for lambdas - to encapsulate formatting
+done multiple times in the same method. By using a lambda for this we:
+
+* eliminate duplication
+* separate the lower level formatting code from the higher level code that calls it
+* name the formatting behavior
+* limit its scope to the method in which it is used, rather than polluting
+the broader class scope as an instance method
+
 
 Here is an example of the output of a run using `strip-pre r` for Ruby highlighted code:
 
@@ -137,7 +147,7 @@ end
 -------------------------------------------------------------------------------
 Output:
 -------------------------------------------------------------------------------
-```
+```ruby
 def stringified_key_hash(numbers)
   numbers.each_with_object({}) do |n, hsh|
     hsh[n] = n.to_s
@@ -155,6 +165,11 @@ When we copy the HTML fragment above into the clipboard, and then run it, we see
 The script is pretty standard Ruby. I've used the `TrickBag::Io::TempFiles.file_containing` method to simplify creating a temp file with content, using it, then deleting it when done. This and other convenience methods can be found in my `trick_bag` gem on Github [here](https://github.com/keithrbennett/trick_bag).
 
 On first glance, it might seem sufficient to just `echo #{content} | pbcopy`, but that could be problematic. The string might be too large for a shell command. In addition, we would have to escape any characters modified or handled by the shell, such as multi-space strings, dollar signs, and backslashes. This could be done using `Shellwords.escape`, but since the TrickBag method was handy, I avoided having to deal with those complications altogether.
+
+
+## Other Uses for pbcopy/pbpaste
+
+Chris Sexton (@csexton on Twitter) likes using `uuidgen | pbcopy` to generate UUID's and copy them to the clipboard. 
 
 ----
 
