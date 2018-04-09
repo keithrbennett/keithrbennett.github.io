@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
+require 'nokogiri'
 require 'trick_bag'
 
-SEPARATOR_LINE = "#{'-' * 79}\n"
 
 LANGUAGE = begin
   if ARGV[0].nil?
@@ -22,35 +22,61 @@ LANGUAGE = begin
 end
 
 
-def ellipsize(string, max_length = 60)
-  string[0...max_length] << (string.length > max_length ? '...' : '')
-end
-
-
-def sandwich_in_separator_lines(s)
-  '' << SEPARATOR_LINE << s.chomp << "\n" << SEPARATOR_LINE
-end
-
-
 def transform(s)
-  pos_close_pre_start = s.index('>')
-  if pos_close_pre_start.nil?
-    raise %Q{> not found in #{ellipsize(s)}}
+  text = Nokogiri::HTML(s).xpath('html/body/pre').text
+  "```#{LANGUAGE}\n" + CGI.unescapeHTML(text) + "```\n"
+end
+
+
+def output_results(input, output)
+
+  separator_line = "#{'-' * 79}\n"
+
+  sandwich = ->(s) do
+    '' << separator_line << s.chomp << "\n" << separator_line
   end
 
-  s = s[(pos_close_pre_start + 1)..-1]
-  s.gsub!('</pre>', '')
-  s.chomp!
-  "```#{LANGUAGE}\n" + CGI.unescapeHTML(s) + "```\n"
+  puts separator_line
+  puts "Input:\n#{sandwich.(input)}"
+  puts "Output:\n#{sandwich.(output)}"
+end
+
+
+def copy_result_to_clipboard(result)
+  TrickBag::Io::TempFiles.file_containing(result) do |temp_filespec|
+    `cat #{temp_filespec} | pbcopy`
+  end
 end
 
 
 input = `pbpaste`
-puts SEPARATOR_LINE
-puts "Input:\n#{sandwich_in_separator_lines(input)}"
 output = transform(input)
-puts "Output:\n#{sandwich_in_separator_lines(output)}"
+output_results(input, output)
+copy_result_to_clipboard(output)
 
-TrickBag::Io::TempFiles.file_containing(output) do |temp_filespec|
-  `cat #{temp_filespec} | pbcopy`
+=begin
+
+Example:
+
+-------------------------------------------------------------------------------
+Input:
+-------------------------------------------------------------------------------
+<pre class="brush: ruby; title: ; notranslate" title="">def stringified_key_hash(numbers)
+  numbers.each_with_object({}) do |n, hsh|
+    hsh[n] = n.to_s
+  end
 end
+</pre>
+-------------------------------------------------------------------------------
+Output:
+-------------------------------------------------------------------------------
+```ruby
+def stringified_key_hash(numbers)
+  numbers.each_with_object({}) do |n, hsh|
+    hsh[n] = n.to_s
+  end
+end
+```
+-------------------------------------------------------------------------------
+
+=end
