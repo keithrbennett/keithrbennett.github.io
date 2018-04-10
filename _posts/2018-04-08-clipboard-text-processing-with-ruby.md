@@ -31,7 +31,7 @@ For me, the most common use case for using `pbcopy/pbpaste` is stripping away fa
 pbpaste | pbcopy
 ```
 
-### Extending Your Text Editor with pcopy/pbpaste
+### Extending Your Text Editor with pbcopy/pbpaste
 
 Things got more interesting when I realized that these utilities open any GUI application up to the possibility of using scripts and command line utilities for processing their text. Admittedly, this is not a new idea; Vim and Textmate, for example, have this feature built into their software; but being able to use the clipboard enables this for _all_ text editors.
 
