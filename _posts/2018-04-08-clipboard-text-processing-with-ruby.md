@@ -171,6 +171,8 @@ On first glance, that might seem like overkill, and it might seem sufficient to 
 
 ### Other Uses for pbcopy/pbpaste
 
+* Miguel Paraz says: "I `pbbpaste | jq .` a lot, for grabbing from the browser's debugger and passing into back-ends under development."
+* Eumir Gaspar says: "I needed a bunch of bank statements merged into one pdf. I added the filenames into a text file, did some minor vim magicks to escape the parentheses, and `cat statements.txt | pbcopy` so i can: `pdftk <cmd+v> cat output statements.pdf`.
 * [Chris Sexton](http://www.codeography.com) uses `uuidgen | pbcopy` to generate UUID's and copy them to the clipboard.
 * [Marian Lucius Pop](https://twitter.com/mlpinit) uses `cat ~/.ssh/id_rsa.pub | pbcopy` for copying his public key to the clipboard. Several other people mentioned using pbcopy with ssh keys.
 * [Hunter Madison](https://github.com/hmadison) suggests using it to add syntax highlighting to code, e.g. `cat <file> | highlight -O rtf | pbcopy`. (`highlight` is a syntax highlighting command line tool installable via `brew`.) He then pastes the highlighted code into his Keynote presentation.
