@@ -1,9 +1,9 @@
 ---
-title: Clipboard Text Processing on the Mac with Ruby
+title: Clipboard Text Processing with Ruby
 date: 2018-04-08
 ---
 
-This article will explain how to enable Ruby script processing, really _any_ command line processing, on _any_ editor. First, some basics...
+This article will explain how to integrate text processing scripts in Ruby (or any other scripting language) with _any_ editor. First, some basics...
 
 ----
 
