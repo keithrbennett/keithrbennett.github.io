@@ -3,7 +3,7 @@ title: Clipboard Text Processing with Ruby
 date: 2018-04-08
 ---
 
-This article will explain how to integrate text processing scripts in Ruby (or any other scripting language) with _any_ editor. First, some basics...
+This article will explain how to integrate text processing scripts in Ruby (or any other language, scripting or otherwise) with _any_ editor. First, some basics...
 
 ----
 
