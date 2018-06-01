@@ -11,7 +11,7 @@ categories:
 Last night I had the pleasure of attending the [Arlington Ruby User Group](http://www.meetup.com/Arlington-Ruby/) meeting in Arlington, Virginia. [Marius Pop](https://twitter.com/mlpinit), a new Rubyist, presented on Ruby's [Forwardable](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/forwardable/rdoc/Forwardable.html) module. Forwardable allows you to very succinctly specify that you want to define a method that simply calls (that is, delegates to) a method on one of the object's instance variables, and returns its return value, if there is one. Here is an example file that illustrates this:
 
 ```ruby
->require 'forwardable'
+require 'forwardable'
 
 class FancyList
   extend Forwardable
