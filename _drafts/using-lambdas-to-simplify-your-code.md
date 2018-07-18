@@ -7,7 +7,7 @@ date: 2018-07-16
 
 [Lambdas](https://en.wikipedia.org/wiki/Anonymous_function), which are self contained functions, are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages. However, even [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages that support lambdas, such as Ruby, can greatly benefit from their use in some cases.
 
-After I started using lambdas, I realized that logic parameterization in object oriented languages is super awkward, with their convention of using `if-elsif-elsif-end` or `case` clauses.
+After I started using lambdas, I realized that logic parameterization in procedural and object oriented languages is super awkward, with their convention of using `if-elsif-elsif-end` or `case` clauses.
 
 [Polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) is an object oriented design paradigm that is intended to address this need, but using a class hierarchy to implement varying behavior in many cases is an overly heavy handed solution to a simple problem.
 
@@ -15,7 +15,7 @@ For example, what if we have an object of a class that contains three varying be
 
 Anyway, for simple behaviors, the burden and ceremony of one class per behavior is excessive in both cognitive load and verbosity. Furthermore, it is an arbitrary choice of one of many criteria that might reasonably be used to define class boundaries.
 
-#### Duck Typing in Ruby Enables Callables as a Superset of Lambdas
+#### Callables as a Superset of Lambdas
 
 In Ruby, thanks to duck typing, _any_ object that responds to the `call` method can be used in place of a lambda...so that call could be a method on an instance of any class, or even the class itself. This provides great flexibility in implementing varying behavior. Since any object responding to `call` can be used in place of a lambda, I will use the term _callable_ instead of _lambda_ where applicable.
 
@@ -25,7 +25,7 @@ In Ruby, thanks to duck typing, _any_ object that responds to the `call` method 
 
 I once worked on a project where I needed to implement buffering on multiple kinds of things received over a network connection. I started writing the first one, and noticed how the code could be cleanly divided into two kinds of tasks: 1) knowing when to fill the buffer and other buffer management tasks, and 2) how to fetch each block of objects and what else to do when performing that (e.g. logging, displaying a message to the user, updating some external state).
 
-I thought about the multiple times I would need to implement this buffering, the admonition about high cohesion / low coupling, and the Unix axiom "do one thing well", and decided to separate the two. From this was born the [`BufferedEnumerable`](https://github.com/keithrbennett/trick_bag/blob/master/lib/trick_bag/enumerables/buffered_enumerable.rb) class in my [`trick_bag`](https://github.com/keithrbennett/trick_bag/) gem.
+Realizing that #1 would be common and identical to all cases, and only #2 would vary, I thought about how wasteful it would be to implement #1 separately in all cases. I thought about the admonition about high cohesion / low coupling, and the Unix axiom "do one thing well", and decided to separate the two. From this was born the [`BufferedEnumerable`](https://github.com/keithrbennett/trick_bag/blob/master/lib/trick_bag/enumerables/buffered_enumerable.rb) class in my [`trick_bag`](https://github.com/keithrbennett/trick_bag/) gem.
 
 The BufferedEnumerable class manages buffering but has no idea how to fetch chunks of data, nor what else to do at each such fetch; for that, the caller provides callables such as lambdas. (Upon user request, the ability to subclass it with named methods for this was also added.) The result is a superb simplification, where the logic of buffering is defined in only one place, and the places it is used need not be concerned with its implementation (or its testing!).
 
@@ -40,7 +40,7 @@ To create an instance of this with callables, we call the `BufferedEnumerable` c
   end
 ```
 
-If a fetcher callable has been defined, it is called like this whenever the buffer needs to be filled, with the data buffer and the number of objects requested passed as parameters:
+If a fetcher callable has been defined, it is called as shown below whenever the buffer needs to be filled, with the emptied data buffer and the number of objects requested passed as parameters:
 
 ```ruby
 fetcher.(data, chunk_size)
@@ -53,8 +53,6 @@ fetcher = ->(data, chunk_size) do
   chunk_size.times { data << Random.rand }
 end
 ```
-
-(`data` is an array that, for every fetcher invocation, is cleared and passed to the fetcher to be filled with objects.)
 
 Here is a `pry` example that illustrates the call to the fetcher, and its effect on the passed array:
 
@@ -85,7 +83,7 @@ A trivial fetch notifier might look like this:
 
 (`data.size` will usually differ from `chunk_size` on the last fetch.)
 
-After defining the `fetcher` and `fetch_notifier` lambda, we could call the class method shown above as follows:
+After defining the `fetcher` and `fetch_notifier` lambdas, we could call the class method shown above as follows:
 
 ```ruby
 buffered_enumerable = BufferedEnumerable.create_with_callables( \
@@ -106,7 +104,7 @@ I once had to write a [generic DNS mock server](https://github.com/keithrbennett
 
 Both cases were an excellent fit for using callables as filters.
 
-In the case of the mock DNS server, there were multiple criteria for the filters, such as TCP vs. UDP, qtype (question type), qclass (question class), and qname (question name). So there are methods that return lambdas that filter for specific values for those attributes; for example, for a filter that will return true only for the qname `example.com`, you would make this call:
+In the case of the mock DNS server, there were multiple criteria for the filters, such as protocol (TCP vs. UDP), qtype (question type), qclass (question class), and qname (question name). I provided methods that return lambdas that filter for specific values for those attributes; for example, for a filter that will return true only for the qname `example.com`, you would make this call:
 
 ```ruby
 predicate_factory = MockDnsServer::PredicateFactory.new
@@ -133,7 +131,7 @@ def from_tcp
 end
 ```
 
-In this case, we can ignore the first (`message`) parameter.
+In this case, we only care about the protocol so we can ignore the first (`message`) parameter.
 
 By the way, the `all` compound filter is nothing more than a simple wrapper around Ruby's Enumerable's `all?` method:
 
@@ -145,7 +143,7 @@ By the way, the `all` compound filter is nothing more than a simple wrapper arou
   end
 ```
 
-The `qname` method is defined as (roughly):
+The `qname` method (i.e. the method that returns a filter for exactly one qname value) is defined as (roughly):
 
 ```ruby
 def qname(qname)
