@@ -9,11 +9,13 @@ date: 2018-07-16
 
 After I started using lambdas, I realized that logic parameterization in procedural and object oriented languages is super awkward, with their convention of using `if-elsif-elsif-end` or `case` clauses.
 
-[Polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) is an object oriented design paradigm that is intended to address this need, but using a class hierarchy to implement varying behavior in many cases is an overly heavy handed solution to a simple problem.
+[Polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) is an object oriented design paradigm that is intended to address this need. Polymorphism is achieved by defining different classes that respond to the same message (usually method or function name) differently. This can be a nice design when the response to that message is the only thing that differs, and when the different implementations are nontrivial, but in other cases it is an overly heavy handed solution to a simple problem; and sometimes it's even not feasible.
 
 For example, what if we have an object of a class that contains three varying behaviors, and each of these behaviors has five possible strategies. If we were to write a class to implement each possible combination of the three behaviors, we would have to hard code the behaviors into the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of the three sets, 5 * 5 * 5, or 125 classes!
 
 Anyway, for simple behaviors, the burden and ceremony of one class per behavior is excessive in both cognitive load and verbosity. Furthermore, it is an arbitrary choice of one of many criteria that might reasonably be used to define class boundaries.
+
+A better solution is using callables such as lambdas.
 
 #### Callables as a Superset of Lambdas
 
@@ -23,13 +25,13 @@ In Ruby, thanks to duck typing, _any_ object that responds to the `call` method 
 
 ### The Buffered Enumerable
 
-I once worked on a project where I needed to implement buffering on multiple kinds of things received over a network connection. I started writing the first one, and noticed how the code could be cleanly divided into two kinds of tasks: 1) knowing when to fill the buffer and other buffer management tasks, and 2) how to fetch each block of objects and what else to do when performing that (e.g. logging, displaying a message to the user, updating some external state).
+I once worked on a project where I needed to implement buffering on multiple kinds of things received over a network connection. I started writing the first one, and noticed how the code could be cleanly divided into two kinds of tasks: 1) knowing _when_ to fetch objects into the buffer and other buffer management tasks, and 2) _how_ to fetch each block of objects and what _else_ to do each time that fetch is performed (e.g. logging, displaying a message to the user, updating some external state).
 
-Realizing that #1 would be common and identical to all cases, and only #2 would vary, I thought about how wasteful it would be to implement #1 separately in all cases. I thought about the admonition about high cohesion / low coupling, and the Unix axiom "do one thing well", and decided to separate the two. From this was born the [`BufferedEnumerable`](https://github.com/keithrbennett/trick_bag/blob/master/lib/trick_bag/enumerables/buffered_enumerable.rb) class in my [`trick_bag`](https://github.com/keithrbennett/trick_bag/) gem.
+Realizing that #1 would be common and identical to all cases, and only #2 would vary, I thought about how wasteful it would be to implement #1 separately in all cases. I thought about the admonition about high cohesion / low coupling, and the Unix axiom "do one thing well", and decided to separate the two. The most natural way to design this functionality in Ruby is with an `Enumerable`; it can be used to call a myriad of useful methods, or easily used to generate an array by calling its `to_a` method. Thus was born the [`BufferedEnumerable`](https://github.com/keithrbennett/trick_bag/blob/master/lib/trick_bag/enumerables/buffered_enumerable.rb) class in my [`trick_bag`](https://github.com/keithrbennett/trick_bag/) gem.
 
 The BufferedEnumerable class manages buffering but has no idea how to fetch chunks of data, nor what else to do at each such fetch; for that, the caller provides callables such as lambdas. (Upon user request, the ability to subclass it with named methods for this was also added.) The result is a superb simplification, where the logic of buffering is defined in only one place, and the places it is used need not be concerned with its implementation (or its testing!).
 
-To create an instance of this with callables, we call the `BufferedEnumerable` class method, which is defined as follows:
+To create an instance of this with callables, we call the `BufferedEnumerable` class method `create_with_callables`, which is defined as follows:
 
 ```ruby
  def self.create_with_callables(chunk_size, fetcher, fetch_notifier = nil)
@@ -104,7 +106,7 @@ I once had to write a [generic DNS mock server](https://github.com/keithrbennett
 
 Both cases were an excellent fit for using callables as filters.
 
-In the case of the mock DNS server, there were multiple criteria for the filters, such as protocol (TCP vs. UDP), qtype (question type), qclass (question class), and qname (question name). I provided methods that return lambdas that filter for specific values for those attributes; for example, for a filter that will return true only for the qname `example.com`, you would make this call:
+In the case of the mock DNS server, there were multiple criteria for the filters, such as protocol (TCP vs. UDP), qtype (question type), qclass (question class), and qname (question name). I provided methods that return lambdas that filter for specific values for those attributes; for example, for a filter that will return true only for the qname `example.com`, you would do the following:
 
 ```ruby
 predicate_factory = MockDnsServer::PredicateFactory.new
@@ -123,7 +125,7 @@ filter = pf.all(
 )
 ```
 
-How can this work? Because these methods all have the same method signature. They are passed the message that was received, and the protocol with which it was sent, and return a boolean value. For example, here is the implementation of `from_tcp`:
+How can this work? The filters are interchangeable because they all share the same method signature. They are passed the message that was received, and the protocol with which it was sent, and return a boolean value. For example, here is the implementation of `from_tcp`:
 
 ```ruby
 def from_tcp
@@ -157,3 +159,10 @@ Notice that the `qname` parameter is effectively stored in the lambda that the m
 
 This technique is called _partial application_, and is extremely useful. Does storing state in the lambda make it any less _functional_? Not really; the state is immutable and used only for comparison.
 
+----
+
+### Conclusion
+
+I hope I have been successful in persuading you to consider using callables for implementing variable predicates and actions.
+
+These are just two examples. I will stop here for the sake of brevity, but if you have any questions or suggestions for elaboration, please contact me. I am keithrbennett on Twitter and several other sites.
