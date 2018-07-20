@@ -5,21 +5,30 @@ date: 2018-07-16
 
 ### Using Lambdas in Object Oriented Languages
 
-[Lambdas](https://en.wikipedia.org/wiki/Anonymous_function), which are self contained functions, are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages. However, even [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages that support lambdas, such as Ruby, can greatly benefit from their use in some cases.
+[Lambdas](https://en.wikipedia.org/wiki/Anonymous_function), which are self contained functions, are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages. However, even [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages that support lambdas, such as Ruby, can greatly benefit from their use.
 
-After I started using lambdas, I realized that logic parameterization in procedural and object oriented languages is super awkward, with their convention of using `if-elsif-elsif-end` or `case` clauses.
+After I started using lambdas, I realized that, in procedural and object oriented languages, support for customizable logic is awkward, and in the case of large numbers of variations in customizable logic, altogether absent.
+ 
+ The procedural `if-elsif-elsif-end` or `case` clauses work when you have a small number of conditions and actions that are known in advance, but if you don't, they're pretty useless.
 
-[Polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) is an object oriented design paradigm that is intended to address this need. Polymorphism is achieved by defining different classes that respond to the same message (usually method or function name) differently. This can be a nice design when the response to that message is the only thing that differs, and when the different implementations are nontrivial, but in other cases it is an overly heavy handed solution to a simple problem; and sometimes it's even not feasible.
+The object oriented approach of [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) isn't much better.
+Polymorphism is a key characteristic of object oriented design whereby objects of different classes can respond to the same message (usually via a method or function name) differently. This can be a nice design when the response to that message is the only thing that differs, and when the different implementations are nontrivial, but in other cases it is an overly heavy handed solution to a simple problem.
 
-For example, what if we have an object of a class that contains three varying behaviors, and each of these behaviors has five possible strategies. If we were to write a class to implement each possible combination of the three behaviors, we would have to hard code the behaviors into the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of the three sets, 5 * 5 * 5, or 125 classes!
+As far as I can tell, both cases become unusable when there you need complex behaviors that are not known until runtime.
 
-Anyway, for simple behaviors, the burden and ceremony of one class per behavior is excessive in both cognitive load and verbosity. Furthermore, it is an arbitrary choice of one of many criteria that might reasonably be used to define class boundaries.
+For example, what if we have an object of a class that contains three varying behaviors, and each of these behaviors has five possible strategies. If we were to write a class to implement each possible variation of the three behaviors, we would have to hard code the behaviors into the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of the three sets, 5 * 5 * 5, or 125 classes!
+
+Anyway, for simple behaviors, the burden and ceremony of one class per behavior is excessive in both cognitive load and verbosity. Furthermore, it is an arbitrary choice of one of many criteria that might reasonably be used to set class boundaries.
 
 A better solution is using callables such as lambdas.
 
+----
+
 #### Callables as a Superset of Lambdas
 
-In Ruby, thanks to duck typing, _any_ object that responds to the `call` method can be used in place of a lambda...so that call could be a method on an instance of any class, or even the class itself. This provides great flexibility in implementing varying behavior. Since any object responding to `call` can be used in place of a lambda, I will use the term _callable_ instead of _lambda_ where applicable.
+In traditional object oriented languages such as Java and C++, polymorphism is (in general) implemented by inheritance. Ruby does that also, but in addition, Ruby uses _duck typing_, meaning that _any_ object that responds to the method name can be used. This means that in Ruby, any object that responds to `call` can be in place of a lambda. It could be a lambda, an instance of a class, or even a class or module itself, as long as it has a `call` method. This provides great flexibility in implementing varying behavior. You can choose what kind of object to use based on your situation. For complex behaviors you may want modules or classes, and for simpler behaviors a lambda will work just fine.
+
+ Since any object responding to `call` can be used in place of a lambda, I will use the term _callable_ instead of _lambda_ where applicable.
 
 ----
 
