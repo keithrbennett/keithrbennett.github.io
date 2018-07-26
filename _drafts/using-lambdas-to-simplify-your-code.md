@@ -123,8 +123,24 @@ predicate_factory = MockDnsServer::PredicateFactory.new
 filter = predicate_factory.qname('example.com')
 ```
 
-If we were also to add the requirement that the qtype be 'A' and the protocol be 'TCP', then we could call methods to return those filters as well, and combine them using the `all` compound filter. (Other compound filters are `any` and `none`.) Here is what that would look like:
+The `qname` method (i.e. the method that returns a filter for exactly one qname value) is defined as (roughly):
 
+```ruby
+def qname(qname)
+  ->(message, _protocol = nil) do
+    eq_case_insensitive(message.qname, qname)
+  end
+end
+```
+
+If you view the method body from left to right, you will notice the prominent `->`, which tells you that the value returned by this method is a lambda. 
+
+Notice that the `qname` parameter is effectively stored in the lambda that the method returns?
+
+This technique is called _partial application_, and is extremely useful. Does storing state in the lambda make it any less _functional_? Not really; the state is immutable and used only for comparison.
+
+
+If we were also to add the requirement that the qtype be 'A' and the protocol be 'TCP', then we could call methods to return those filters as well, and combine them using the `all` compound filter. (Other compound filters are `any` and `none`.) Here is what that would look like:
 
 ```ruby
 pf = MockDnsServer::PredicateFactory.new
@@ -145,7 +161,7 @@ The `all` compound filter is nothing more than a simple wrapper around Ruby's En
   end
 ```
 
-How can this work? The filters are interchangeable because they all share the same method signature. They are passed the message that was received, and the protocol with which it was sent, and return a boolean value. For example, here is the implementation of `from_tcp`:
+How can this work? The filters are interchangeable because they all share the same method signature. They are passed the message that was received, and the protocol with which it was sent, and return a boolean value. We've already seen one example, the lambda returned by the `qname` method shown above. Here is another one; this one returns true if and only if the message was sent over TCP:
 
 ```ruby
 def from_tcp
@@ -154,20 +170,6 @@ end
 ```
 
 In this case, we only care about the protocol so we can ignore the first (`message`) parameter.
-
-The `qname` method (i.e. the method that returns a filter for exactly one qname value) is defined as (roughly):
-
-```ruby
-def qname(qname)
-  ->(message, _protocol = nil) do
-    eq_case_insensitive(message.qname, qname)
-  end
-end
-```
-
-Notice that the `qname` parameter is effectively stored in the lambda that the method returns?
-
-This technique is called _partial application_, and is extremely useful. Does storing state in the lambda make it any less _functional_? Not really; the state is immutable and used only for comparison.
 
 ----
 
