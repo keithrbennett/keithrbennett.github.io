@@ -1,5 +1,5 @@
 ---
-title: Callables vs. Polymorphism in Object Oriented Languages Like Ruby
+title: Simplify Your Code with Lambdas and Other Callables
 date: 2018-07-16
 ---
 
@@ -175,7 +175,7 @@ In this case, we only care about the protocol so we can ignore the first (`messa
 
 I hope I have been successful in persuading you to consider using callables for implementing variable predicates and actions.
 
-These are just two examples. I will stop here for the sake of brevity, but if you have any questions or suggestions for elaboration, please contact me. I am keithrbennett on Twitter and several other sites.
+These are just two examples. I will stop here for the sake of brevity, but if you have any questions or suggestions for elaboration, please contact me. I am keithrbennett on Twitter, Github, and several other sites.
 
 ----
 
