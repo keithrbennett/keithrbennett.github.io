@@ -31,7 +31,9 @@ In traditional object oriented languages such as Java and C++, polymorphism is (
 
 I once worked on a project where I needed to implement buffering of multiple kinds of things received over network connections. I started writing the first one, and noticed how the code could be cleanly divided into two kinds of tasks: 1) knowing _when_ to fetch objects into the buffer and other buffer management tasks, and 2) _how_ to fetch each block of objects and what _else_ to do each time that fetch is performed (e.g. logging, displaying a message to the user, updating some external state).
 
-Realizing that #1 would be common and identical to all cases, and only #2 would vary, I thought about how wasteful it would be to implement #1 separately in all cases. I thought about the admonition about high cohesion / low coupling, and the Unix axiom "do one thing well", and decided to separate the two. The most natural way to design this functionality in Ruby is with an `Enumerable`, which will have access to all kinds of functional wizardry thanks to the methods it gets for free by including the `Enumerable` module. In addition, it can easily used to generate an array by calling its `to_a` method.
+Realizing that #1 would be common and identical to all cases, and only #2 would vary, I thought about how wasteful it would be to implement #1 separately in all cases. I thought about the admonition about high cohesion / low coupling, and the Unix axiom "do one thing well", and decided to separate the two.
+
+The most natural way to design this functionality in Ruby is with an [_Enumerable_](https://ruby-doc.org/core-2.5.1/Enumerable.html), which will have access to all kinds of functional wizardry thanks to the methods it gets for free by including the `Enumerable` module. In addition, it can easily used to generate an array by calling its `to_a` method.
 
 This is the origin of the  [_BufferedEnumerable_](https://github.com/keithrbennett/trick_bag/blob/master/lib/trick_bag/enumerables/buffered_enumerable.rb) class in my [_trick_bag_](https://github.com/keithrbennett/trick_bag/) gem. This class manages buffering but has no idea how to fetch chunks of data, nor what else to do at each such fetch; for that, the caller provides callables such as lambdas. (Upon user request, the ability to subclass it and override its methods was also added.) The result is a dramatic simplification, where the logic of buffering is defined in only one place, and the places it is used need not be concerned with its implementation (or its testing!).
 
@@ -99,6 +101,8 @@ After defining the `fetcher` and `fetch_notifier` lambdas, we could call the cla
 buffered_enumerable = BufferedEnumerable.create_with_callables( \
     1000, fetcher, fetch_notifier)
 ```
+
+This enumerable can be used to call `each` or any other of the rich set of methods available on the [_Enumerable_](https://ruby-doc.org/core-2.5.1/Enumerable.html) class.
 
 By parameterizing the behaviors with callables, we have increased the simplicity of the implementation by separating the two orthogonal tasks into separate code areas, and avoided the unnecessary overhead of the inheritance approach, which would have packaged these functions in classes.
 
@@ -175,7 +179,14 @@ In this case, we only care about the protocol so we can ignore the first (`messa
 
 I hope I have been successful in persuading you to consider using callables for implementing variable predicates and actions.
 
-These are just two examples. I will stop here for the sake of brevity, but if you have any questions or suggestions for elaboration, please contact me. I am keithrbennett on Twitter, Github, and several other sites.
+These are just two examples. I will stop here for the sake of brevity, but if you have any questions or suggestions for elaboration, please contact me.
+
+You can find me on:
+
+* [Github](https://github.com/keithrbennett)
+* [LinkedIn](https://www.linkedin.com/in/keithrbennett/)
+* [StackOverflow](https://stackoverflow.com/users/501266/keith-bennett)
+* [Twitter](https://twitter.com/keithrbennett)
 
 ----
 
