@@ -11,7 +11,7 @@ And although the object oriented approach of [polymorphism](https://en.wikipedia
 
 Furthermore, though we're accustomed to thinking about this problem in the context of a _single_ customizable behavior, what if there are several?
 
-Let's say we have a class that contains 3 varying behaviors. As an admittedly contrived example, let's say we have classes for different types of animals, and they each have a `move`, `sleep`, and `vocalize` behavior. As a simplifying assumption, let's say that each of these behaviors has 7 possible variations. If we were to write a class to implement each possible set of behaviors, we would need the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of classes, (7 * 7 * 7), or 343 classes! That would be silly of course, since we could simplify it by providing a class hierarchy for each of the three kinds of behavior, and plug those into the larger class -- but then we would still need (7 + 7 + 7), or 21 classes! (Probably 24 really, as pure design would dictate an additional class as an abstract superclass for each set of 7 implementations).
+Let's say we have a class that contains 3 varying behaviors. As an admittedly contrived example, let's say we have classes for hundreds of different species of animals, and they each have a `move`, `sleep`, and `vocalize` behavior. As a simplifying assumption, let's say that each of these behaviors has 7 possible variations that are shared by many species. If we were to write a class to implement each possible set of behaviors, we would need the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of classes, (7 * 7 * 7), or 343 classes! That would be silly of course, since we could simplify it by providing a class hierarchy for each of the three kinds of behavior, and plug those into the larger class -- but then we would still need (7 + 7 + 7), or 21 classes! (Probably 24 really, as pure design would dictate an additional class as an abstract superclass for each set of 7 implementations).
 
 If these behaviors are truly complex enough to justify a class of their own, this is not a problem. However, often they are not, and the solution is many times as verbose and complex as it needs to be.
 
@@ -163,7 +163,7 @@ The `all` compound filter is nothing more than a simple wrapper around Ruby's En
   end
 ```
 
-How can this work? The filters are interchangeable because they all take the same parameter list and they all return a value usable by the caller. To be specific, they are passed the message that was received, and the protocol with which it was sent, and return a boolean value. We've already seen one example, the lambda returned by the `qname` method shown above. Here is another one; this one returns true if and only if the message was sent over TCP:
+How can this work? The filters are interchangeable because they all take the same parameter list and they all return a value usable by the caller. To be specific, they are passed the message that was received and the protocol with which it was sent, and return a boolean value. We've already seen one example, the lambda returned by the `qname` method shown above. Here is another one; this one returns true if and only if the message was sent over TCP:
 
 ```ruby
 def from_tcp
