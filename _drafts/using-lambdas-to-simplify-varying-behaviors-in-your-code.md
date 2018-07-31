@@ -14,11 +14,11 @@ And although the object oriented approach of [polymorphism](https://en.wikipedia
 
 Furthermore, though we're accustomed to thinking about this problem in the context of a _single_ customizable behavior, what if there are _several_?
 
-Let's say we have a class that contains 3 varying behaviors. As an admittedly contrived example, let's say we have classes for each of hundreds of different species of animals, and they each have a `move`, `sleep`, and `vocalize` behavior. As a simplifying assumption, let's say that each of these behaviors has 7 possible variations, each of which is shared by many species. If we were to write a class to implement each possible set of behaviors, we would need the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of classes, (7 * 7 * 7), or 343 classes! That would be a silly monstrosity for several reasons of course, one of which being we could simplify the design by providing a class hierarchy for each of the three kinds of behavior, and plug those into the larger class -- but then we would still need (7 + 7 + 7), or 21 classes! (Probably 24 really, as pure design would dictate an additional class as an abstract superclass for each set of 7 implementations).
+Let's say we have a class that contains 3 varying behaviors. As an admittedly contrived example, let's say we have classes for each of hundreds of different species of animals, and they each have a `move`, `sleep`, and `vocalize` behavior. As a simplifying assumption, let's say that each of these behaviors has 7 possible variations, each of which is shared by many species. If we were to write a class to implement each possible set of the 3 behaviors, we would need the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of classes, (7 * 7 * 7), or 343 classes! That would be a silly monstrosity for several reasons of course, one of which being we could simplify the design by providing a class hierarchy for each of the three kinds of behavior, and plug those into the larger class -- but then we would still need (7 + 7 + 7), or 21 classes! (Probably 24 really, as pure design would dictate an additional class as an abstract superclass for each set of 7 implementations).
 
 If these behaviors are truly complex enough to justify a class of their own, this is not a problem. However, often they are not, and the solution is many times as verbose and complex as it needs to be.
 
-A better solution is using callables such as lambdas.
+A better solution is using _callables_ such as lambdas.
 
 ----
 
@@ -55,7 +55,7 @@ To create an instance of this with callables, we call the `BufferedEnumerable` c
   end
 ```
 
-If a fetcher callable has been defined (as opposed to the use of the subclassing approach), it is called with the empty data buffer and the number of objects requested as shown below whenever the buffer needs to be filled:
+If a fetcher callable has been defined (as opposed to the use of the subclassing approach), it is called with the empty data buffer and the number of objects requested as shown below whenever the buffer needs to be filled, as follows:
 
 ```ruby
 fetcher.(data, chunk_size)
@@ -96,20 +96,20 @@ A trivial fetch notifier might look like this:
 ->(data) { puts "#{Time.now} Fetched #{data.size} objects" }
 ```
 
-(`data.size` will not necessarily be equal to `chunk_size` on the last fetch.)
+(`data.size` will not necessarily be equal to `chunk_size`, especially on the last fetch.)
 
 This notifier might produce something looking like this:
 
 `2018-07-26 17:19:47 +0700 Fetched 1000 objects`
 
-After defining the `fetcher` and `fetch_notifier` lambdas, we could call the class method shown above as follows:
+After defining the `fetcher` and `fetch_notifier` lambdas, we could call the class method for creating a BufferedEnumerable shown above as follows:
 
 ```ruby
 buffered_enumerable = BufferedEnumerable.create_with_callables( \
     1000, fetcher, fetch_notifier)
 ```
 
-This enumerable can be used to call `each` or any other of the rich set of methods available on the [_Enumerable_](https://ruby-doc.org/core-2.5.1/Enumerable.html) class.
+This enumerable can be used to call `each` or any other of the rich set of methods available on the [_Enumerable_](https://ruby-doc.org/core-2.5.1/Enumerable.html) module.
 
 By parameterizing the behaviors with callables, we have increased the simplicity of the implementation by separating the two orthogonal tasks into separate code areas, and avoided the unnecessary overhead of the inheritance approach, which would have packaged these functions in classes.
 
@@ -142,7 +142,7 @@ def qname(qname)
 end
 ```
 
-If you view the method body from left to right, you will notice the prominent `->` and its corresponding `end` two lines beneath it, which tell you that the value returned by this method is a lambda. The leading underscore is a convention that indicates that the passed value is not used in the lambda.
+If you view the method body from left to right, you will notice the prominent `->` and its corresponding `end` two lines beneath it, which tell you that the value returned by this method is a lambda. The leading underscore is a convention that indicates that that parameter is unused by the lambda.
 
 Notice that the `qname` parameter is effectively stored in the lambda that the method returns?
 
