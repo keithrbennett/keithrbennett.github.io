@@ -1,17 +1,20 @@
 ---
-title: Simplify Your Code with Lambdas and Other Callables
+title: Using Lambdas to Simplify Varying Behaviors in Your Code
 date: 2018-07-16
 ---
 
-[Lambdas](https://en.wikipedia.org/wiki/Anonymous_function), which, unlike methods, are functions not bound to any object, are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages. However, even [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages that support lambdas, such as Ruby, can greatly benefit from their use.
+
+[Lambdas](https://en.wikipedia.org/wiki/Anonymous_function), unlike methods, are functions not bound to any object. They are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages. However, even [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages that support lambdas, such as Ruby, can greatly benefit from their use. This is especially true when it comes to implementing varying behaviors.
+
+### The Problem with Non-Lambda Approaches
 
 The procedural `if-elsif-end` or `case` clauses work when you have a small number of conditions and actions that are known in advance, but if you don't, they're pretty useless.
 
 And although the object oriented approach of [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) by inheritance (1) can produce a correct result, in many cases it is unnecessarily verbose, ceremonial, and awkward.
 
-Furthermore, though we're accustomed to thinking about this problem in the context of a _single_ customizable behavior, what if there are several?
+Furthermore, though we're accustomed to thinking about this problem in the context of a _single_ customizable behavior, what if there are _several_?
 
-Let's say we have a class that contains 3 varying behaviors. As an admittedly contrived example, let's say we have classes for hundreds of different species of animals, and they each have a `move`, `sleep`, and `vocalize` behavior. As a simplifying assumption, let's say that each of these behaviors has 7 possible variations that are shared by many species. If we were to write a class to implement each possible set of behaviors, we would need the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of classes, (7 * 7 * 7), or 343 classes! That would be silly of course, since we could simplify it by providing a class hierarchy for each of the three kinds of behavior, and plug those into the larger class -- but then we would still need (7 + 7 + 7), or 21 classes! (Probably 24 really, as pure design would dictate an additional class as an abstract superclass for each set of 7 implementations).
+Let's say we have a class that contains 3 varying behaviors. As an admittedly contrived example, let's say we have classes for each of hundreds of different species of animals, and they each have a `move`, `sleep`, and `vocalize` behavior. As a simplifying assumption, let's say that each of these behaviors has 7 possible variations, each of which is shared by many species. If we were to write a class to implement each possible set of behaviors, we would need the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of classes, (7 * 7 * 7), or 343 classes! That would be a silly monstrosity for several reasons of course, one of which being we could simplify the design by providing a class hierarchy for each of the three kinds of behavior, and plug those into the larger class -- but then we would still need (7 + 7 + 7), or 21 classes! (Probably 24 really, as pure design would dictate an additional class as an abstract superclass for each set of 7 implementations).
 
 If these behaviors are truly complex enough to justify a class of their own, this is not a problem. However, often they are not, and the solution is many times as verbose and complex as it needs to be.
 
@@ -21,7 +24,11 @@ A better solution is using callables such as lambdas.
 
 #### Callables as a Superset of Lambdas
 
-In traditional object oriented languages such as Java and C++, polymorphism is (in general) implemented by inheritance. Ruby does this also (2), but in addition, Ruby uses _duck typing_, meaning that _any_ object that responds to the method name can be used, regardless of its position in the class hierarchy. This means that in Ruby, since the method used to call a lambda is `call`, _any_ object that responds to `call` can be used in place of a lambda. It could be a lambda, an instance of a class, or even a class or module. This provides great flexibility in implementing varying behavior. You can choose what kind of object to use based on your situation. For complex behaviors you may want modules or classes, and for simpler behaviors a lambda will work just fine.
+In traditional object oriented languages such as Java and C++, polymorphism is (in general) implemented by inheritance. Ruby does this also (2), but in addition, Ruby uses _duck typing_, meaning that _any_ object that responds to the method name can be used, regardless of its position in the class hierarchy.
+
+##### This means that in Ruby, since the method used to call a lambda is `call`, _any_ object that responds to `call` can be used in place of a lambda.
+
+It could be a lambda, an instance of a class, or even a class or module. This provides great flexibility in implementing varying behavior. You can choose what kind of object to use based on your situation. For complex behaviors you may want modules or classes, and for simpler behaviors a lambda will work just fine.
 
  Since any object responding to `call` can be used in place of a lambda, I will use the term _callable_ instead of _lambda_ where applicable.
 
@@ -163,7 +170,7 @@ The `all` compound filter is nothing more than a simple wrapper around Ruby's En
   end
 ```
 
-How can this work? The filters are interchangeable because they all take the same parameter list and they all return a value usable by the caller. To be specific, they are passed the message that was received and the protocol with which it was sent, and return a boolean value. We've already seen one example, the lambda returned by the `qname` method shown above. Here is another one; this one returns true if and only if the message was sent over TCP:
+How can this work? The filters are interchangeable because they all take the same parameter list and they all return a value usable by the caller. To be more specific, they are passed the message that was received and the protocol with which it was sent, and return a boolean value. We've already seen one example, the lambda returned by the `qname` method shown above. Here is another one; this one returns true if and only if the message was sent over TCP:
 
 ```ruby
 def from_tcp
