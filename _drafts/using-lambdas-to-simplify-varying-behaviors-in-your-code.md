@@ -36,7 +36,7 @@ It could be a lambda, an instance of a class, or even a class or module. This pr
 
 ### The Buffered Enumerable
 
-I once worked on a project where I needed to implement buffering of multiple kinds of things received over network connections. I started writing the first one, and noticed how the code could be cleanly divided into two kinds of tasks: 1) knowing _when_ to fetch objects into the buffer and other buffer management tasks, and 2) _how_ to fetch each block of objects and what _else_ to do each time that fetch is performed (e.g. logging, displaying a message to the user, updating some external state).
+I once worked on a project where I needed to implement buffering of multiple kinds of things received over network connections. I started writing the first one, and noticed how the code could be cleanly divided into two kinds of tasks: 1) knowing _when_ to fetch objects into the buffer and other buffer management tasks, and 2) knowing _how_ to fetch each block of objects and what _else_ to do each time that fetch is performed (e.g. logging, displaying a message to the user, updating some external state).
 
 Realizing that #1 would be common and identical to all cases, and only #2 would vary, I thought about how wasteful it would be to implement #1 separately in all cases. I thought about the admonition about high cohesion / low coupling, and the Unix axiom "do one thing well", and decided to separate the two.
 
@@ -44,7 +44,7 @@ The most natural way to design this functionality in Ruby is with an [_Enumerabl
 
 This is the origin of the  [_BufferedEnumerable_](https://github.com/keithrbennett/trick_bag/blob/master/lib/trick_bag/enumerables/buffered_enumerable.rb) class in my [_trick_bag_](https://github.com/keithrbennett/trick_bag/) gem. This class manages buffering but has no idea how to fetch chunks of data, nor what else to do at each such fetch; for that, the caller provides callables such as lambdas. (Upon user request, the ability to subclass it and override its methods was also added.) The result is a dramatic simplification, where the logic of buffering is defined in only one place, and the places it is used need not be concerned with its implementation (or its testing!).
 
-To create an instance of this with callables, we call the `BufferedEnumerable` class method `create_with_callables`, which is defined as follows:
+To create an instance of this with callables, we call the `BufferedEnumerable` class method `create_with_callables`, which is defined as follows(3):
 
 ```ruby
  def self.create_with_callables(chunk_size, fetcher, fetch_notifier = nil)
@@ -55,7 +55,7 @@ To create an instance of this with callables, we call the `BufferedEnumerable` c
   end
 ```
 
-If a fetcher callable has been defined (as opposed to the use of the subclassing approach), it is called with the empty data buffer and the number of objects requested as shown below whenever the buffer needs to be filled, as follows:
+When a fetcher callable has been defined (as opposed to the use of the subclassing approach, where an overriding method is used), it is called with the empty data buffer and the number of objects requested as shown below whenever the buffer needs to be filled, as follows:
 
 ```ruby
 fetcher.(data, chunk_size)
@@ -117,7 +117,7 @@ By parameterizing the behaviors with callables, we have increased the simplicity
 
 ### Using Predicate Callables to Implement Filters
 
-_Predicates_ are functions that return a Boolean value, that is, either true or false. There are many use cases for predicates in software: filters, boundaries, triggers, authentication results...again, anything that produces a true or false value.
+_Predicates_ are functions that return a Boolean value, that is, either true or false. There are many uses for predicates in software: filters, boundaries, triggers, authentication results...again, anything that produces a true or false value.
 
 Configurable predicates are another natural fit for using callables.
 
@@ -125,11 +125,10 @@ I once had to write a [DNS mock server](https://github.com/keithrbennett/mock_dn
 
 Both cases were an excellent fit for using callables as filters.
 
-In the case of the mock DNS server, there were multiple criteria for the filters, such as _protocol_ (TCP vs. UDP), _qtype_ (question type), _qclass_ (question class), and _qname_ (question name). I provided methods that return lambdas that filter for specific values for those attributes; for example, for a filter that will return true only for the qname `example.com`, you would do the following:
+In the case of the mock DNS server, there were multiple criteria for the filters, such as _protocol_ (TCP vs. UDP), _qtype_ (question type), _qclass_ (question class), and _qname_ (question name). I provided methods that return lambdas that filter for specific values for those attributes; for example, to create a filter that will return true only for the qname `example.com`, you would do the following:
 
 ```ruby
-predicate_factory = MockDnsServer::PredicateFactory.new
-filter = predicate_factory.qname('example.com')
+MockDnsServer::PredicateFactory.new.qname('example.com')
 ```
 
 The `qname` method (i.e. the method that returns a filter for exactly one qname value) is defined as (roughly):
@@ -142,14 +141,13 @@ def qname(qname)
 end
 ```
 
-If you view the method body from left to right, you will notice the prominent `->` and its corresponding `end` two lines beneath it, which tell you that the value returned by this method is a lambda. The leading underscore is a convention that indicates that that parameter is unused by the lambda.
+If you view the method body from left to right, you will notice the prominent `->` and its corresponding `end` two lines beneath it, which tell you that the value returned by this method is a lambda. The leading underscore of the `_protocol` parameter is a convention that indicates that that parameter is unused by the lambda.
 
-Notice that the `qname` parameter is effectively stored in the lambda that the method returns?
+Notice that the `qname` parameter's value (e.g. "example.com") is effectively stored in the lambda that the method returns? This technique is called _partial application_, and is extremely useful when working with lambdas.
 
-This technique is called _partial application_, and is extremely useful. Does storing state in the lambda make it any less _functional_? Not really; the state is immutable and used only for comparison.
+Does storing state in the lambda make it any less _functional_? Not really; the state is immutable and used only for comparison.
 
-
-If we were also to add the requirement that the qtype be 'A' and the protocol be 'TCP', then we could call methods to return those filters as well, and combine them using the `all` compound filter. (Other compound filters are `any` and `none`.) Here is what that would look like:
+If we were to refine the filter by adding the requirement that the qtype be 'A' and the protocol be 'TCP', then we could call methods to return those filters as well, and combine all three using the `all` compound filter. (Other compound filters are `any` and `none`.) Here is what that would look like:
 
 ```ruby
 pf = MockDnsServer::PredicateFactory.new
@@ -170,7 +168,7 @@ The `all` compound filter is nothing more than a simple wrapper around Ruby's En
   end
 ```
 
-How can this work? The filters are interchangeable because they all take the same parameter list and they all return a value usable by the caller. To be more specific, they are passed the message that was received and the protocol with which it was sent, and return a boolean value. We've already seen one example, the lambda returned by the `qname` method shown above. Here is another one; this one returns true if and only if the message was sent over TCP:
+Why does all this work? The filters are interchangeable because they all have uniform inputs and outputs. That is, they take the same parameter list (`[message, protocol]` in this example), and they all return a value usable by the caller (`true` or `false` in this example). We've already seen one example, the lambda returned by the `qname` method shown above. Here is another one; this one returns true if and only if the message was sent over TCP:
 
 ```ruby
 def from_tcp
@@ -203,3 +201,5 @@ You can find me on:
 
 
 (2) To be more precise, Ruby supports polymorphism by inheritance, but not by checking the class hierarchy like most OO languages do. Instead, it is using duck typing, and merely calls the method by name; since a subclass will be able to call its superclass' method by default, it works.
+
+(3) The omission of the `fetcher` and `fetch_notifier` parameters from the constructor is intentional. The constructor is intended to be used directly by the caller only when the subclassing approach is used; for lambdas the static method `create_with_callables` should be used.
