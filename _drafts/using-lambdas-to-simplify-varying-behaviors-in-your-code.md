@@ -4,7 +4,7 @@ date: 2018-07-16
 ---
 
 
-[Lambdas](https://en.wikipedia.org/wiki/Anonymous_function), unlike methods, are functions not bound to any object. They are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages. However, even [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages that support lambdas, such as Ruby, can greatly benefit from their use. This is especially true when it comes to implementing varying behaviors.
+[Lambdas](https://en.wikipedia.org/wiki/Anonymous_function) are anonymous (unnamed) functions. Unlike _methods_ in [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages, lambdas are not bound to any object. Although they are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages, object oriented programming languages that support lambdas, such as Ruby, can greatly benefit from their use. This is especially true when it comes to implementing varying behaviors.
 
 ### The Problem with Non-Lambda Approaches
 
@@ -63,7 +63,7 @@ fetcher.(data, chunk_size)
 
 (In Ruby, `.(` is an abbreviation for `.call(`.)
 
-Here is a trivial fetcher that merely fills the array of the requested chunk size with random numbers:
+A trivial fetcher that merely fills the array of the requested chunk size with random numbers could look like this:
 
 ```ruby
 fetcher = ->(data, chunk_size) do
@@ -71,7 +71,7 @@ fetcher = ->(data, chunk_size) do
 end
 ```
 
-Here is a `pry` example that illustrates the call to that fetcher, and its effect on the passed array:
+Below is a `pry` example that illustrates the call to that fetcher, and its effect on the passed array:
 
 ```
 [7] pry("")> a = []; fetcher.(a, 2)
@@ -125,7 +125,7 @@ I once had to write a [DNS mock server](https://github.com/keithrbennett/mock_dn
 
 Both cases were an excellent fit for using callables as filters.
 
-In the case of the mock DNS server, there were multiple criteria for the filters, such as _protocol_ (TCP vs. UDP), _qtype_ (question type), _qclass_ (question class), and _qname_ (question name). I provided methods that return lambdas that filter for specific values for those attributes; for example, to create a filter that will return true only for the qname `example.com`, you would do the following:
+In the case of the mock DNS server, there were multiple criteria for the DNS request filters, such as _protocol_ (TCP vs. UDP), _qtype_ (question type), _qclass_ (question class), and _qname_ (question name). I provided methods that return lambdas that filter for specific values for those attributes; for example, to create a filter that will return true only for the qname `example.com`, you would do the following:
 
 ```ruby
 MockDnsServer::PredicateFactory.new.qname('example.com')
