@@ -1,6 +1,6 @@
 ---
 title: Using Lambdas to Simplify Varying Behaviors in Your Code
-date: 2018-07-16
+date: 2018-08-04
 ---
 
 
