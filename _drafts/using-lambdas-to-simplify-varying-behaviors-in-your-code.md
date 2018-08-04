@@ -67,7 +67,7 @@ A trivial fetcher that merely fills the array of the requested chunk size with r
 
 ```ruby
 fetcher = ->(data, chunk_size) do
-  chunk_size.times { data << Random.rand }
+  chunk_size.times { |index| data[index] = Random.rand }
 end
 ```
 
@@ -168,7 +168,7 @@ The `all` compound filter is nothing more than a simple wrapper around Ruby's En
   end
 ```
 
-Why does all this work? The filters are interchangeable because they all have uniform inputs and outputs. That is, they take the same parameter list (`[message, protocol]` in this example), and they all return a value usable by the caller (`true` or `false` in this example). We've already seen one example, the lambda returned by the `qname` method shown above. Here is another one; this one returns true if and only if the message was sent over TCP:
+Why does all this work? The filters are interchangeable because they all have uniform inputs and outputs. That is, they take the same parameter list (`[message, protocol]` in this example), and they all return a value usable by the caller (`true` or `false` in this example). We've already seen one implementation, the lambda returned by the `qname` method shown above. Here is another one; this one returns true if and only if the message was sent over TCP:
 
 ```ruby
 def from_tcp
