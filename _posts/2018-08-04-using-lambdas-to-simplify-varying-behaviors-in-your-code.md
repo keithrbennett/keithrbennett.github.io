@@ -193,7 +193,7 @@ You can find me on:
 * [StackOverflow](https://stackoverflow.com/users/501266/keith-bennett)
 * [Twitter](https://twitter.com/keithrbennett)
 
-Also, for more information about labmdas, feel free to check out my Ruby lambdas presentation at https://speakerdeck.com/keithrbennett/ruby-lambdas-functional-conf-bangalore-oct-2014 (slideshow PDF) and https://www.youtube.com/watch?v=R9Wjbt6K5yQ (video).
+Also, for more information about labmdas, feel free to check out my Ruby lambdas presentation on [Speakerdeck slideshow  PDF](https://speakerdeck.com/keithrbennett/ruby-lambdas-functional-conf-bangalore-oct-2014) and [YouTube video](https://www.youtube.com/watch?v=hyRgf6Qc5pw).
 
 ----
 
