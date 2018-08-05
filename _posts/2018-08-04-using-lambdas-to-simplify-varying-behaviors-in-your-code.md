@@ -4,13 +4,13 @@ date: 2018-08-04
 ---
 
 
-[Lambdas](https://en.wikipedia.org/wiki/Anonymous_function) are anonymous (unnamed) functions. Unlike _methods_ in [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages, lambdas are not bound to any object. Although they are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages, object oriented programming languages that support lambdas, such as Ruby, can greatly benefit from their use. This is especially true when it comes to implementing varying behaviors.
+[Lambdas](https://en.wikipedia.org/wiki/Anonymous_function) are anonymous (unnamed) functions. Unlike _methods_ in [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages, lambdas are not bound to any object. Although they are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages, object oriented programming languages that support lambdas, such as Ruby, can greatly benefit from their use. This is especially true when it comes to implementing varying behaviors(1).
 
 ### The Problem with Non-Lambda Approaches
 
 The procedural `if-elsif-end` or `case` clauses work when you have a small number of conditions and actions that are known in advance, but if you don't, they're pretty useless.
 
-And although the object oriented approach of [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) by inheritance (1) can produce a correct result, in many cases it is unnecessarily verbose, ceremonial, and awkward.
+And although the object oriented approach of [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) by inheritance (2) can produce a correct result, in many cases it is unnecessarily verbose, ceremonial, and awkward.
 
 Furthermore, though we're accustomed to thinking about this problem in the context of a _single_ customizable behavior, what if there are _several_?
 
@@ -24,7 +24,7 @@ A better solution is using _callables_ such as lambdas.
 
 #### Callables as a Superset of Lambdas
 
-In traditional object oriented languages such as Java and C++, polymorphism is (in general) implemented by inheritance. Ruby does this also (2), but in addition, Ruby uses _duck typing_, meaning that _any_ object that responds to the method name can be used, regardless of its position in the class hierarchy.
+In traditional object oriented languages such as Java and C++, polymorphism is (in general) implemented by inheritance. Ruby does this also (3), but in addition, Ruby uses _duck typing_, meaning that _any_ object that responds to the method name can be used, regardless of its position in the class hierarchy.
 
 ##### This means that in Ruby, since the method used to call a lambda is `call`, _any_ object that responds to `call` can be used in place of a lambda.
 
@@ -44,7 +44,7 @@ The most natural way to design this functionality in Ruby is with an [_Enumerabl
 
 This is the origin of the  [_BufferedEnumerable_](https://github.com/keithrbennett/trick_bag/blob/master/lib/trick_bag/enumerables/buffered_enumerable.rb) class in my [_trick_bag_](https://github.com/keithrbennett/trick_bag/) gem. This class manages buffering but has no idea how to fetch chunks of data, nor what else to do at each such fetch; for that, the caller provides callables such as lambdas. (Upon user request, the ability to subclass it and override its methods was also added.) The result is a dramatic simplification, where the logic of buffering is defined in only one place, and the places it is used need not be concerned with its implementation (or its testing!).
 
-To create an instance of this with callables, we call the `BufferedEnumerable` class method `create_with_callables`, which is defined as follows(3):
+To create an instance of this with callables, we call the `BufferedEnumerable` class method `create_with_callables`, which is defined as follows(4):
 
 ```ruby
  def self.create_with_callables(chunk_size, fetcher, fetch_notifier = nil)
@@ -193,13 +193,23 @@ You can find me on:
 * [StackOverflow](https://stackoverflow.com/users/501266/keith-bennett)
 * [Twitter](https://twitter.com/keithrbennett)
 
+Also, for more information about labmdas, feel free to check out my Ruby lambdas presentation at https://speakerdeck.com/keithrbennett/ruby-lambdas-functional-conf-bangalore-oct-2014 (slideshow PDF) and https://www.youtube.com/watch?v=R9Wjbt6K5yQ (video).
+
 ----
 
 ### Footnotes
 
-(1) Polymorphism by inheritance is a key characteristic of object oriented design whereby, by virtue of having a common ancestor in the class hierarchy that contains the method in question, objects of different classes can respond to the same message (typically identified by a method or function name) differently. This can be a nice design in some cases, but in others it is an overly heavy handed solution to a simple problem, as it forces the developer to create multiple classes in a class hierarchy.
+(1) One might ask what else _is_ there about lambdas other than varying behavior, but there _are_ other reasons to use them in Ruby. For example, they can be used:
 
+* as nested functions
+* as truly private functions (which, unlike private methods, cannot be accessed with `send`
+* for self invoking anonymous functions to hide variables
+* for defining functions where methods cannot be defined (e.g. in some RSpec code)
+* for defining classes dynamically with the `class...end` notation which may be easier to understand than the `define_method` approach.
+* for chaining operations, as in an array of lambdas
 
-(2) To be more precise, Ruby supports polymorphism by inheritance, but not by checking the class hierarchy like most OO languages do. Instead, it is using duck typing, and merely calls the method by name; since a subclass will be able to call its superclass' method by default, it works.
+(2) Polymorphism by inheritance is a key characteristic of object oriented design whereby, by virtue of having a common ancestor in the class hierarchy that contains the method in question, objects of different classes can respond to the same message (typically identified by a method or function name) differently. This can be a nice design in some cases, but in others it is an overly heavy handed solution to a simple problem, as it forces the developer to create multiple classes in a class hierarchy.
 
-(3) The omission of the `fetcher` and `fetch_notifier` parameters from the constructor is intentional. The constructor is intended to be used directly by the caller only when the subclassing approach is used; for lambdas the static method `create_with_callables` should be used.
+(3) To be more precise, Ruby supports polymorphism by inheritance, but not by checking the class hierarchy like most OO languages do. Instead, it is using duck typing, and merely calls the method by name; since a subclass will be able to call its superclass' method by default, it works.
+
+(4) The omission of the `fetcher` and `fetch_notifier` parameters from the constructor is intentional. The constructor is intended to be used directly by the caller only when the subclassing approach is used; for lambdas the static method `create_with_callables` should be used.
