@@ -213,3 +213,7 @@ Also, for more information about lambdas, feel free to check out my Ruby lambdas
 (3) To be more precise, Ruby supports polymorphism by inheritance, but not by checking the class hierarchy like most OO languages do. Instead, it is using duck typing, and merely calls the method by name; since a subclass will be able to call its superclass' method by default, it works.
 
 (4) The omission of the `fetcher` and `fetch_notifier` parameters from the constructor is intentional. The constructor is intended to be used directly by the caller only when the subclassing approach is used; for lambdas the static method `create_with_callables` should be used.
+
+----
+
+This article may be improved over time. To see its revisions you can go to its [Github commit history](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/_posts/2018-08-04-using-lambdas-to-simplify-varying-behaviors-in-your-code.md).
