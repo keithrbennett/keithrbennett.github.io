@@ -12,6 +12,8 @@ The procedural `if-elsif-end` or `case` clauses work when you have a small numbe
 
 And although the object oriented approach of [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) by inheritance (2) can produce a correct result, in many cases it is unnecessarily verbose, ceremonial, and awkward.
 
+To further embellish on this point, @kayess pointed me to a [discussion](http://okmij.org/ftp/Scheme/oop-in-fp.txt) on a Scheme forum where Anton van Straaten said about closures (lambdas are closures): "A closure's  simplicity can be an asset: classes and interfaces can get in the way of simple parameterization of behavior.  Anyone who's tried functional programming in Java or C++ has encountered this - it can be done, but it's more tedious." Anton goes on to provide an entertaining koan about the subject.
+
 Furthermore, though we're accustomed to thinking about this problem in the context of a _single_ customizable behavior, what if there are _several_?
 
 Let's say we have a class that contains 3 varying behaviors. As an admittedly contrived example, let's say we have classes for each of hundreds of different species of animals, and they each have a `move`, `sleep`, and `vocalize` behavior. As a simplifying assumption, let's say that each of these behaviors has 7 possible variations, each of which is shared by many species. If we were to write a class to implement each possible set of the 3 behaviors, we would need the [Cartesian product](https://en.wikipedia.org/wiki/Cartesian_product) of classes, (7 * 7 * 7), or 343 classes! That would be a silly monstrosity for several reasons of course, one of which being we could simplify the design by providing a class hierarchy for each of the three kinds of behavior, and plug those into the larger class -- but then we would still need (7 + 7 + 7), or 21 classes! (Probably 24 really, as pure design would dictate an additional class as an abstract superclass for each set of 7 implementations).
@@ -209,6 +211,8 @@ Also, for more information about lambdas, feel free to check out my Ruby lambdas
 * for chaining operations, as in an array of lambdas
 
 (2) Polymorphism by inheritance is a key characteristic of object oriented design whereby, by virtue of having a common ancestor in the class hierarchy that contains the method in question, objects of different classes can respond to the same message (typically identified by a method or function name) differently. This can be a nice design in some cases, but in others it is an overly heavy handed solution to a simple problem, as it forces the developer to create multiple classes in a class hierarchy.
+
+(2 (cont'd)) [@kayess](https://twitter.com/KayEss) points out that the more precise terms in software engineering are [nominal typing](https://en.wikipedia.org/wiki/Nominal_type_system) for polymorphism by inheritance, and [structural typing](https://en.wikipedia.org/wiki/Structural_type_system) for duck typing.
 
 (3) To be more precise, Ruby supports polymorphism by inheritance, but not by checking the class hierarchy like most OO languages do. Instead, it is using duck typing, and merely calls the method by name; since a subclass will be able to call its superclass' method by default, it works.
 
