@@ -12,7 +12,7 @@ The procedural `if-elsif-end` or `case` clauses work when you have a small numbe
 
 And although the object oriented approach of [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)) by inheritance (2) can produce a correct result, in many cases it is unnecessarily verbose, ceremonial, and awkward.
 
-To further embellish on this point, @kayess pointed me to a [discussion](http://okmij.org/ftp/Scheme/oop-in-fp.txt) on a Scheme forum where Anton van Straaten said about closures (lambdas are closures): "A closure's  simplicity can be an asset: classes and interfaces can get in the way of simple parameterization of behavior.  Anyone who's tried functional programming in Java or C++ has encountered this - it can be done, but it's more tedious." Anton goes on to provide an entertaining koan about the subject.
+To further embellish on this point, [@kayess](https://twitter.com/KayEss) pointed me to a [discussion](http://okmij.org/ftp/Scheme/oop-in-fp.txt) on a Scheme forum where Anton van Straaten said about closures (lambdas are closures): "A closure's  simplicity can be an asset: classes and interfaces can get in the way of simple parameterization of behavior.  Anyone who's tried functional programming in Java or C++ has encountered this - it can be done, but it's more tedious." Anton goes on to provide an entertaining koan about the subject.
 
 Furthermore, though we're accustomed to thinking about this problem in the context of a _single_ customizable behavior, what if there are _several_?
 
