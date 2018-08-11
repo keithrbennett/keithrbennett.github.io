@@ -6,6 +6,11 @@ date: 2018-08-04
 
 [Lambdas](https://en.wikipedia.org/wiki/Anonymous_function) are anonymous (unnamed) functions. Unlike _methods_ in [object oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) languages, lambdas are not bound to any object. Although they are best known in the context of [functional programming](https://en.wikipedia.org/wiki/Functional_languages) languages, object oriented programming languages that support lambdas, such as Ruby, can greatly benefit from their use. This is especially true when it comes to implementing varying behaviors(1).
 
+By varying behaviors, I mean situations where the code that needs to run is not fixed, but rather specified, using parameters, subclassing, or configuration. Examples would include cases for which you would use the [Command](https://en.wikipedia.org/wiki/Command_pattern) and [Strategy](https://en.wikipedia.org/wiki/Strategy_pattern) design patterns.
+
+Many developers are already familiar with using lambdas (called _functions_ in JavaScript) for event handling, but there are many other cases in which they are helpful, a couple of which I will describe below.
+
+
 ### The Problem with Non-Lambda Approaches
 
 The procedural `if-elsif-end` or `case` clauses work when you have a small number of conditions and actions that are known in advance, but if you don't, they're pretty useless.
