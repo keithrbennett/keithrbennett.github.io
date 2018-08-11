@@ -8,7 +8,7 @@ date: 2018-08-04
 
 By varying behaviors, I mean situations where the code that needs to run is not fixed, but rather specified, using parameters, subclassing, or configuration. Examples would include cases for which you would use the [Command](https://en.wikipedia.org/wiki/Command_pattern) and [Strategy](https://en.wikipedia.org/wiki/Strategy_pattern) design patterns.
 
-Many developers are already familiar with using lambdas (called _functions_ in JavaScript) for event handling, but there are many other cases in which they are helpful, a couple of which I will describe below.
+Many developers are already familiar with using lambdas for _event handling_ (implemented with the  `function` keyword in JavaScript and also as arrow functions in ES6) , but there are many other cases in which they are helpful, a couple of which I will describe below.
 
 
 ### The Problem with Non-Lambda Approaches
