@@ -9,7 +9,7 @@ Often, I solve this problem by writing a Ruby script instead. Ruby gives me fine
 
 ### Using the Ruby Interpreter on the Command Line
 
-Sometimes a good solution is to combine Ruby and shell scripting on the same command line. Here's an example, using an intermediate environment variable to simplify the logic (an excerpt of the color output follows the code):
+Sometimes a good solution is to combine Ruby and shell scripting on the same command line. Here's an example, using an intermediate environment variable to simplify the logic (an excerpt of the output follows the code):
 
 ```
 ➜  ~   export JSON_TEXT=`curl https://api.exchangeratesapi.io/latest`
@@ -29,7 +29,7 @@ However, the length and verbosity of the command are awkward and discourage this
 
 ### Rexe
 
-Enter, the `rexe` script (coincidentally, written by me!). `rexe` is at https://github.com/keithrbennett/rexe and can be installed with `gem install rexe`. `rexe` provides several ways to simplify Ruby on the command line, tipping the scale so that it can be done more often.
+Enter, the `rexe` script (coincidentally, written by me!). `rexe` is at https://github.com/keithrbennett/rexe and can be installed with `gem install rexe`. `rexe` provides several ways to simplify Ruby on the command line, tipping the scale so that it is practical to do it more often.
 
 For consistency with the `ruby` interpreter we called previously, `rexe` supports requires with the `-r` option, but also allows grouping them together using commas:
 
@@ -37,24 +37,26 @@ For consistency with the `ruby` interpreter we called previously, `rexe` support
 echo $JSON_TEXT | rexe -r json,awesome_print 'ap JSON.parse(STDIN.read)'
 ```
 
-This command produces the same results as the previous one.
+This command produces the same results as the previous `ruby` one.
 
 ### Simplifying the Rexe Invocation with Configuration
 
+Using any of several configuration approaches, the `json` and `awesome_print` requires can be excluded from the command line altogether so that the command is shortened and simplified. 
+
 #### The REXE_OPTIONS Environment Variable
 
-Using any of several configuration approaches, the `json` and `awesome_print` requires can be excluded from the command line altogether so that the command is shortened and simplified. One way is to use the `REXE_OPTIONS` environment variable:
+One way is to use the `REXE_OPTIONS` environment variable:
 
 ```
 export REXE_OPTIONS="-r json,awesome_print"
 echo $JSON_TEXT | rexe 'ap JSON.parse(STDIN.read)'
 ```
 
-Like any environment variable, it could also be set in your startup script, input on the command line, or in another script loaded with `source` or `.`.
+Like any environment variable, `REXE_OPTIONS` could also be set in your startup script, input on a command line using `export`, or in another script loaded with `source` or `.`.
 
 #### Loading Files
 
-This approach works well for command line options, but what if we want to run Ruby code that can be used by all invocations of `rexe`? An example would be if we want to write methods that would be available to us on the command line.
+This approach works well for command line _options_, but what if we want to specify Ruby _code_ (e.g. methods) that can be used by all invocations of `rexe`?
 
 For this, `rexe` lets you _load_ Ruby files, using the `-l` or `-u` options, or implicitly (without your specifying it) in the case of the `~/.rexerc` file. Here is an example of something you might include in such a file (this is an alternate approach to specifying `-r` in the `REXE_OPTIONS` environment variable):
 
@@ -64,7 +66,7 @@ require 'yaml'
 require 'awesome_print'
 ```
 
-Requiring gems and modules from a configuration file instead of on a command line will make your commands simpler and more concise. However, this will be a waste of execution time if they are not needed. You can inspect the execution times to see just how much time is being wasted. For example, we can find out that nokogiri takes about 0.8 seconds to load on my laptop by observing and comparing the execution times with and without the require:
+Requiring gems and modules for _all_ invocations of `rexe` will make your commands simpler and more concise, but will be a waste of execution time if they are not needed. You can inspect the execution times to see just how much time is being wasted. For example, we can find out that nokogiri takes about 0.8 seconds to load on my laptop by observing and comparing the execution times with and without the require:
 
 ```
 ➜  ~   rexe -v
@@ -72,13 +74,14 @@ rexe version 0.6.0 -- 2019-02-23 16:51:48 +0700
 Source Code:
 Options: {:input_mode=>:no_input, :loads=>[], :requires=>[], :verbose=>true}
 Loading global config file /Users/kbennett/.rexerc
-rexe time elapsed: 0.094946 seconds.
+rexe time elapsed: 0.094946 seconds.   # <---------------------------
+
 ➜  ~   rexe -v -r nokogiri
 rexe version 0.6.0 -- 2019-02-23 16:51:53 +0700
 Source Code:
 Options: {:input_mode=>:no_input, :loads=>[], :requires=>["nokogiri"], :verbose=>true}
 Loading global config file /Users/kbennett/.rexerc
-rexe time elapsed: 0.165996 seconds.
+rexe time elapsed: 0.165996 seconds.   # <---------------------------
 ```
 
 ### Using Loaded Files in Your Commands: Wagner's "Ride of the Valkyries"
@@ -96,16 +99,16 @@ Why would you want this? You might want to be able to go to another room until a
 
 Defining methods in your loaded files enables you to effectively define a DSL for your command line use.
 
-Here is an example of how you might use this, assuming the above configuration is in your ~/.rexerc file (or otherwise loaded):
+Here is an example of how you might use this, assuming the above configuration is loaded from your ~/.rexerc file or 
+an explicitly loaded file:
 
 ```
 tar czf /tmp/my-whole-user-space.tar.gz ~ ; rexe valkyries
 ```
 
 You might be thinking that creating an alias or a minimal shell script for this open would be a simpler and more natural
-approach, and I would agree with you. However, over time the number of these could become unmanageable, whereas with Ruby code
-you could build a pretty extensive and well organized library of functionality; and in many cases it would be more than
- a simple call to the shell and you need Ruby functionality.
+approach, and I would agree with you. However, over time the number of these could become unmanageable, and using Ruby
+you could build a pretty extensive and well organized library of functionality.
 
 #### Verbose Mode
 
@@ -135,7 +138,7 @@ Show disk space used/free on a Mac's main hard drive:
 ```
 
 
-Print yellow:
+Print yellow (trust me!):
 
 ```
 `➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m}; puts self.to_a"
@@ -171,3 +174,4 @@ instead of Ruby to truncate the array of lines:
 2019-02-25T11:45:50+07:00 : drwxr-xr-x     4 kbennett  staff        128 Jul 27  2017 AndroidStudioProjects
 2019-02-25T11:45:50+07:00 : drwx------     8 kbennett  staff        256 Sep  4 12:09 Applications
 ```
+
