@@ -47,7 +47,7 @@ require 'yaml'
 require 'awesome_print'
 ```
 
-Requiring gems and modules from a configuration file instead of on a command line will make your commands simpler and more concise. However, this will be a waste of time if they are not needed. You can inspect the execution times to see just how much time is being wasted. For example, we can find out that nokogiri takes about 0.8 seconds to load on my laptop by observing the execution time with and without the require:
+Requiring gems and modules from a configuration file instead of on a command line will make your commands simpler and more concise. However, this will be a waste of execution time if they are not needed. You can inspect the execution times to see just how much time is being wasted. For example, we can find out that nokogiri takes about 0.8 seconds to load on my laptop by observing and comparing the execution times with and without the require:
 
 ```
 ➜  ~   rexe -v
@@ -83,9 +83,17 @@ Here is an example of how you might use this, assuming the above configuration i
 tar czf /tmp/my-whole-user-space.tar.gz ~ ; rexe valkyries
 ```
 
-If you ever want to see how `rexe` has been configured by all these approaches, you can make use of its _verbose mode_ by specifying the `-v` option. If we were to add the `-v` option to the previous command, we would see these additional lines in the output:
+You might be thinking that creating an alias or a minimal shell script for this open would be a simpler and more natural
+approach, and I would agree with you. However, over time the number of these could become unmanageable, whereas with Ruby code
+you could build a pretty extensive and well organized library of functionality; and in many cases you would be
+doing more than simply an `open`.
+
+In addition to displaying the execution time, verbose mode will display the version, date/time of execution, source code
+to be evaluated, options specified (by all approaches), and that the global file has been loaded (if it was found):
  
 ```
+➜  ~   rexe -rjson,awesome_print "ap JSON.parse(STDIN.read)"
+
 rexe version 0.5.0 -- 2019-02-19 19:18:48 +0700
 Source Code: ap JSON.parse(STDIN.read)
 Options: {:input_mode=>:no_input, :loads=>[], :requires=>["json", "awesome_print"], :verbose=>true}
@@ -95,10 +103,6 @@ rexe time elapsed: 0.051131 seconds.
 ``` 
  
 This extra output is sent to standard error (_stderr_) instead of standard output (_stdout_) so that it will not pollute the "real" data when stdout is piped to another command.)
-
-
-
-```
 
 Using this approach we could eliminate the requires by creating a `~/.rbrc` file containing:
 
