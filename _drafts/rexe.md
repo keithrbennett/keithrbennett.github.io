@@ -12,11 +12,18 @@ Often, I solve this problem by writing a Ruby script instead. Ruby gives me fine
 Sometimes a good solution is to combine Ruby and shell scripting on the same command line. Here's an example, using an intermediate environment variable to simplify the logic (an excerpt of the color output follows the code):
 
 ```
-export JSON_TEXT=`curl https://api.exchangeratesapi.io/latest`
-echo $JSON_TEXT | ruby -r json -r awesome_print -e 'ap JSON.parse(STDIN.read)'
+➜  ~   export JSON_TEXT=`curl https://api.exchangeratesapi.io/latest`
+➜  ~   echo $JSON_TEXT | ruby -r json -r awesome_print -e 'ap JSON.parse(STDIN.read)'
+{
+    "rates" => {
+        "MXN" => 21.781,
+        ...
+        "DKK" => 7.462
+    },
+     "base" => "EUR",
+     "date" => "2019-02-22"
+}
 ```
-
-![output of ap](2019-02-15-shot-1.png)
 
 However, the length and verbosity of the command are awkward and discourage this approach.
 
