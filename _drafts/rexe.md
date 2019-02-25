@@ -84,7 +84,7 @@ Loading global config file /Users/kbennett/.rexerc
 rexe time elapsed: 0.165996 seconds.   # <---------------------------
 ```
 
-### Using Loaded Files in Your Commands: Wagner's "Ride of the Valkyries"
+### Using Loaded Files in Your Commands
 
 Here's something else you could include in such a load file:
 
@@ -95,11 +95,9 @@ def valkyries
 end
 ```
 
-Why would you want this? You might want to be able to go to another room until a long job completes, and be notified when it is done. The `valkyries` method will launch a browser window pointed to Richard Wagner's "Ride of the Valkyries" starting at a lively point in the music. (The `open` command is Mac specific and could be replaced with `start` on Windows, a browser command name, etc.) If you like this sort of thing, you could download public domain audio files and use a command like player like `afplay` on Mac OS, or `mpg123` or `ogg123` on Linux. This is lighter weight, requires no network access, and will not leave an open browser window for you to close.
+Why would you want this? You might want to be able to go to another room until a long job completes, and be notified when it is done. The `valkyries` method will launch a browser window pointed to Richard Wagner's "Ride of the Valkyries" starting at a lively point in the music. (The `open` command is Mac specific and could be replaced with `start` on Windows, a browser command name, etc.) If you like this sort of thing, you could download public domain audio files and use a command like player like `afplay` on Mac OS, or `mpg123` or `ogg123` on Linux. This approach is lighter weight, requires no network access, and will not leave an open browser window for you to close.
 
-Defining methods in your loaded files enables you to effectively define a DSL for your command line use.
-
-Here is an example of how you might use this, assuming the above configuration is loaded from your ~/.rexerc file or 
+Here is an example of how you might use this, assuming the above configuration is loaded from your `~/.rexerc` file or 
 an explicitly loaded file:
 
 ```
@@ -109,6 +107,21 @@ tar czf /tmp/my-whole-user-space.tar.gz ~ ; rexe valkyries
 You might be thinking that creating an alias or a minimal shell script for this open would be a simpler and more natural
 approach, and I would agree with you. However, over time the number of these could become unmanageable, and using Ruby
 you could build a pretty extensive and well organized library of functionality.
+
+Defining methods in your loaded files enables you to effectively define a DSL for your command line use. You could use different load files for different projects, domains, or contexts, and define aliases or one line scripts to give them meaningful names. For example, if I wrote code to work with Ansible and put it in `~/projects/rexe-ansible.rb`, I could define an alias in my startup script:
+
+```
+alias rxans="rexe -l ~/projects/rexe-ansible.rb $*"
+```
+...and then I would have an Ansible DSL available for me to use with `rxans`.
+
+There may be times when you have specified a load or require in the configuration
+(environment variable, ~/.rexerc, etc.), but you want to override it for a
+single invocation. Currently you cannot unspecify a single resource, but you
+can unspecify _all_ the requires or loads with the `-r!` and `-l!` command line
+options, respectively.
+
+
 
 #### Verbose Mode
 
@@ -125,7 +138,12 @@ Loading global config file /Users/kbennett/.rexerc
 rexe time elapsed: 0.051131 seconds.
 ``` 
  
-This extra output is sent to standard error (_stderr_) instead of standard output (_stdout_) so that it will not pollute the "real" data when stdout is piped to another command.
+This extra output is sent to standard error (_stderr_) instead of standard output
+(_stdout_) so that it will not pollute the "real" data when stdout is piped to
+another command.
+
+If verbose mode is enabled in configuration and you want to disable it, you can
+do so by using any of the following: `--[no-]verbose`, `-v n`, or `-v false`.
 
 ### More Examples
 
@@ -175,3 +193,18 @@ instead of Ruby to truncate the array of lines:
 2019-02-25T11:45:50+07:00 : drwx------     8 kbennett  staff        256 Sep  4 12:09 Applications
 ```
 
+### Conclusion
+
+`rexe` is not revolutionary technology, it's just plumbing that removes low level
+configuration from your command line so that you can focus on the high level
+task at hand.
+
+When we think of a new piece of software, we usually think "what would this be
+helpful with now?". However, the power of `rexe` is not so much what can be done
+with it in a single use case now, but rather what will it do for me as I get
+used to the concept and my supporting code and its uses evolve.
+
+I suggest starting to use `rexe` even for modest improvements in workflow, even
+if it doesn't seem compelling. There's a good chance that as you use it over
+time, new ideas will come to you and the workflow improvements will increase
+exponentially.
