@@ -178,15 +178,21 @@ Show disk space used/free on a Mac's main hard drive:
 
 ```
 ➜  ~   export TEXT=`df -h | grep disk1s1`
-➜  ~   echo $TEXT | rexe -ms "x = self.split; puts %Q{#{x[4]} Used: #{x[2]}, Avail #{x[3]}}"
+➜  ~   echo $TEXT | rexe -ms "x = split; puts %Q{#{x[4]} Used: #{x[2]}, Avail #{x[3]}}"
 91% Used: 412Gi, Avail 44Gi
 ```
+
+(Note that `split` is equivalent to `self.split`, and because the `-ms` option is used, `self` is the line of text.
 
 
 Print yellow (trust me!):
 
 ```
-`➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m}; puts self.to_a"
+➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m}; puts to_a"
+➜  ~     # or
+➜  ~   cowsay hello | rexe -mb "print %Q{\u001b[33m}; puts self"
+➜  ~     # or
+➜  ~   cowsay hello | rexe "print %Q{\u001b[33m}; puts STDIN.read"
   _______
  < hello >
   -------
@@ -201,7 +207,7 @@ Print yellow (trust me!):
 Add line numbers to the first 3 files in the directory listing:
 
 ```
-➜  ~   ls | rexe -me "self.first(3).each_with_index { |ln,i| puts '%5d  %s' % [i, ln] }; nil"
+➜  ~   ls | rexe -me "first(3).each_with_index { |ln,i| puts '%5d  %s' % [i, ln] }; nil"
 
     0  AndroidStudioProjects
     1  Applications
@@ -213,7 +219,7 @@ Add the current date/time to the first 3 files in the directory listing, this ti
 instead of Ruby to truncate the array of lines:
 
 ```
-➜  ~   ls -l | head -3 | rexe -ms "require 'date'; print DateTime.now.iso8601 + ' : ' + self"
+➜  ~   ls -l | head -3 | rexe -ms -r date "print DateTime.now.iso8601 + ' : ' + self"
 
 2019-02-25T11:45:50+07:00 : total 2387104
 2019-02-25T11:45:50+07:00 : drwxr-xr-x     4 kbennett  staff        128 Jul 27  2017 AndroidStudioProjects
