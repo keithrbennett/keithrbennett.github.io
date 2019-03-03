@@ -3,13 +3,20 @@ title: The `rexe` Command Line Executor and Filter
 date: 2019-02-15
 ---
 
-I love the power of the command line, but not the awkwardness of shell scripting languages. Sure, there's a lot that can be done with them, but it doesn't take long before I get frustrated with their bluntness and verbosity.
+I love the power of the command line, but not the awkwardness of shell scripting
+languages. Sure, there's a lot that can be done with them, but it doesn't take
+long before I get frustrated with their bluntness and verbosity.
 
-Often, I solve this problem by writing a Ruby script instead. Ruby gives me fine grained control in a "real" programming language with which I am comfortable. However, when there are multiple OS commands to be called, then Ruby can be awkward too.
+Often, I solve this problem by writing a Ruby script instead. Ruby gives me fine
+grained control in a "real" programming language with which I am comfortable.
+However, when there are multiple OS commands to be called, then Ruby can be
+awkward too.
 
 ### Using the Ruby Interpreter on the Command Line
 
-Sometimes a good solution is to combine Ruby and shell scripting on the same command line. Here's an example, using an intermediate environment variable to simplify the logic (an excerpt of the output follows the code):
+Sometimes a good solution is to combine Ruby and shell scripting on the same
+command line. Here's an example, using an intermediate environment variable to
+simplify the logic (an excerpt of the output follows the code):
 
 ```
 ➜  ~   export JSON_TEXT=`curl https://api.exchangeratesapi.io/latest`
@@ -25,16 +32,21 @@ Sometimes a good solution is to combine Ruby and shell scripting on the same com
 }
 ```
 
-However, the length and verbosity of the command are awkward and discourage this approach.
+However, the length and verbosity of the command are awkward and discourage this
+approach.
 
 ### Rexe
 
-Enter, the `rexe` script (coincidentally, written by me!). `rexe` is at https://github.com/keithrbennett/rexe and can be installed with `gem install rexe`. `rexe` provides several ways to simplify Ruby on the command line, tipping the scale so that it is practical to do it more often.
+Enter, the `rexe` script (coincidentally, written by me!). [^1]
+ 
+`rexe` is at https://github.com/keithrbennett/rexe and can be installed with
+`gem install rexe`. `rexe` provides several ways to simplify Ruby on the command
+line, tipping the scale so that it is practical to do it more often.
 
-Here is `rexe`'s help text:
+Here is `rexe`'s help text as of the time of this writing:
 
 ```
-rexe -- Ruby Command Line Filter/Executor -- v0.6.1 -- https://github.com/keithrbennett/rexe
+rexe -- Ruby Command Line Filter/Executor -- v0.7.0 -- https://github.com/keithrbennett/rexe
 
 Executes Ruby code on the command line, optionally taking standard input and writing to standard output.
 
@@ -42,16 +54,15 @@ Options:
 
 -h, --help                 Print help and exit
 -l, --load RUBY_FILE(S)    Ruby file(s) to load, comma separated, or ! to clear
--u, --load-up RUBY_FILE(S) Ruby file(s) to load, searching up tree, comma separated, or ! to clear
 -m, --mode MODE            Mode with which to handle input (i.e. what `self` will be in the code):
                            -ms for each line to be handled separately as a string
                            -me for an enumerator of lines (least memory consumption for big data)
                            -mb for 1 big string (all lines combined into single multiline string)
-                           -mn to execute the specified Ruby code on no input at all (default)
+                           -mn don't do special handling of input; self is not the input (default) 
 -r, --require REQUIRES     Gems and built-in libraries to require, comma separated, or ! to clear
 -v, --[no-]verbose         verbose mode (logs to stderr); to disable, short options: -v n, -v false
 
-If there is an .rexerc file in your home directory, it will be run as Ruby code
+If there is an .rexerc file in your home directory, it will be run as Ruby code 
 before processing the input.
 
 If there is a REXE_OPTIONS environment variable, its content will be prepended to the command line
@@ -61,7 +72,7 @@ so that you can specify options implicitly (e.g. `export REXE_OPTIONS="-r awesom
 For consistency with the `ruby` interpreter we called previously, `rexe` supports requires with the `-r` option, but also allows grouping them together using commas:
 
 ```
-echo $JSON_TEXT | rexe -r json,awesome_print 'ap JSON.parse(STDIN.read)'
+➜  ~   echo $JSON_TEXT | rexe -r json,awesome_print 'ap JSON.parse(STDIN.read)'
 ```
 
 This command produces the same results as the previous `ruby` one.
@@ -83,9 +94,9 @@ Like any environment variable, `REXE_OPTIONS` could also be set in your startup 
 
 #### Loading Files
 
-This approach works well for command line _options_, but what if we want to specify Ruby _code_ (e.g. methods) that can be used by all invocations of `rexe`?
+The environment variable approach works well for command line _options_, but what if we want to specify Ruby _code_ (e.g. methods) that can be used by all invocations of `rexe`?
 
-For this, `rexe` lets you _load_ Ruby files, using the `-l` or `-u` options, or implicitly (without your specifying it) in the case of the `~/.rexerc` file. Here is an example of something you might include in such a file (this is an alternate approach to specifying `-r` in the `REXE_OPTIONS` environment variable):
+For this, `rexe` lets you _load_ Ruby files, using the `-l` option, or implicitly (without your specifying it) in the case of the `~/.rexerc` file. Here is an example of something you might include in such a file (this is an alternate approach to specifying `-r` in the `REXE_OPTIONS` environment variable):
 
 ```
 require 'json'
@@ -93,22 +104,14 @@ require 'yaml'
 require 'awesome_print'
 ```
 
-Requiring gems and modules for _all_ invocations of `rexe` will make your commands simpler and more concise, but will be a waste of execution time if they are not needed. You can inspect the execution times to see just how much time is being wasted. For example, we can find out that nokogiri takes about 0.8 seconds to load on my laptop by observing and comparing the execution times with and without the require:
+Requiring gems and modules for _all_ invocations of `rexe` will make your commands simpler and more concise, but will be a waste of execution time if they are not needed. You can inspect the execution times to see just how much time is being wasted. For example, we can find out that nokogiri takes about 0.7 seconds to load on my laptop by observing and comparing the execution times with and without the require (output has been abbreviated):
 
 ```
 ➜  ~   rexe -v
-rexe version 0.6.0 -- 2019-02-23 16:51:48 +0700
-Source Code:
-Options: {:input_mode=>:no_input, :loads=>[], :requires=>[], :verbose=>true}
-Loading global config file /Users/kbennett/.rexerc
-rexe time elapsed: 0.094946 seconds.   # <---------------------------
+rexe time elapsed: 0.094946 seconds.
 
 ➜  ~   rexe -v -r nokogiri
-rexe version 0.6.0 -- 2019-02-23 16:51:53 +0700
-Source Code:
-Options: {:input_mode=>:no_input, :loads=>[], :requires=>["nokogiri"], :verbose=>true}
-Loading global config file /Users/kbennett/.rexerc
-rexe time elapsed: 0.165996 seconds.   # <---------------------------
+rexe time elapsed: 0.165996 seconds.
 ```
 
 ### Using Loaded Files in Your Commands
@@ -128,12 +131,12 @@ Here is an example of how you might use this, assuming the above configuration i
 an explicitly loaded file:
 
 ```
-tar czf /tmp/my-whole-user-space.tar.gz ~ ; rexe valkyries
+➜  ~   tar czf /tmp/my-whole-user-space.tar.gz ~ ; rexe valkyries
 ```
 
 You might be thinking that creating an alias or a minimal shell script for this open would be a simpler and more natural
 approach, and I would agree with you. However, over time the number of these could become unmanageable, and using Ruby
-you could build a pretty extensive and well organized library of functionality.
+you could build a pretty extensive and well organized library of functionality. Moreover, that functionality could be made available to _all_ your Ruby code (for example, by putting it in a gem), and not just command line one liners.
 
 Defining methods in your loaded files enables you to effectively define a DSL for your command line use. You could use different load files for different projects, domains, or contexts, and define aliases or one line scripts to give them meaningful names. For example, if I wrote code to work with Ansible and put it in `~/projects/rexe-ansible.rb`, I could define an alias in my startup script:
 
@@ -142,12 +145,14 @@ alias rxans="rexe -l ~/projects/rexe-ansible.rb $*"
 ```
 ...and then I would have an Ansible DSL available for me to use with `rxans`.
 
-There may be times when you have specified a load or require in the configuration
-(environment variable, ~/.rexerc, etc.), but you want to override it for a
-single invocation. Currently you cannot unspecify a single resource, but you
-can unspecify _all_ the requires or loads with the `-r!` and `-l!` command line
-options, respectively.
 
+#### Clearing the Require and Load Lists
+
+There may be times when you have specified a load or require that has been 
+specified on the command line or in the `REXE_OPTIONS` environment variable,
+but you want to override it for a single invocation. Currently you cannot
+unspecify a single resource, but you can unspecify _all_ the requires or loads
+with the `-r!` and `-l!` command line options, respectively.
 
 
 #### Verbose Mode
@@ -156,13 +161,14 @@ In addition to displaying the execution time, verbose mode will display the vers
 to be evaluated, options specified (by all approaches), and that the global file has been loaded (if it was found):
  
 ```
-➜  ~   rexe -rjson,awesome_print "ap JSON.parse(STDIN.read)"
-rexe version 0.5.0 -- 2019-02-19 19:18:48 +0700
+➜  ~   export JSON_TEXT=`curl https://api.exchangeratesapi.io/latest`
+➜  ~   echo $JSON_TEXT | rexe -v -rjson,awesome_print "ap JSON.parse(STDIN.read)"
+rexe version 0.7.0 -- 2019-03-03 18:18:14 +0700
 Source Code: ap JSON.parse(STDIN.read)
 Options: {:input_mode=>:no_input, :loads=>[], :requires=>["json", "awesome_print"], :verbose=>true}
 Loading global config file /Users/kbennett/.rexerc
 ...
-rexe time elapsed: 0.051131 seconds.
+rexe time elapsed: 0.085913 seconds.
 ``` 
  
 This extra output is sent to standard error (_stderr_) instead of standard output
@@ -172,9 +178,88 @@ another command.
 If verbose mode is enabled in configuration and you want to disable it, you can
 do so by using any of the following: `--[no-]verbose`, `-v n`, or `-v false`.
 
+### Input Modes
+
+`rexe` tries to make it simple for you to handle standard input conveniently, and in different ways. Here is the help text relating to input modes:
+
+```
+-m, --mode MODE   Mode with which to handle input (i.e. what `self` will be in the code):
+                  -ms for each line to be handled separately as a string
+                  -me for an enumerator of lines (least memory consumption for big data)
+                  -mb for 1 big string (all lines combined into single multiline string)
+                  -mn to execute the specified Ruby code on no input at all (default)
+```
+
+The first three are _filter_ modes; they make standard input available
+to your code as `self`, and automatically output to standard output
+the last value evaluated by your code.
+
+The last (and default) is the _executor_ mode. It merely assists you in
+executing the code you provide without any special handling of standard
+input.
+
+
+##### "No Input" Mode -- The Default
+
+Examples up until this point have all used the default
+`-mn` mode listed last. This is the simplest use case, where `self`
+does not evaluate to anything useful, and if you cared about standard
+input, you would have to code it yourself (e.g. with `STDIN.read`).
+
+
+
+##### -ms "Single String" Mode
+
+In this mode, your code would be called once per line of input,
+and in each call, `self` would evaluate to the line of text:
+
+```
+➜  ~   echo "hello\ngoodbye" | rexe -ms reverse
+olleh
+eybdoog
+```
+
+`reverse` is implicitly called on each line of standard input.  `self`
+ is the input line in each call (we could also have used `self.reverse`).
+  
+
+##### -me "Enumerator" Mode
+
+In this mode, your code is called only once, and `self` is an enumerator
+dispensing all lines of standard input. To be more precise, it is the enumerator returned by `STDIN.each_line`.
+
+Dealing with input as an enumerator yields the following benefits:
+
+* you can use the wealth of `Enumerable` methods such as `select`, `to_a`, `map`, etc.
+* if the amount of standard input is huge, and you can process one line at a time, you don't need to be concerned about exhausting the available memory.
+
+Here is an example of using `-me` to add line numbers to the first 3
+files in the directory listing:
+
+```
+➜  ~   ls / | rexe -me "first(3).each_with_index { |ln,i| puts '%5d  %s' % [i, ln] }; nil"
+
+    0  AndroidStudioProjects
+    1  Applications
+    2  Desktop
+```
+
+Since `self` is an enumerable, we can call `first` and then `each_with_index`.
+
+
+##### -mb "Big String" Mode
+
+In this mode, all standard input is combined into a single, (possibly)
+large string, with newline characters joining the lines in the string.
+
+
+
+##### Suppressing Automatic Output in Filter Modes
+
+
 ### More Examples
 
-Show disk space used/free on a Mac's main hard drive:
+Show disk space used/free on a Mac's main hard drive's main partition:
 
 ```
 ➜  ~   export TEXT=`df -h | grep disk1s1`
@@ -204,26 +289,15 @@ Print yellow (trust me!):
 ```
 
 
-Add line numbers to the first 3 files in the directory listing:
-
-```
-➜  ~   ls | rexe -me "first(3).each_with_index { |ln,i| puts '%5d  %s' % [i, ln] }; nil"
-
-    0  AndroidStudioProjects
-    1  Applications
-    2  Desktop
-```
     
-
-Add the current date/time to the first 3 files in the directory listing, this time using the `head` utility
-instead of Ruby to truncate the array of lines:
+Show the 3 longest file names of the current directory, with their lengths:
 
 ```
-➜  ~   ls -l | head -3 | rexe -ms -r date "print DateTime.now.iso8601 + ' : ' + self"
-
-2019-02-25T11:45:50+07:00 : total 2387104
-2019-02-25T11:45:50+07:00 : drwxr-xr-x     4 kbennett  staff        128 Jul 27  2017 AndroidStudioProjects
-2019-02-25T11:45:50+07:00 : drwx------     8 kbennett  staff        256 Sep  4 12:09 Applications
+➜  ~   ls  | rexe -ms "%Q{[%4d] %s} % [length, self]" | sort -r | head -3
+"
+[  50] Agoda_Booking_ID_9999999 49_–_RECEIPT_enclosed.pdf
+[  40] 679a5c034994544aab4635ecbd50ab73-big.jpg
+[  28] 2018-abc-2019-01-16-2340.zip
 ```
 
 ### Conclusion
@@ -241,3 +315,10 @@ I suggest starting to use `rexe` even for modest improvements in workflow, even
 if it doesn't seem compelling. There's a good chance that as you use it over
 time, new ideas will come to you and the workflow improvements will increase
 exponentially.
+
+
+#### Footnotes
+
+[^1]: `rexe` is an embellishment of the minimal but excellent `rb` script at
+https://github.com/thisredone/rb. I started using `rb` and thought of lots of
+other features I would like to have, so I started working on `rexe`.
