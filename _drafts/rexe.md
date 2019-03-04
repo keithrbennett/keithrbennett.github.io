@@ -19,8 +19,8 @@ command line. Here's an example, using an intermediate environment variable to
 simplify the logic (an excerpt of the output follows the code):
 
 ```
-➜  ~   export JSON_TEXT=`curl https://api.exchangeratesapi.io/latest`
-➜  ~   echo $JSON_TEXT | ruby -r json -r awesome_print -e 'ap JSON.parse(STDIN.read)'
+➜  ~   export EUR_RATES_JSON=`curl https://api.exchangeratesapi.io/latest`
+➜  ~   echo $EUR_RATES_JSON | ruby -r json -r awesome_print -e 'ap JSON.parse(STDIN.read)'
 {
     "rates" => {
         "MXN" => 21.781,
@@ -69,10 +69,12 @@ If there is a REXE_OPTIONS environment variable, its content will be prepended t
 so that you can specify options implicitly (e.g. `export REXE_OPTIONS="-r awesome_print,yaml"`)
 ```
 
-For consistency with the `ruby` interpreter we called previously, `rexe` supports requires with the `-r` option, but also allows grouping them together using commas:
+For consistency with the `ruby` interpreter we called previously, `rexe` supports requires with the `-r` option, but as one tiny improvement it also allows grouping them together using commas:
 
 ```
-➜  ~   echo $JSON_TEXT | rexe -r json,awesome_print 'ap JSON.parse(STDIN.read)'
+                                    vvvvvvvvvvvvvvvvvvvvv
+➜  ~   echo $EUR_RATES_JSON | rexe -r json,awesome_print 'ap JSON.parse(STDIN.read)'
+                                    ^^^^^^^^^^^^^^^^^^^^^
 ```
 
 This command produces the same results as the previous `ruby` one.
@@ -87,7 +89,7 @@ One way is to use the `REXE_OPTIONS` environment variable:
 
 ```
 export REXE_OPTIONS="-r json,awesome_print"
-echo $JSON_TEXT | rexe 'ap JSON.parse(STDIN.read)'
+echo $EUR_RATES_JSON | rexe 'ap JSON.parse(STDIN.read)'
 ```
 
 Like any environment variable, `REXE_OPTIONS` could also be set in your startup script, input on a command line using `export`, or in another script loaded with `source` or `.`.
@@ -161,8 +163,8 @@ In addition to displaying the execution time, verbose mode will display the vers
 to be evaluated, options specified (by all approaches), and that the global file has been loaded (if it was found):
  
 ```
-➜  ~   export JSON_TEXT=`curl https://api.exchangeratesapi.io/latest`
-➜  ~   echo $JSON_TEXT | rexe -v -rjson,awesome_print "ap JSON.parse(STDIN.read)"
+➜  ~   export EUR_RATES_JSON=`curl https://api.exchangeratesapi.io/latest`
+➜  ~   echo $EUR_RATES_JSON | rexe -v -rjson,awesome_print "ap JSON.parse(STDIN.read)"
 rexe version 0.7.0 -- 2019-03-03 18:18:14 +0700
 Source Code: ap JSON.parse(STDIN.read)
 Options: {:input_mode=>:no_input, :loads=>[], :requires=>["json", "awesome_print"], :verbose=>true}
@@ -256,6 +258,35 @@ large string, with newline characters joining the lines in the string.
 
 ##### Suppressing Automatic Output in Filter Modes
 
+The filter input modes will automatically call `puts` to output the last evaulated value of your code to stdout. There may be times you may want to do something _else_ with the input and send nothing to stdout. For example, you might want to write something to a file, send to a network, etc. The simplest way to suppress output is to make nil or the empty string the final value in the expression. This can be accomplished simply merely by appending `; nil` or `''` to your code. For example, to only output directory entries containing the letter 'e' in `-ms` (single string) mode:
+
+```
+➜  /   ls | sort | rexe -ms "include?('e') ? self : nil"
+
+Incompatible Software
+
+Network
+...
+```
+
+As you can see, blank lines were displayed where `nil` was output. This is probably not what you want.
+
+If you want to suppress the blank lines too, the best way is to use `-me` (enumerator) mode. If you won't have a huge amount of input data you could use `select`:
+
+```
+➜  /   ls | sort | rexe -me "select { |s| s.include?('e') }"
+Incompatible Software
+Network
+System
+```
+
+This works because `puts` does _not_ call `to_s` to express an array, but instead prints each element on its own line. If instead we appended `.to_s` to the code, we would get the more compact array notation: 
+ 
+```
+➜  /   ls | sort | rexe -me "select { |s| s.include?('e') }.to_s"
+["Incompatible Software\n", "Network\n", ..., "private\n"]
+```
+
 
 ### More Examples
 
@@ -299,6 +330,26 @@ Show the 3 longest file names of the current directory, with their lengths:
 [  40] 679a5c034994544aab4635ecbd50ab73-big.jpg
 [  28] 2018-abc-2019-01-16-2340.zip
 ```
+
+#### Mimicking Method Arguments
+
+You may want to support arguments in your code. One of the previous examples downloaded currency conversion rates. Let's find out the available currency codes:
+
+```
+➜  /   echo $JSON_TEXT | rexe -rjson -mb "JSON.parse(self)[%q{rates}].keys.sort.join(%q{ })"
+AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR NOK NZD PHP PLN RON RUB SEK SGD THB TRY USD ZAR
+```
+ 
+ Here would be a way to output a single rate:
+ 
+```
+➜  ~   echo PHP | rexe -ms -rjson "rate = JSON.parse(ENV[%q{EUR_RATES_JSON}])[%q{rates}][self]; %Q{1 EUR = #{rate} #{self}}"
+
+1 EUR = 58.986 PHP
+```
+
+In this code, `self` is the currency code `PHP` (Philippine Peso). We have accessed the JSON text to parse from the environment variable we previously populated.
+
 
 ### Conclusion
 
