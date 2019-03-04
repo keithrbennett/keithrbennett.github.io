@@ -46,27 +46,32 @@ line, tipping the scale so that it is practical to do it more often.
 Here is `rexe`'s help text as of the time of this writing:
 
 ```
-rexe -- Ruby Command Line Filter/Executor -- v0.7.0 -- https://github.com/keithrbennett/rexe
+rexe -- Ruby Command Line Executor/Filter -- v0.8.0 -- https://github.com/keithrbennett/rexe
 
 Executes Ruby code on the command line, optionally taking standard input and writing to standard output.
 
 Options:
 
+-c  --clear_options        Clear all previous command line options specified up to now
 -h, --help                 Print help and exit
 -l, --load RUBY_FILE(S)    Ruby file(s) to load, comma separated, or ! to clear
--m, --mode MODE            Mode with which to handle input (i.e. what `self` will be in the code):
-                           -ms for each line to be handled separately as a string
+-m, --mode MODE            Mode with which to handle input (i.e. what `self` will be in your code):
+                           -ms for each line to be handled as a separate string
                            -me for an enumerator of lines (least memory consumption for big data)
                            -mb for 1 big string (all lines combined into single multiline string)
                            -mn don't do special handling of input; self is not the input (default) 
+-n, --[no-]noop            Do not execute the code (useful with -v); see note (1) below
 -r, --require REQUIRES     Gems and built-in libraries to require, comma separated, or ! to clear
--v, --[no-]verbose         verbose mode (logs to stderr); to disable, short options: -v n, -v false
+-v, --[no-]verbose         verbose mode (logs to stderr); see note (1) below
 
 If there is an .rexerc file in your home directory, it will be run as Ruby code 
 before processing the input.
 
 If there is a REXE_OPTIONS environment variable, its content will be prepended to the command line
 so that you can specify options implicitly (e.g. `export REXE_OPTIONS="-r awesome_print,yaml"`)
+
+(1) For boolean verbose and noop options, the following are valid:
+-v no, -v yes, -v false, -v true, -v n, -v y, -v +, but not -v -
 ```
 
 For consistency with the `ruby` interpreter we called previously, `rexe` supports requires with the `-r` option, but as one tiny improvement it also allows grouping them together using commas:
@@ -96,7 +101,7 @@ Like any environment variable, `REXE_OPTIONS` could also be set in your startup 
 
 #### Loading Files
 
-The environment variable approach works well for command line _options_, but what if we want to specify Ruby _code_ (e.g. methods) that can be used by all invocations of `rexe`?
+The environment variable approach works well for command line _options_, but what if we want to specify Ruby _code_ (e.g. methods) that can be used by multiple invocations of `rexe`?
 
 For this, `rexe` lets you _load_ Ruby files, using the `-l` option, or implicitly (without your specifying it) in the case of the `~/.rexerc` file. Here is an example of something you might include in such a file (this is an alternate approach to specifying `-r` in the `REXE_OPTIONS` environment variable):
 
@@ -157,6 +162,13 @@ unspecify a single resource, but you can unspecify _all_ the requires or loads
 with the `-r!` and `-l!` command line options, respectively.
 
 
+#### Clearing _All_ Options
+
+You can also clear _all_ options specified up to a certain point in time with the _clear options_ option (`-c`).
+
+This is especially useful if you have specified options in the `REXE_OPTIONS` environment variable, and want to ignore them.
+
+
 #### Verbose Mode
 
 In addition to displaying the execution time, verbose mode will display the version, date/time of execution, source code
@@ -177,12 +189,18 @@ This extra output is sent to standard error (_stderr_) instead of standard outpu
 (_stdout_) so that it will not pollute the "real" data when stdout is piped to
 another command.
 
+If you would like to append this informational output to a file, you could do something like this:
+
+```
+➜  ~   rexe ... -v 2>>rexe.log
+```
+
 If verbose mode is enabled in configuration and you want to disable it, you can
 do so by using any of the following: `--[no-]verbose`, `-v n`, or `-v false`.
 
 ### Input Modes
 
-`rexe` tries to make it simple for you to handle standard input conveniently, and in different ways. Here is the help text relating to input modes:
+`rexe` tries to make it simple and convenient for you to handle standard input, and in different ways. Here is the help text relating to input modes:
 
 ```
 -m, --mode MODE   Mode with which to handle input (i.e. what `self` will be in the code):
@@ -197,20 +215,10 @@ to your code as `self`, and automatically output to standard output
 the last value evaluated by your code.
 
 The last (and default) is the _executor_ mode. It merely assists you in
-executing the code you provide without any special handling of standard
-input.
+executing the code you provide without any special implicit handling of standard input.
 
 
-##### "No Input" Mode -- The Default
-
-Examples up until this point have all used the default
-`-mn` mode listed last. This is the simplest use case, where `self`
-does not evaluate to anything useful, and if you cared about standard
-input, you would have to code it yourself (e.g. with `STDIN.read`).
-
-
-
-##### -ms "Single String" Mode
+##### -ms "Single String" Filter Mode
 
 In this mode, your code would be called once per line of input,
 and in each call, `self` would evaluate to the line of text:
@@ -222,10 +230,10 @@ eybdoog
 ```
 
 `reverse` is implicitly called on each line of standard input.  `self`
- is the input line in each call (we could also have used `self.reverse`).
+ is the input line in each call (we could also have used `self.reverse` but the `self` would have been redundant.).
   
 
-##### -me "Enumerator" Mode
+##### -me "Enumerator" Filter Mode
 
 In this mode, your code is called only once, and `self` is an enumerator
 dispensing all lines of standard input. To be more precise, it is the enumerator returned by `STDIN.each_line`.
@@ -249,11 +257,20 @@ files in the directory listing:
 Since `self` is an enumerable, we can call `first` and then `each_with_index`.
 
 
-##### -mb "Big String" Mode
+##### -mb "Big String" Filter Mode
 
 In this mode, all standard input is combined into a single, (possibly)
 large string, with newline characters joining the lines in the string.
 
+A good example of when you would use this is when you parse JSON or YAML text; you need to pass the entire (probably) multiline string to the parse method.
+
+
+##### -mn "No Input" Executor Mode -- The Default
+
+Examples up until this point have all used the default
+`-mn` mode. This is the simplest use case, where `self`
+does not evaluate to anything useful, and if you cared about standard
+input, you would have to code it yourself (e.g. with `STDIN.read`).
 
 
 ##### Suppressing Automatic Output in Filter Modes
@@ -269,9 +286,11 @@ Network
 ...
 ```
 
-As you can see, blank lines were displayed where `nil` was output. This is probably not what you want.
+However, as you can see, blank lines were displayed where `nil` was output. This is probably not what you want.
 
-If you want to suppress the blank lines too, the best way is to use `-me` (enumerator) mode. If you won't have a huge amount of input data you could use `select`:
+If you want to see the `nil`s, you could replace `nil` with `nil.inspect`, which returns the string `nil`, unlike `nil.to_s` which returns the empty string when called by `puts`. Of course, there may be some other custom string you would want, such as `[no match]` or `-`, or you could just specify the string `'nil'`. [^2]
+
+If you do want to filter out lines that evaluate to nil, the best way is to use `-me` (enumerator) mode. If you won't have a huge amount of input data you could use `select`:
 
 ```
 ➜  /   ls | sort | rexe -me "select { |s| s.include?('e') }"
@@ -280,55 +299,11 @@ Network
 System
 ```
 
-This works because `puts` does _not_ call `to_s` to express an array, but instead prints each element on its own line. If instead we appended `.to_s` to the code, we would get the more compact array notation: 
+Here, `select` returns an array which is implicitly passed to `puts`. `puts` does _not_ call `to_s` when passed an array, but instead has special handling for arrays which prints each element on its own line. If instead we appended `.to_s` to the result array, we would get the more compact array notation: 
  
 ```
 ➜  /   ls | sort | rexe -me "select { |s| s.include?('e') }.to_s"
 ["Incompatible Software\n", "Network\n", ..., "private\n"]
-```
-
-
-### More Examples
-
-Show disk space used/free on a Mac's main hard drive's main partition:
-
-```
-➜  ~   export TEXT=`df -h | grep disk1s1`
-➜  ~   echo $TEXT | rexe -ms "x = split; puts %Q{#{x[4]} Used: #{x[2]}, Avail #{x[3]}}"
-91% Used: 412Gi, Avail 44Gi
-```
-
-(Note that `split` is equivalent to `self.split`, and because the `-ms` option is used, `self` is the line of text.
-
-
-Print yellow (trust me!):
-
-```
-➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m}; puts to_a"
-➜  ~     # or
-➜  ~   cowsay hello | rexe -mb "print %Q{\u001b[33m}; puts self"
-➜  ~     # or
-➜  ~   cowsay hello | rexe "print %Q{\u001b[33m}; puts STDIN.read"
-  _______
- < hello >
-  -------
-         \   ^__^
-          \  (oo)\_______
-             (__)\       )\/\
-                 ||----w |
-                 ||     ||`
-```
-
-
-    
-Show the 3 longest file names of the current directory, with their lengths:
-
-```
-➜  ~   ls  | rexe -ms "%Q{[%4d] %s} % [length, self]" | sort -r | head -3
-"
-[  50] Agoda_Booking_ID_9999999 49_–_RECEIPT_enclosed.pdf
-[  40] 679a5c034994544aab4635ecbd50ab73-big.jpg
-[  28] 2018-abc-2019-01-16-2340.zip
 ```
 
 #### Mimicking Method Arguments
@@ -349,6 +324,80 @@ AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR 
 ```
 
 In this code, `self` is the currency code `PHP` (Philippine Peso). We have accessed the JSON text to parse from the environment variable we previously populated.
+
+
+### More Examples
+
+Show disk space used/free on a Mac's main hard drive's main partition:
+
+```
+➜  ~   export TEXT=`df -h | grep disk1s1`
+➜  ~   echo $TEXT | rexe -ms "x = split; puts %Q{#{x[4]} Used: #{x[2]}, Avail #{x[3]}}"
+91% Used: 412Gi, Avail 44Gi
+```
+
+(Note that `split` is equivalent to `self.split`, and because the `-ms` option is used, `self` is the line of text.
+
+----
+
+Print yellow (trust me!):
+
+```
+➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m}; puts to_a"
+➜  ~     # or
+➜  ~   cowsay hello | rexe -mb "print %Q{\u001b[33m}; puts self"
+➜  ~     # or
+➜  ~   cowsay hello | rexe "print %Q{\u001b[33m}; puts STDIN.read"
+  _______
+ < hello >
+  -------
+         \   ^__^
+          \  (oo)\_______
+             (__)\       )\/\
+                 ||----w |
+                 ||     ||`
+```
+
+
+----
+
+    
+Show the 3 longest file names of the current directory, with their lengths:
+
+```
+➜  ~   ls  | rexe -ms "%Q{[%4d] %s} % [length, self]" | sort -r | head -3
+"
+[  50] Agoda_Booking_ID_9999999 49_–_RECEIPT_enclosed.pdf
+[  40] 679a5c034994544aab4635ecbd50ab73-big.jpg
+[  28] 2018-abc-2019-01-16-2340.zip
+```
+
+
+I was recently asked to provide a schema for the data in my `rock_books` accounting gem. `rock_books` data is intended to be very small in size, and no data base is used. Instead, the input data is parsed and reports generated on every run. However, there are data structures(actually class instances) in memory at runtime, and their classes inherit from `Struct`. So I was able to output a readable list of them like this:
+
+```
+grep Struct **/*.rb | grep -v OpenStruct | rexe -ms \
+"a = gsub('lib/rock_books/', '')\
+.gsub('< Struct.new', '')\
+.gsub('; end', '')\
+.split('.rb:')\
+.map(&:strip);\
+ %q{%-40s %-s} % [a[0] + %q{.rb}, a[1]]"
+ 
+cmd_line/command_line_interface.rb       class Command (:min_string, :max_string, :action)
+documents/book_set.rb                    class BookSet (:run_options, :chart_of_accounts, :journals)
+documents/journal.rb                     class Entry (:date, :amount, :acct_amounts, :description)
+documents/journal_entry.rb               class JournalEntry (:date, :acct_amounts, :doc_short_name, :description, :receipts)
+documents/journal_entry_builder.rb       class JournalEntryBuilder (:journal_entry_context)
+reports/report_context.rb                class ReportContext (:chart_of_accounts, :journals, :page_width)
+types/account.rb                         class Account (:code, :type, :name)
+types/account_type.rb                    class AccountType (:symbol, :singular_name, :plural_name)
+types/acct_amount.rb                     class AcctAmount (:date, :code, :amount, :journal_entry_context)
+types/journal_entry_context.rb           class JournalEntryContext (:journal, :linenum, :line)
+``` 
+
+
+
 
 
 ### Conclusion
@@ -373,3 +422,5 @@ exponentially.
 [^1]: `rexe` is an embellishment of the minimal but excellent `rb` script at
 https://github.com/thisredone/rb. I started using `rb` and thought of lots of
 other features I would like to have, so I started working on `rexe`.
+
+[^2]: You might wonder why we don't just refrain from sending output to stdout on null or false. That is certainly easy to implement, but there are other ways to accomplish this (using _enumerable_ or _no input_ modes), and the lack of output might be surprising and disconcerting to the user. What do _you_ think, which approach makes more sense to you?
