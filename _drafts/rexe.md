@@ -311,14 +311,17 @@ Here, `select` returns an array which is implicitly passed to `puts`. `puts` doe
 You may want to support arguments in your code. One of the previous examples downloaded currency conversion rates. Let's find out the available currency codes:
 
 ```
-➜  /   echo $JSON_TEXT | rexe -rjson -mb "JSON.parse(self)[%q{rates}].keys.sort.join(%q{ })"
+➜  /   echo $JSON_TEXT | rexe -rjson -mb \
+"JSON.parse(self)[%q{rates}].keys.sort.join(%q{ })"
 AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR NOK NZD PHP PLN RON RUB SEK SGD THB TRY USD ZAR
 ```
  
  Here would be a way to output a single rate:
  
 ```
-➜  ~   echo PHP | rexe -ms -rjson "rate = JSON.parse(ENV[%q{EUR_RATES_JSON}])[%q{rates}][self]; %Q{1 EUR = #{rate} #{self}}"
+➜  ~   echo PHP | rexe -ms -rjson \
+"rate = JSON.parse(ENV[%q{EUR_RATES_JSON}])[%q{rates}][self];\
+%Q{1 EUR = #{rate} #{self}}"
 
 1 EUR = 58.986 PHP
 ```
@@ -332,7 +335,8 @@ Show disk space used/free on a Mac's main hard drive's main partition:
 
 ```
 ➜  ~   export TEXT=`df -h | grep disk1s1`
-➜  ~   echo $TEXT | rexe -ms "x = split; puts %Q{#{x[4]} Used: #{x[2]}, Avail #{x[3]}}"
+➜  ~   echo $TEXT | rexe -ms \
+"x = split; puts %Q{#{x[4]} Used: #{x[2]}, Avail #{x[3]}}"
 91% Used: 412Gi, Avail 44Gi
 ```
 
@@ -372,17 +376,33 @@ Show the 3 longest file names of the current directory, with their lengths:
 [  28] 2018-abc-2019-01-16-2340.zip
 ```
 
+----
 
-I was recently asked to provide a schema for the data in my `rock_books` accounting gem. `rock_books` data is intended to be very small in size, and no data base is used. Instead, the input data is parsed and reports generated on every run. However, there are data structures(actually class instances) in memory at runtime, and their classes inherit from `Struct`. So I was able to output a readable list of them like this:
+I was recently asked to provide a schema for the data in my `rock_books` accounting gem. `rock_books` data is intended to be very small in size, and no data base is used. Instead, the input data is parsed and reports generated on every run. However, there are data structures (actually class instances) in memory at runtime, and their classes inherit from `Struct`.
+ The definition lines look like this one:
+ 
+```
+class JournalEntry < Struct.new(:date, :acct_amounts, :doc_short_name, :description, :receipts)
+```
+
+The `grep` command line utility prepends each of these matches with a string like this:
+
+```
+lib/rock_books/documents/journal_entry.rb:
+```
+
+So this is what worked well for me:
 
 ```
 grep Struct **/*.rb | grep -v OpenStruct | rexe -ms \
-"a = gsub('lib/rock_books/', '')\
-.gsub('< Struct.new', '')\
-.gsub('; end', '')\
+"a = \
+ gsub('lib/rock_books/', '')\
+.gsub('< Struct.new',    '')\
+.gsub('; end',           '')\
 .split('.rb:')\
 .map(&:strip);\
- %q{%-40s %-s} % [a[0] + %q{.rb}, a[1]]"
+\
+%q{%-40s %-s} % [a[0] + %q{.rb}, a[1]]"
  
 cmd_line/command_line_interface.rb       class Command (:min_string, :max_string, :action)
 documents/book_set.rb                    class BookSet (:run_options, :chart_of_accounts, :journals)
@@ -396,7 +416,16 @@ types/acct_amount.rb                     class AcctAmount (:date, :code, :amount
 types/journal_entry_context.rb           class JournalEntryContext (:journal, :linenum, :line)
 ``` 
 
+Here's what this does:
 
+* grep the code base for `"Struct"`
+* exclude references to `"OpenStruct"` with `grep -v`
+* remove unwanted text with `gsub`
+* split the line into 1) a filespec relative to the project root, and 2) the class definition
+* strip unwanted space because that will mess up the horizontal alignment of the output.
+* use C-style printf formatting to align the text into two columns
+
+ 
 
 
 
