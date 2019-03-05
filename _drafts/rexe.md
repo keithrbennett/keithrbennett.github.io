@@ -16,7 +16,8 @@ awkward too.
 
 Sometimes a good solution is to combine Ruby and shell scripting on the same
 command line. Here's an example, using an intermediate environment variable to
-simplify the logic (an excerpt of the output follows the code):
+simplify the logic and save the data for use by future commands
+(an excerpt of the output follows the code):
 
 ```
 ➜  ~   export EUR_RATES_JSON=`curl https://api.exchangeratesapi.io/latest`
@@ -93,8 +94,8 @@ Using any of several configuration approaches, the `json` and `awesome_print` re
 One way is to use the `REXE_OPTIONS` environment variable:
 
 ```
-export REXE_OPTIONS="-r json,awesome_print"
-echo $EUR_RATES_JSON | rexe 'ap JSON.parse(STDIN.read)'
+➜  ~   export REXE_OPTIONS="-r json,awesome_print"
+➜  ~   echo $EUR_RATES_JSON | rexe 'ap JSON.parse(STDIN.read)'
 ```
 
 Like any environment variable, `REXE_OPTIONS` could also be set in your startup script, input on a command line using `export`, or in another script loaded with `source` or `.`.
@@ -145,18 +146,48 @@ You might be thinking that creating an alias or a minimal shell script for this 
 approach, and I would agree with you. However, over time the number of these could become unmanageable, and using Ruby
 you could build a pretty extensive and well organized library of functionality. Moreover, that functionality could be made available to _all_ your Ruby code (for example, by putting it in a gem), and not just command line one liners.
 
+### Implementing Domain Specific Languages (DSL's)
+
 Defining methods in your loaded files enables you to effectively define a DSL for your command line use. You could use different load files for different projects, domains, or contexts, and define aliases or one line scripts to give them meaningful names. For example, if I wrote code to work with Ansible and put it in `~/projects/rexe-ansible.rb`, I could define an alias in my startup script:
 
 ```
-alias rxans="rexe -l ~/projects/rexe-ansible.rb $*"
+➜  ~   alias rxans="rexe -l ~/projects/rexe-ansible.rb $*"
 ```
-...and then I would have an Ansible DSL available for me to use with `rxans`.
+...and then I would have an Ansible DSL available for me to use by calling `rxans`.
+
+In addition, you can also call `pry` on the context of any object, so you
+can provide a DSL in a REPL trivially easily. Just to illustrate, here's how
+you would open a REPL on the File class:
+
+```
+➜  ~   ruby -r pry -e File.pry
+# or
+➜  ~   rexe -r pry File.pry
+```
+
+`self` would evaluate to the `File` class, so you could call class methods implicitly using only their names:
+
+```
+➜  rock_books git:(master) ✗   rexe  -r pry File.pry
+
+[6] pry(File)> size '/etc/passwd'
+6804
+[7] pry(File)> directory? '.'
+true
+[8] pry(File)> file?('/etc/passwd')
+true
+```
+
+This could be really handy if you call `pry` on a custom object that has methods especially suited to your task.
+
+Ruby is supremely suited for DSL's since it does not require parentheses for method calls, 
+so calls to your custom methods _look_ like built in language commands and keywords. 
 
 
 #### Clearing the Require and Load Lists
 
-There may be times when you have specified a load or require that has been 
-specified on the command line or in the `REXE_OPTIONS` environment variable,
+There may be times when you have specified a load or require on the command line
+or in the `REXE_OPTIONS` environment variable,
 but you want to override it for a single invocation. Currently you cannot
 unspecify a single resource, but you can unspecify _all_ the requires or loads
 with the `-r!` and `-l!` command line options, respectively.
@@ -165,8 +196,8 @@ with the `-r!` and `-l!` command line options, respectively.
 #### Clearing _All_ Options
 
 You can also clear _all_ options specified up to a certain point in time with the _clear options_ option (`-c`).
-
-This is especially useful if you have specified options in the `REXE_OPTIONS` environment variable, and want to ignore them.
+This is especially useful if you have specified options in the `REXE_OPTIONS` environment variable, 
+and want to ignore all of them.
 
 
 #### Verbose Mode
@@ -175,7 +206,6 @@ In addition to displaying the execution time, verbose mode will display the vers
 to be evaluated, options specified (by all approaches), and that the global file has been loaded (if it was found):
  
 ```
-➜  ~   export EUR_RATES_JSON=`curl https://api.exchangeratesapi.io/latest`
 ➜  ~   echo $EUR_RATES_JSON | rexe -v -rjson,awesome_print "ap JSON.parse(STDIN.read)"
 rexe version 0.7.0 -- 2019-03-03 18:18:14 +0700
 Source Code: ap JSON.parse(STDIN.read)
@@ -218,7 +248,7 @@ The last (and default) is the _executor_ mode. It merely assists you in
 executing the code you provide without any special implicit handling of standard input.
 
 
-##### -ms "Single String" Filter Mode
+#### -ms "Single String" Filter Mode
 
 In this mode, your code would be called once per line of input,
 and in each call, `self` would evaluate to the line of text:
@@ -233,7 +263,7 @@ eybdoog
  is the input line in each call (we could also have used `self.reverse` but the `self` would have been redundant.).
   
 
-##### -me "Enumerator" Filter Mode
+#### -me "Enumerator" Filter Mode
 
 In this mode, your code is called only once, and `self` is an enumerator
 dispensing all lines of standard input. To be more precise, it is the enumerator returned by `STDIN.each_line`.
@@ -257,27 +287,33 @@ files in the directory listing:
 Since `self` is an enumerable, we can call `first` and then `each_with_index`.
 
 
-##### -mb "Big String" Filter Mode
+#### -mb "Big String" Filter Mode
 
 In this mode, all standard input is combined into a single, (possibly)
 large string, with newline characters joining the lines in the string.
 
 A good example of when you would use this is when you parse JSON or YAML text; you need to pass the entire (probably) multiline string to the parse method.
 
+An earlier example would be more simply specified using this mode, since `STDIN.read` could be replaced with `self`:
 
-##### -mn "No Input" Executor Mode -- The Default
+```
+➜  ~   echo $EUR_RATES_JSON | rexe -mb -r awesome_print,json 'ap JSON.parse(self)'
+```
+
+#### -mn "No Input" Executor Mode -- The Default
 
 Examples up until this point have all used the default
 `-mn` mode. This is the simplest use case, where `self`
 does not evaluate to anything useful, and if you cared about standard
-input, you would have to code it yourself (e.g. with `STDIN.read`).
+input, you would have to code it yourself (e.g. as we did earlier with `STDIN.read`).
 
 
-##### Suppressing Automatic Output in Filter Modes
+#### Suppressing Automatic Output in Filter Modes
 
-The filter input modes will automatically call `puts` to output the last evaulated value of your code to stdout. There may be times you may want to do something _else_ with the input and send nothing to stdout. For example, you might want to write something to a file, send to a network, etc. The simplest way to suppress output is to make nil or the empty string the final value in the expression. This can be accomplished simply merely by appending `; nil` or `''` to your code. For example, to only output directory entries containing the letter 'e' in `-ms` (single string) mode:
+The filter input modes will automatically call `puts` to output the last evaulated value of your code to stdout. There may be times you may want to do something _else_ with the input and send nothing to stdout. For example, you might want to write something to a file, send to a network, etc. The simplest way to suppress output is to make nil or the empty string the final value in the expression. This can be accomplished simply merely by appending `; nil` or `;''` to your code. For example, to only output directory entries containing the letter 'e' in `-ms` (single string) mode:
 
 ```
+# Output only entries that contain the letter 'e':
 ➜  /   ls | sort | rexe -ms "include?('e') ? self : nil"
 
 Incompatible Software
@@ -288,23 +324,36 @@ Network
 
 However, as you can see, blank lines were displayed where `nil` was output. This is probably not what you want.
 
-If you want to see the `nil`s, you could replace `nil` with `nil.inspect`, which returns the string `nil`, unlike `nil.to_s` which returns the empty string when called by `puts`. Of course, there may be some other custom string you would want, such as `[no match]` or `-`, or you could just specify the string `'nil'`. [^2]
+If you want to see the `nil`s, you could replace `nil` with `nil.inspect`, which returns the string `nil`, unlike `nil.to_s` which returns the empty string. Of course, there may be some other custom string you would want, such as `[no match]` or `-`, or you could just specify the string `'nil'`. [^2]
 
-If you do want to filter out lines that evaluate to nil, the best way is to use `-me` (enumerator) mode. If you won't have a huge amount of input data you could use `select`:
+But you probably don't want any line to display at all for excluded objects. For this it is best to use 
+`-me` (enumerator) mode. If you won't have a huge amount of input data you could use `select`:
 
 ```
+# Output only entries that contain the letter 'e':
 ➜  /   ls | sort | rexe -me "select { |s| s.include?('e') }"
 Incompatible Software
 Network
 System
 ```
 
-Here, `select` returns an array which is implicitly passed to `puts`. `puts` does _not_ call `to_s` when passed an array, but instead has special handling for arrays which prints each element on its own line. If instead we appended `.to_s` to the result array, we would get the more compact array notation: 
+Here, `select` returns an array which is implicitly passed to `puts`. `puts` does _not_ call `to_s` when passed an array, but instead has special handling for arrays which prints each element on its own line. If instead we appended `.to_s` 
+or `.inspect` to the result array, we would get the more compact array notation: 
  
 ```
 ➜  /   ls | sort | rexe -me "select { |s| s.include?('e') }.to_s"
 ["Incompatible Software\n", "Network\n", ..., "private\n"]
 ```
+
+#### Quoting Strings in Your Ruby Code
+
+One complication of using utilities like `rexe` where Ruby code is specified on the shell command line is that
+you need to be careful about the shell's special treatment of certain characters. For this reason, it is often
+necessary to quote the Ruby code. You can use single or double quotes. 
+An excellent reference for how they differ is [here](https://stackoverflow.com/questions/6697753/difference-between-single-and-double-quotes-in-bash).
+
+Feel free to fall back on Ruby's super useful `%q{}` and `%Q{}`, equivalent to single and double quotes, respectively.
+
 
 #### Mimicking Method Arguments
 
@@ -312,7 +361,7 @@ You may want to support arguments in your code. One of the previous examples dow
 
 ```
 ➜  /   echo $JSON_TEXT | rexe -rjson -mb \
-"JSON.parse(self)[%q{rates}].keys.sort.join(%q{ })"
+        "JSON.parse(self)['rates'].keys.sort.join(' ')"
 AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR NOK NZD PHP PLN RON RUB SEK SGD THB TRY USD ZAR
 ```
  
@@ -320,8 +369,8 @@ AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR 
  
 ```
 ➜  ~   echo PHP | rexe -ms -rjson \
-"rate = JSON.parse(ENV[%q{EUR_RATES_JSON}])[%q{rates}][self];\
-%Q{1 EUR = #{rate} #{self}}"
+        "rate = JSON.parse(ENV['EUR_RATES_JSON'])['rates'][self];\
+        %Q{1 EUR = #{rate} #{self}}"
 
 1 EUR = 58.986 PHP
 ```
@@ -334,8 +383,7 @@ In this code, `self` is the currency code `PHP` (Philippine Peso). We have acces
 Show disk space used/free on a Mac's main hard drive's main partition:
 
 ```
-➜  ~   export TEXT=`df -h | grep disk1s1`
-➜  ~   echo $TEXT | rexe -ms \
+➜  ~   df -h | grep disk1s1 | rexe -ms \
 "x = split; puts %Q{#{x[4]} Used: #{x[2]}, Avail #{x[3]}}"
 91% Used: 412Gi, Avail 44Gi
 ```
@@ -366,19 +414,21 @@ Print yellow (trust me!):
 ----
 
     
-Show the 3 longest file names of the current directory, with their lengths:
+Show the 3 longest file names of the current directory, with their lengths, in descending order:
 
 ```
 ➜  ~   ls  | rexe -ms "%Q{[%4d] %s} % [length, self]" | sort -r | head -3
-"
 [  50] Agoda_Booking_ID_9999999 49_–_RECEIPT_enclosed.pdf
 [  40] 679a5c034994544aab4635ecbd50ab73-big.jpg
 [  28] 2018-abc-2019-01-16-2340.zip
 ```
 
+Notice that when you right align numbers using printf formatting, sorting the lines
+alphabetically will result in sorting them numerically as well.
+
 ----
 
-I was recently asked to provide a schema for the data in my `rock_books` accounting gem. `rock_books` data is intended to be very small in size, and no data base is used. Instead, the input data is parsed and reports generated on every run. However, there are data structures (actually class instances) in memory at runtime, and their classes inherit from `Struct`.
+I was recently asked to provide a schema for the data in my `rock_books` accounting gem. `rock_books` data is intended to be very small in size, and no data base is used. Instead, the input data is parsed on every run, and reports generated on demand. However, there are data structures (actually class instances) in memory at runtime, and their classes inherit from `Struct`.
  The definition lines look like this one:
  
 ```
@@ -394,7 +444,7 @@ lib/rock_books/documents/journal_entry.rb:
 So this is what worked well for me:
 
 ```
-grep Struct **/*.rb | grep -v OpenStruct | rexe -ms \
+➜  ~   grep Struct **/*.rb | grep -v OpenStruct | rexe -ms \
 "a = \
  gsub('lib/rock_books/', '')\
 .gsub('< Struct.new',    '')\
@@ -403,7 +453,11 @@ grep Struct **/*.rb | grep -v OpenStruct | rexe -ms \
 .map(&:strip);\
 \
 %q{%-40s %-s} % [a[0] + %q{.rb}, a[1]]"
- 
+```
+
+...which produced this output:
+
+``` 
 cmd_line/command_line_interface.rb       class Command (:min_string, :max_string, :action)
 documents/book_set.rb                    class BookSet (:run_options, :chart_of_accounts, :journals)
 documents/journal.rb                     class Entry (:date, :amount, :acct_amounts, :description)
@@ -416,12 +470,13 @@ types/acct_amount.rb                     class AcctAmount (:date, :code, :amount
 types/journal_entry_context.rb           class JournalEntryContext (:journal, :linenum, :line)
 ``` 
 
-Here's what this does:
+Although there's a lot going on here, the vertical and horizontal alignments and spacing make the code
+straightforward to follow. Here's what it does:
 
 * grep the code base for `"Struct"`
 * exclude references to `"OpenStruct"` with `grep -v`
 * remove unwanted text with `gsub`
-* split the line into 1) a filespec relative to the project root, and 2) the class definition
+* split the line into 1) a filespec relative to `lib/rockbooks`, and 2) the class definition
 * strip unwanted space because that will mess up the horizontal alignment of the output.
 * use C-style printf formatting to align the text into two columns
 
