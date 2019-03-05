@@ -16,8 +16,8 @@ awkward too.
 
 Sometimes a good solution is to combine Ruby and shell scripting on the same
 command line. Here's an example, using an intermediate environment variable to
-simplify the logic and save the data for use by future commands
-(an excerpt of the output follows the code):
+simplify the logic and save the data for use by future commands.
+An excerpt of the output follows the code:
 
 ```
 ➜  ~   export EUR_RATES_JSON=`curl https://api.exchangeratesapi.io/latest`
@@ -33,12 +33,12 @@ simplify the logic and save the data for use by future commands
 }
 ```
 
-However, the length and verbosity of the command are awkward and discourage this
+However, the configuration setup (the `require`s) make the command long and tedious, discouraging this
 approach.
 
 ### Rexe
 
-Enter, the `rexe` script (coincidentally, written by me!). [^1]
+Enter the `rexe` script. [^1]
  
 `rexe` is at https://github.com/keithrbennett/rexe and can be installed with
 `gem install rexe`. `rexe` provides several ways to simplify Ruby on the command
@@ -47,7 +47,7 @@ line, tipping the scale so that it is practical to do it more often.
 Here is `rexe`'s help text as of the time of this writing:
 
 ```
-rexe -- Ruby Command Line Executor/Filter -- v0.8.0 -- https://github.com/keithrbennett/rexe
+rexe -- Ruby Command Line Executor/Filter -- v0.8.1 -- https://github.com/keithrbennett/rexe
 
 Executes Ruby code on the command line, optionally taking standard input and writing to standard output.
 
@@ -71,7 +71,7 @@ before processing the input.
 If there is a REXE_OPTIONS environment variable, its content will be prepended to the command line
 so that you can specify options implicitly (e.g. `export REXE_OPTIONS="-r awesome_print,yaml"`)
 
-(1) For boolean verbose and noop options, the following are valid:
+(1) For boolean 'verbose' and 'noop' options, the following are valid:
 -v no, -v yes, -v false, -v true, -v n, -v y, -v +, but not -v -
 ```
 
@@ -87,11 +87,19 @@ This command produces the same results as the previous `ruby` one.
 
 ### Simplifying the Rexe Invocation with Configuration
 
-Using any of several configuration approaches, the `json` and `awesome_print` requires can be excluded from the command line altogether so that the command is shortened and simplified. 
+`rexe` provides two approaches to configuration:
 
-#### The REXE_OPTIONS Environment Variable
+* the `REXE_OPTIONS` environment variable
+* loading Ruby files before executing the code using `-l`, or implicitly with `~/.rexerc`
 
-One way is to use the `REXE_OPTIONS` environment variable:
+These approaches enable removing configuration information from your `rexe` command,
+making it shorter and simpler to read.
+
+
+### The REXE_OPTIONS Environment Variable
+
+The `REXE_OPTIONS` environment variable can contain command line options that would otherwise
+be specified on the `rexe` command line:
 
 ```
 ➜  ~   export REXE_OPTIONS="-r json,awesome_print"
@@ -100,7 +108,7 @@ One way is to use the `REXE_OPTIONS` environment variable:
 
 Like any environment variable, `REXE_OPTIONS` could also be set in your startup script, input on a command line using `export`, or in another script loaded with `source` or `.`.
 
-#### Loading Files
+### Loading Files
 
 The environment variable approach works well for command line _options_, but what if we want to specify Ruby _code_ (e.g. methods) that can be used by multiple invocations of `rexe`?
 
@@ -146,45 +154,31 @@ You might be thinking that creating an alias or a minimal shell script for this 
 approach, and I would agree with you. However, over time the number of these could become unmanageable, and using Ruby
 you could build a pretty extensive and well organized library of functionality. Moreover, that functionality could be made available to _all_ your Ruby code (for example, by putting it in a gem), and not just command line one liners.
 
-### Implementing Domain Specific Languages (DSL's)
-
-Defining methods in your loaded files enables you to effectively define a DSL for your command line use. You could use different load files for different projects, domains, or contexts, and define aliases or one line scripts to give them meaningful names. For example, if I wrote code to work with Ansible and put it in `~/projects/rexe-ansible.rb`, I could define an alias in my startup script:
+For example, you could have something like this in a configuration file:
 
 ```
-➜  ~   alias rxans="rexe -l ~/projects/rexe-ansible.rb $*"
-```
-...and then I would have an Ansible DSL available for me to use by calling `rxans`.
-
-In addition, you can also call `pry` on the context of any object, so you
-can provide a DSL in a REPL trivially easily. Just to illustrate, here's how
-you would open a REPL on the File class:
-
-```
-➜  ~   ruby -r pry -e File.pry
-# or
-➜  ~   rexe -r pry File.pry
+def play(piece_code)
+  pieces = {
+    hallelujah: "https://www.youtube.com/watch?v=IUZEtVbJT5c&t=0m20s",
+    valkyries:  "http://www.youtube.com/watch?v=P73Z6291Pt8&t=0m28s",
+    wm_tell:    "https://www.youtube.com/watch?v=j3T8-aeOrbg"
+    # ... and many, many more
+  }
+  `open #{Shellwords.escape(pieces.fetch(piece_code))}`
+end
 ```
 
-`self` would evaluate to the `File` class, so you could call class methods implicitly using only their names:
+...which you could then call like this:
 
 ```
-➜  rock_books git:(master) ✗   rexe  -r pry File.pry
-
-[6] pry(File)> size '/etc/passwd'
-6804
-[7] pry(File)> directory? '.'
-true
-[8] pry(File)> file?('/etc/passwd')
-true
+➜  ~   tar czf /tmp/my-whole-user-space.tar.gz ~ ; rexe 'play(:hallelujah)'
 ```
 
-This could be really handy if you call `pry` on a custom object that has methods especially suited to your task.
-
-Ruby is supremely suited for DSL's since it does not require parentheses for method calls, 
-so calls to your custom methods _look_ like built in language commands and keywords. 
+(You need to quote the `play` call because otherwise the shell will process and remove the parentheses.
+Alternatively you could escape the parentheses with backslashes.)
 
 
-#### Clearing the Require and Load Lists
+### Clearing the Require and Load Lists
 
 There may be times when you have specified a load or require on the command line
 or in the `REXE_OPTIONS` environment variable,
@@ -193,14 +187,14 @@ unspecify a single resource, but you can unspecify _all_ the requires or loads
 with the `-r!` and `-l!` command line options, respectively.
 
 
-#### Clearing _All_ Options
+### Clearing _All_ Options
 
 You can also clear _all_ options specified up to a certain point in time with the _clear options_ option (`-c`).
 This is especially useful if you have specified options in the `REXE_OPTIONS` environment variable, 
 and want to ignore all of them.
 
 
-#### Verbose Mode
+### Verbose Mode
 
 In addition to displaying the execution time, verbose mode will display the version, date/time of execution, source code
 to be evaluated, options specified (by all approaches), and that the global file has been loaded (if it was found):
@@ -306,6 +300,44 @@ Examples up until this point have all used the default
 `-mn` mode. This is the simplest use case, where `self`
 does not evaluate to anything useful, and if you cared about standard
 input, you would have to code it yourself (e.g. as we did earlier with `STDIN.read`).
+
+
+### Implementing Domain Specific Languages (DSL's)
+
+Defining methods in your loaded files enables you to effectively define a [DSL](https://en.wikipedia.org/wiki/Domain-specific_language) for your command line use. You could use different load files for different projects, domains, or contexts, and define aliases or one line scripts to give them meaningful names. For example, if I wrote code to work with Ansible and put it in `~/projects/rexe-ansible.rb`, I could define an alias in my startup script:
+
+```
+➜  ~   alias rxans="rexe -l ~/projects/rexe-ansible.rb $*"
+```
+...and then I would have an Ansible DSL available for me to use by calling `rxans`.
+
+In addition, since you can also call `pry` on the context of any object, you
+can provide a DSL in a [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) (shell)
+trivially easily. Just to illustrate, here's how you would open a REPL on the File class:
+
+```
+➜  ~   ruby -r pry -e File.pry
+# or
+➜  ~   rexe -r pry File.pry
+```
+
+`self` would evaluate to the `File` class, so you could call class methods implicitly using only their names:
+
+```
+➜  rock_books git:(master) ✗   rexe  -r pry File.pry
+
+[6] pry(File)> size '/etc/passwd'
+6804
+[7] pry(File)> directory? '.'
+true
+[8] pry(File)> file?('/etc/passwd')
+true
+```
+
+This could be really handy if you call `pry` on a custom object that has methods especially suited to your task.
+
+Ruby is supremely suited for DSL's since it does not require parentheses for method calls, 
+so calls to your custom methods _look_ like built in language commands and keywords. 
 
 
 #### Suppressing Automatic Output in Filter Modes
