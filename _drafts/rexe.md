@@ -47,7 +47,7 @@ line, tipping the scale so that it is practical to do it more often.
 Here is `rexe`'s help text as of the time of this writing:
 
 ```
-rexe -- Ruby Command Line Executor/Filter -- v0.8.1 -- https://github.com/keithrbennett/rexe
+rexe -- Ruby Command Line Executor/Filter -- v0.10.0 -- https://github.com/keithrbennett/rexe
 
 Executes Ruby code on the command line, optionally taking standard input and writing to standard output.
 
@@ -55,13 +55,22 @@ Options:
 
 -c  --clear_options        Clear all previous command line options specified up to now
 -h, --help                 Print help and exit
+-i, --input_mode MODE      Mode with which to handle input (i.e. what `self` will be in your code):
+                             -il line mode; each line is ingested as a separate string
+                             -ie enumerator mode
+                             -ib big string mode; all lines combined into single multiline string
+                             -in (default) no input mode; no special handling of input; self is not input 
 -l, --load RUBY_FILE(S)    Ruby file(s) to load, comma separated, or ! to clear
--m, --mode MODE            Mode with which to handle input (i.e. what `self` will be in your code):
-                           -ms for each line to be handled as a separate string
-                           -me for an enumerator of lines (least memory consumption for big data)
-                           -mb for 1 big string (all lines combined into single multiline string)
-                           -mn don't do special handling of input; self is not the input (default) 
 -n, --[no-]noop            Do not execute the code (useful with -v); see note (1) below
+-o, --output_mode MODE     Output formatting mode (puts is default):
+                             'a' => awesome_print
+                             'i' => inspect
+                             'j' => json
+                             'J' => pretty_json
+                             'n' => no_output
+                             'p' => puts (default)
+                             's' => to_string
+                             'y' => yaml
 -r, --require REQUIRES     Gems and built-in libraries to require, comma separated, or ! to clear
 -v, --[no-]verbose         verbose mode (logs to stderr); see note (1) below
 
@@ -151,7 +160,7 @@ an explicitly loaded file:
 ```
 
 You might be thinking that creating an alias or a minimal shell script for this open would be a simpler and more natural
-approach, and I would agree with you. However, over time the number of these could become unmanageable, and using Ruby
+approach, and I would agree with you. However, over time the number of these could become unmanageable, whereas using Ruby
 you could build a pretty extensive and well organized library of functionality. Moreover, that functionality could be made available to _all_ your Ruby code (for example, by putting it in a gem), and not just command line one liners.
 
 For example, you could have something like this in a configuration file:
@@ -224,14 +233,15 @@ do so by using any of the following: `--[no-]verbose`, `-v n`, or `-v false`.
 
 ### Input Modes
 
-`rexe` tries to make it simple and convenient for you to handle standard input, and in different ways. Here is the help text relating to input modes:
+`rexe` tries to make it simple and convenient for you to handle standard input, 
+and in different ways. Here is the help text relating to input modes:
 
 ```
--m, --mode MODE   Mode with which to handle input (i.e. what `self` will be in the code):
-                  -ms for each line to be handled separately as a string
-                  -me for an enumerator of lines (least memory consumption for big data)
-                  -mb for 1 big string (all lines combined into single multiline string)
-                  -mn to execute the specified Ruby code on no input at all (default)
+-i, --input_mode MODE      Mode with which to handle input (i.e. what `self` will be in your code):
+                           -il line mode; each line is ingested as a separate string
+                           -ie enumerator mode
+                           -ib big string mode; all lines combined into single multiline string
+                           -in (default) no input mode; no special handling of input; self is not input 
 ```
 
 The first three are _filter_ modes; they make standard input available
@@ -242,13 +252,13 @@ The last (and default) is the _executor_ mode. It merely assists you in
 executing the code you provide without any special implicit handling of standard input.
 
 
-#### -ms "Single String" Filter Mode
+#### -il "Line" Filter Mode
 
 In this mode, your code would be called once per line of input,
 and in each call, `self` would evaluate to the line of text:
 
 ```
-➜  ~   echo "hello\ngoodbye" | rexe -ms reverse
+➜  ~   echo "hello\ngoodbye" | rexe -is reverse
 olleh
 eybdoog
 ```
@@ -257,21 +267,18 @@ eybdoog
  is the input line in each call (we could also have used `self.reverse` but the `self` would have been redundant.).
   
 
-#### -me "Enumerator" Filter Mode
+#### -ie "Enumerator" Filter Mode
 
 In this mode, your code is called only once, and `self` is an enumerator
 dispensing all lines of standard input. To be more precise, it is the enumerator returned by `STDIN.each_line`.
 
-Dealing with input as an enumerator yields the following benefits:
+Dealing with input as an enumerator enables you to use the wealth of `Enumerable` methods such as `select`, `to_a`, `map`, etc.
 
-* you can use the wealth of `Enumerable` methods such as `select`, `to_a`, `map`, etc.
-* if the amount of standard input is huge, and you can process one line at a time, you don't need to be concerned about exhausting the available memory.
-
-Here is an example of using `-me` to add line numbers to the first 3
+Here is an example of using `-ie` to add line numbers to the first 3
 files in the directory listing:
 
 ```
-➜  ~   ls / | rexe -me "first(3).each_with_index { |ln,i| puts '%5d  %s' % [i, ln] }; nil"
+➜  ~   ls / | rexe -ie "first(3).each_with_index { |ln,i| puts '%5d  %s' % [i, ln] }; nil"
 
     0  AndroidStudioProjects
     1  Applications
@@ -281,7 +288,7 @@ files in the directory listing:
 Since `self` is an enumerable, we can call `first` and then `each_with_index`.
 
 
-#### -mb "Big String" Filter Mode
+#### -ib "Big String" Filter Mode
 
 In this mode, all standard input is combined into a single, (possibly)
 large string, with newline characters joining the lines in the string.
@@ -291,15 +298,25 @@ A good example of when you would use this is when you parse JSON or YAML text; y
 An earlier example would be more simply specified using this mode, since `STDIN.read` could be replaced with `self`:
 
 ```
-➜  ~   echo $EUR_RATES_JSON | rexe -mb -r awesome_print,json 'ap JSON.parse(self)'
+➜  ~   echo $EUR_RATES_JSON | rexe -ib -r awesome_print,json 'ap JSON.parse(self)'
 ```
 
-#### -mn "No Input" Executor Mode -- The Default
+#### -in "No Input" Executor Mode -- The Default
 
 Examples up until this point have all used the default
-`-mn` mode. This is the simplest use case, where `self`
+`-in` mode. This is the simplest use case, where `self`
 does not evaluate to anything useful, and if you cared about standard
 input, you would have to code it yourself (e.g. as we did earlier with `STDIN.read`).
+
+
+#### Filter Input Mode Memory Considerations
+
+If you may have more input than would fit in memory, you can do the following:
+
+* use `-il` (line) mode so you are fed only 1 line at a time
+* use `-ie` (enumerator) mode or use `-in` (no input) mode with something like `STDIN.each_line`, 
+but make sure not to call any methods (e.g. `map`, `select`)
+ that will produce an array of all the input
 
 
 ### Implementing Domain Specific Languages (DSL's)
@@ -336,17 +353,17 @@ true
 
 This could be really handy if you call `pry` on a custom object that has methods especially suited to your task.
 
-Ruby is supremely suited for DSL's since it does not require parentheses for method calls, 
+Ruby is supremely well suited for DSL's since it does not require parentheses for method calls, 
 so calls to your custom methods _look_ like built in language commands and keywords. 
 
 
 #### Suppressing Automatic Output in Filter Modes
 
-The filter input modes will automatically call `puts` to output the last evaulated value of your code to stdout. There may be times you may want to do something _else_ with the input and send nothing to stdout. For example, you might want to write something to a file, send to a network, etc. The simplest way to suppress output is to make nil or the empty string the final value in the expression. This can be accomplished simply merely by appending `; nil` or `;''` to your code. For example, to only output directory entries containing the letter 'e' in `-ms` (single string) mode:
+The filter input modes will automatically call `puts` to output the last evaulated value of your code to stdout. There may be times you may want to do something _else_ with the input and send nothing to stdout. For example, you might want to write something to a file, send to a network, etc. The simplest way to suppress output is to make nil or the empty string the final value in the expression. This can be accomplished simply merely by appending `; nil` or `;''` to your code. For example, to only output directory entries containing the letter 'e' in `-il` (line) mode:
 
 ```
 # Output only entries that contain the letter 'e':
-➜  /   ls | sort | rexe -ms "include?('e') ? self : nil"
+➜  /   ls | sort | rexe -il "include?('e') ? self : nil"
 
 Incompatible Software
 
@@ -354,16 +371,21 @@ Network
 ...
 ```
 
-However, as you can see, blank lines were displayed where `nil` was output. This is probably not what you want.
+However, as you can see, blank lines were displayed where `nil` was output. Why? Because in -il mode,
+ puts will be called unconditionally on whatever value is the result of the expression. In the case of nil,
+ puts outputs an empty string and its usual newline. This is probably not what you want.
 
-If you want to see the `nil`s, you could replace `nil` with `nil.inspect`, which returns the string `nil`, unlike `nil.to_s` which returns the empty string. Of course, there may be some other custom string you would want, such as `[no match]` or `-`, or you could just specify the string `'nil'`. [^2]
+If you want to see the `nil`s, you could replace `nil` with `nil.inspect`, which returns the string `'nil'`,
+ unlike `nil.to_s` which returns the empty string. Of course, 
+ there may be some other custom string you would want, 
+ such as `[no match]` or `-`, or you could just specify the string `'nil'`. [^2]
 
-But you probably don't want any line to display at all for excluded objects. For this it is best to use 
-`-me` (enumerator) mode. If you won't have a huge amount of input data you could use `select`:
+But you probably don't want any line at all to display for excluded objects. For this it is best to use 
+`-ie` (enumerator) mode. If you won't have a huge amount of input data you could use `select`:
 
 ```
 # Output only entries that contain the letter 'e':
-➜  /   ls | sort | rexe -me "select { |s| s.include?('e') }"
+➜  /   ls | sort | rexe -ie "select { |s| s.include?('e') }"
 Incompatible Software
 Network
 System
@@ -373,7 +395,7 @@ Here, `select` returns an array which is implicitly passed to `puts`. `puts` doe
 or `.inspect` to the result array, we would get the more compact array notation: 
  
 ```
-➜  /   ls | sort | rexe -me "select { |s| s.include?('e') }.to_s"
+➜  /   ls | sort | rexe -ie "select { |s| s.include?('e') }.to_s"
 ["Incompatible Software\n", "Network\n", ..., "private\n"]
 ```
 
@@ -392,7 +414,7 @@ Feel free to fall back on Ruby's super useful `%q{}` and `%Q{}`, equivalent to s
 You may want to support arguments in your code. One of the previous examples downloaded currency conversion rates. Let's find out the available currency codes:
 
 ```
-➜  /   echo $JSON_TEXT | rexe -rjson -mb \
+➜  /   echo $JSON_TEXT | rexe -rjson -ib \
         "JSON.parse(self)['rates'].keys.sort.join(' ')"
 AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR NOK NZD PHP PLN RON RUB SEK SGD THB TRY USD ZAR
 ```
@@ -400,7 +422,7 @@ AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR 
  Here would be a way to output a single rate:
  
 ```
-➜  ~   echo PHP | rexe -ms -rjson \
+➜  ~   echo PHP | rexe -il -rjson \
         "rate = JSON.parse(ENV['EUR_RATES_JSON'])['rates'][self];\
         %Q{1 EUR = #{rate} #{self}}"
 
@@ -412,24 +434,28 @@ In this code, `self` is the currency code `PHP` (Philippine Peso). We have acces
 
 ### More Examples
 
+Here are some more examples to illustrate the use of `rexe`.
+
+----
+
 Show disk space used/free on a Mac's main hard drive's main partition:
 
 ```
-➜  ~   df -h | grep disk1s1 | rexe -ms \
+➜  ~   df -h | grep disk1s1 | rexe -il \
 "x = split; puts %Q{#{x[4]} Used: #{x[2]}, Avail #{x[3]}}"
 91% Used: 412Gi, Avail 44Gi
 ```
 
-(Note that `split` is equivalent to `self.split`, and because the `-ms` option is used, `self` is the line of text.
+(Note that `split` is equivalent to `self.split`, and because the `-il` option is used, `self` is the line of text.
 
 ----
 
 Print yellow (trust me!):
 
 ```
-➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m}; puts to_a"
+➜  ~   cowsay hello | rexe -ie "print %Q{\u001b[33m}; puts to_a"
 ➜  ~     # or
-➜  ~   cowsay hello | rexe -mb "print %Q{\u001b[33m}; puts self"
+➜  ~   cowsay hello | rexe -ib "print %Q{\u001b[33m}; puts self"
 ➜  ~     # or
 ➜  ~   cowsay hello | rexe "print %Q{\u001b[33m}; puts STDIN.read"
   _______
@@ -449,7 +475,7 @@ Print yellow (trust me!):
 Show the 3 longest file names of the current directory, with their lengths, in descending order:
 
 ```
-➜  ~   ls  | rexe -ms "%Q{[%4d] %s} % [length, self]" | sort -r | head -3
+➜  ~   ls  | rexe -il "%Q{[%4d] %s} % [length, self]" | sort -r | head -3
 [  50] Agoda_Booking_ID_9999999 49_–_RECEIPT_enclosed.pdf
 [  40] 679a5c034994544aab4635ecbd50ab73-big.jpg
 [  28] 2018-abc-2019-01-16-2340.zip
@@ -476,7 +502,7 @@ lib/rock_books/documents/journal_entry.rb:
 So this is what worked well for me:
 
 ```
-➜  ~   grep Struct **/*.rb | grep -v OpenStruct | rexe -ms \
+➜  ~   grep Struct **/*.rb | grep -v OpenStruct | rexe -il \
 "a = \
  gsub('lib/rock_books/', '')\
 .gsub('< Struct.new',    '')\
