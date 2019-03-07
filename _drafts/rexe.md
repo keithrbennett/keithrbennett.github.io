@@ -266,6 +266,10 @@ eybdoog
 `reverse` is implicitly called on each line of standard input.  `self`
  is the input line in each call (we could also have used `self.reverse` but the `self` would have been redundant.).
   
+Be aware that there is no way to selectively exclude records from being output. Even if the result of the code
+is nil or the empty string, a newline will be output. If this is an issue, you might be better off using Enumerator
+mode and calling `select`, `filter`, `reject`, etc.
+
 
 #### -ie "Enumerator" Filter Mode
 
@@ -314,9 +318,35 @@ input, you would have to code it yourself (e.g. as we did earlier with `STDIN.re
 If you may have more input than would fit in memory, you can do the following:
 
 * use `-il` (line) mode so you are fed only 1 line at a time
-* use `-ie` (enumerator) mode or use `-in` (no input) mode with something like `STDIN.each_line`, 
-but make sure not to call any methods (e.g. `map`, `select`)
- that will produce an array of all the input
+* use an Enumerator, either by specifying the `-ie` (enumerator) mode option,
+ or using `-in` (no input) mode in conjunction with something like `STDIN.each_line`. Then: 
+** Make sure not to call any methods (e.g. `map`, `select`)
+ that will produce an array of all the input because that will pull all the records into memory, or:
+** use lazy enumerators
+ 
+
+
+### Output Modes
+
+Several output modes are provided for your convenience. Here they are in alphabetical order:
+
+* `-a` (Awesome Print) - calls `.ai` on the object to get the string that `ap` would print
+* `-i` (Inspect) - calls `inspect` on the object
+* `-j` (JSON) - calls `to_json` on the object
+* `-J` (Pretty JSON) calls `JSON.pretty_generate` with the object
+* `-n` (No Output) - output is suppressed
+* `-p` (Puts) - produces what `puts` would output
+* `-s` (To String) - calls `to_s` on the object
+* `-y` (YAML) - calls `to_yaml` on the object
+
+All modes will implicitly `require` anything needed to accomplish their task (e.g. `require 'yaml'`).
+
+You may wonder why these modes are provided, given that their functionality 
+could be included in the custom code instead. Here's why:
+
+* The savings in command line length goes a long way to making these commands more readable and feasible.
+* It's much simpler to use multiple formats, as there is no need to change the code itself. This also enables
+parameterization of the output format.
 
 
 ### Implementing Domain Specific Languages (DSL's)
@@ -357,49 +387,7 @@ Ruby is supremely well suited for DSL's since it does not require parentheses fo
 so calls to your custom methods _look_ like built in language commands and keywords. 
 
 
-#### Suppressing Automatic Output in Filter Modes
-
-The filter input modes will automatically call `puts` to output the last evaulated value of your code to stdout. There may be times you may want to do something _else_ with the input and send nothing to stdout. For example, you might want to write something to a file, send to a network, etc. The simplest way to suppress output is to make nil or the empty string the final value in the expression. This can be accomplished simply merely by appending `; nil` or `;''` to your code. For example, to only output directory entries containing the letter 'e' in `-il` (line) mode:
-
-```
-# Output only entries that contain the letter 'e':
-➜  /   ls | sort | rexe -il "include?('e') ? self : nil"
-
-Incompatible Software
-
-Network
-...
-```
-
-However, as you can see, blank lines were displayed where `nil` was output. Why? Because in -il mode,
- puts will be called unconditionally on whatever value is the result of the expression. In the case of nil,
- puts outputs an empty string and its usual newline. This is probably not what you want.
-
-If you want to see the `nil`s, you could replace `nil` with `nil.inspect`, which returns the string `'nil'`,
- unlike `nil.to_s` which returns the empty string. Of course, 
- there may be some other custom string you would want, 
- such as `[no match]` or `-`, or you could just specify the string `'nil'`. [^2]
-
-But you probably don't want any line at all to display for excluded objects. For this it is best to use 
-`-ie` (enumerator) mode. If you won't have a huge amount of input data you could use `select`:
-
-```
-# Output only entries that contain the letter 'e':
-➜  /   ls | sort | rexe -ie "select { |s| s.include?('e') }"
-Incompatible Software
-Network
-System
-```
-
-Here, `select` returns an array which is implicitly passed to `puts`. `puts` does _not_ call `to_s` when passed an array, but instead has special handling for arrays which prints each element on its own line. If instead we appended `.to_s` 
-or `.inspect` to the result array, we would get the more compact array notation: 
- 
-```
-➜  /   ls | sort | rexe -ie "select { |s| s.include?('e') }.to_s"
-["Incompatible Software\n", "Network\n", ..., "private\n"]
-```
-
-#### Quoting Strings in Your Ruby Code
+### Quoting Strings in Your Ruby Code
 
 One complication of using utilities like `rexe` where Ruby code is specified on the shell command line is that
 you need to be careful about the shell's special treatment of certain characters. For this reason, it is often
@@ -409,12 +397,12 @@ An excellent reference for how they differ is [here](https://stackoverflow.com/q
 Feel free to fall back on Ruby's super useful `%q{}` and `%Q{}`, equivalent to single and double quotes, respectively.
 
 
-#### Mimicking Method Arguments
+### Mimicking Method Arguments
 
 You may want to support arguments in your code. One of the previous examples downloaded currency conversion rates. Let's find out the available currency codes:
 
 ```
-➜  /   echo $JSON_TEXT | rexe -rjson -ib \
+➜  /   echo $EUR_RATES_JSON | rexe -rjson -ib \
         "JSON.parse(self)['rates'].keys.sort.join(' ')"
 AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR NOK NZD PHP PLN RON RUB SEK SGD THB TRY USD ZAR
 ```
@@ -430,6 +418,35 @@ AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR 
 ```
 
 In this code, `self` is the currency code `PHP` (Philippine Peso). We have accessed the JSON text to parse from the environment variable we previously populated.
+
+
+### Using the Clipboard for Text Processing
+
+Sometimes when editing text I need to do some one off text manipulation.
+Using the system's commands for pasting to and copying from the clipboard,
+this can easily be done. On the Mac, the `pbpaste` command outputs to stdout
+the clipboard content, and the `pbcopy` command copies its stdin to the clipboard.
+
+Let's say I have the following currency codes displayed on the screen:
+
+```
+AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR NOK NZD PHP PLN RON RUB SEK SGD THB TRY USD ZAR
+```
+
+...and I want to turn them into Ruby symbols for inclusion in Ruby source code as keys in a hash
+whose values will be the display names of the currencies, e.g "Australian Dollar").
+After copying this line to the clipboard, I could run this:
+
+```
+➜  ~   pbpaste | rexe -il "split.map(&:downcase).map { |s| %Q{    #{s}: '',} }.join(%Q{\n})"
+    aud: '',
+    bgn: '',
+    brl: '',
+    # ...
+```
+
+If I add `| pbcopy` to the rexe command, then that output text would be copied into the clipboard instead of
+displayed in the terminal, and I could then paste it in my editor.
 
 
 ### More Examples
@@ -539,6 +556,51 @@ straightforward to follow. Here's what it does:
 * use C-style printf formatting to align the text into two columns
 
  
+----
+
+Let's go a little crazy with the YouTube example.
+Let's have the video that loads be different for the success or failure
+of the command.
+
+If I put this in a load file (such as ~/.rexerc):
+
+```
+def play(piece_code)
+  pieces = {
+    hallelujah: "https://www.youtube.com/watch?v=IUZEtVbJT5c&t=0m20s",
+    rick_roll:  "https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=0m43s",
+    valkyries:  "http://www.youtube.com/watch?v=P73Z6291Pt8&t=0m28s",
+    wm_tell:    "https://www.youtube.com/watch?v=j3T8-aeOrbg",
+  }
+  `open #{Shellwords.escape(pieces.fetch(piece_code))}`
+end
+
+
+def play_result(success)
+  play(success ? :hallelujah : :rick_roll)
+end
+
+
+def play_result_by_exit_code
+  play_result(STDIN.read.chomp == '0')
+end
+
+```
+
+Then when I issue a command that succeeds, the Hallelujah Chorus is played:
+
+```
+➜  ~   uname; echo $? | rexe play_result_by_exit_code
+```
+
+...but when the command fails, in this case, with an executable which is not found, it plays Rick Astley's
+"Never Gonna Give You Up":
+
+```
+➜  ~   uuuuu; echo $? | rexe play_result_by_exit_code
+```
+
+
 
 
 
