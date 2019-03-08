@@ -56,21 +56,20 @@ Options:
 -c  --clear_options        Clear all previous command line options specified up to now
 -h, --help                 Print help and exit
 -i, --input_mode MODE      Mode with which to handle input (i.e. what `self` will be in your code):
-                             -il line mode; each line is ingested as a separate string
-                             -ie enumerator mode
-                             -ib big string mode; all lines combined into single multiline string
-                             -in (default) no input mode; no special handling of input; self is not input 
+                             -il  line mode; each line is ingested as a separate string
+                             -ie  enumerator mode
+                             -ib  big string mode; all lines combined into single multiline string
+                             -in  (default) no input mode; no special handling of input; self is not input 
 -l, --load RUBY_FILE(S)    Ruby file(s) to load, comma separated, or ! to clear
 -n, --[no-]noop            Do not execute the code (useful with -v); see note (1) below
 -o, --output_mode MODE     Output formatting mode (puts is default):
-                             'a' => awesome_print
-                             'i' => inspect
-                             'j' => json
-                             'J' => pretty_json
-                             'n' => no_output
-                             'p' => puts (default)
-                             's' => to_string
-                             'y' => yaml
+                             -oi  Inspect
+                             -oj  JSON
+                             -oJ  Pretty JSON
+                             -on  No Output
+                             -op  Puts (default)
+                             -os  to_s
+                             -oy  YAML
 -r, --require REQUIRES     Gems and built-in libraries to require, comma separated, or ! to clear
 -v, --[no-]verbose         verbose mode (logs to stderr); see note (1) below
 
@@ -600,8 +599,34 @@ Then when I issue a command that succeeds, the Hallelujah Chorus is played:
 ➜  ~   uuuuu; echo $? | rexe play_result_by_exit_code
 ```
 
+----
 
+Another formatting example...I wanted to reformat this help text:
 
+```
+                                 'i' => Inspect
+                                 'j' => JSON
+                                 'J' => Pretty JSON
+                                 'n' => No Output
+                                 'p' => Puts (default)
+                                 's' => to_s
+                                 'y' => YAML
+```
+
+Admittedly, the time it took to do this with rexe probably exceeded the time to do it manually,
+but it was an interesting exercise and made it easy to try different formats. Here it is:
+
+```
+➜  ~   pbpaste | rexe -il "sub(%q{'}, '-o').sub(%q{' =>}, %q{ })"
+                                 -oi  Inspect
+                                 -oj  JSON
+                                 -oJ  Pretty JSON
+                                 -on  No Output
+                                 -op  Puts (default)
+                                 -os  to_s
+                                 -oy  YAML
+```                                 
+                                 
 
 
 ### Conclusion
