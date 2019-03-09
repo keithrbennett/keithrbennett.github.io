@@ -55,6 +55,11 @@ Options:
 
 -c  --clear_options        Clear all previous command line options specified up to now
 -h, --help                 Print help and exit
+-i, --input_format FORMAT  Input format (none is default)
+                             -oj  JSON
+                             -om  Marshal
+                             -on  None
+                             -oy  YAML
 -l, --load RUBY_FILE(S)    Ruby file(s) to load, comma separated, or ! to clear
 -m, --input_mode MODE      Mode with which to handle input (i.e. what `self` will be in your code):
                              -ml  line mode; each line is ingested as a separate string
@@ -62,15 +67,16 @@ Options:
                              -mb  big string mode; all lines combined into single multiline string
                              -mn  (default) no input mode; no special handling of input; self is not input 
 -n, --[no-]noop            Do not execute the code (useful with -v); see note (1) below
--o, --output_mode MODE     Output formatting mode (puts is default):
+-o, --output_format FORMAT Output format (puts is default):
                              -oi  Inspect
                              -oj  JSON
                              -oJ  Pretty JSON
+                             -om  Marshal
                              -on  No Output
                              -op  Puts (default)
                              -os  to_s
                              -oy  YAML
--r, --require REQUIRES     Gems and built-in libraries to require, comma separated, or ! to clear
+-r, --require REQUIRES     Gems and built-mn libraries to require, comma separated, or ! to clear
 -v, --[no-]verbose         verbose mode (logs to stderr); see note (1) below
 
 If there is an .rexerc file in your home directory, it will be run as Ruby code 
