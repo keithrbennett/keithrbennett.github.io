@@ -55,12 +55,12 @@ Options:
 
 -c  --clear_options        Clear all previous command line options specified up to now
 -h, --help                 Print help and exit
--i, --input_mode MODE      Mode with which to handle input (i.e. what `self` will be in your code):
-                             -il  line mode; each line is ingested as a separate string
-                             -ie  enumerator mode
-                             -ib  big string mode; all lines combined into single multiline string
-                             -in  (default) no input mode; no special handling of input; self is not input 
 -l, --load RUBY_FILE(S)    Ruby file(s) to load, comma separated, or ! to clear
+-m, --input_mode MODE      Mode with which to handle input (i.e. what `self` will be in your code):
+                             -ml  line mode; each line is ingested as a separate string
+                             -me  enumerator mode
+                             -mb  big string mode; all lines combined into single multiline string
+                             -mn  (default) no input mode; no special handling of input; self is not input 
 -n, --[no-]noop            Do not execute the code (useful with -v); see note (1) below
 -o, --output_mode MODE     Output formatting mode (puts is default):
                              -oi  Inspect
@@ -236,11 +236,11 @@ do so by using any of the following: `--[no-]verbose`, `-v n`, or `-v false`.
 and in different ways. Here is the help text relating to input modes:
 
 ```
--i, --input_mode MODE      Mode with which to handle input (i.e. what `self` will be in your code):
-                           -il line mode; each line is ingested as a separate string
-                           -ie enumerator mode
-                           -ib big string mode; all lines combined into single multiline string
-                           -in (default) no input mode; no special handling of input; self is not input 
+-m, --input_mode MODE      Mode with which to handle input (i.e. what `self` will be in your code):
+                           -ml line mode; each line is ingested as a separate string
+                           -me enumerator mode
+                           -mb big string mode; all lines combined into single multiline string
+                           -mn (default) no input mode; no special handling of input; self is not input 
 ```
 
 The first three are _filter_ modes; they make standard input available
@@ -251,13 +251,13 @@ The last (and default) is the _executor_ mode. It merely assists you in
 executing the code you provide without any special implicit handling of standard input.
 
 
-#### -il "Line" Filter Mode
+#### -ml "Line" Filter Mode
 
 In this mode, your code would be called once per line of input,
 and in each call, `self` would evaluate to the line of text:
 
 ```
-➜  ~   echo "hello\ngoodbye" | rexe -is reverse
+➜  ~   echo "hello\ngoodbye" | rexe -ms reverse
 olleh
 eybdoog
 ```
@@ -270,18 +270,18 @@ is nil or the empty string, a newline will be output. If this is an issue, you m
 mode and calling `select`, `filter`, `reject`, etc.
 
 
-#### -ie "Enumerator" Filter Mode
+#### -me "Enumerator" Filter Mode
 
 In this mode, your code is called only once, and `self` is an enumerator
 dispensing all lines of standard input. To be more precise, it is the enumerator returned by `STDIN.each_line`.
 
 Dealing with input as an enumerator enables you to use the wealth of `Enumerable` methods such as `select`, `to_a`, `map`, etc.
 
-Here is an example of using `-ie` to add line numbers to the first 3
+Here is an example of using `-me` to add line numbers to the first 3
 files in the directory listing:
 
 ```
-➜  ~   ls / | rexe -ie "first(3).each_with_index { |ln,i| puts '%5d  %s' % [i, ln] }; nil"
+➜  ~   ls / | rexe -me "first(3).each_with_index { |ln,i| puts '%5d  %s' % [i, ln] }; nil"
 
     0  AndroidStudioProjects
     1  Applications
@@ -291,7 +291,7 @@ files in the directory listing:
 Since `self` is an enumerable, we can call `first` and then `each_with_index`.
 
 
-#### -ib "Big String" Filter Mode
+#### -mb "Big String" Filter Mode
 
 In this mode, all standard input is combined into a single, (possibly)
 large string, with newline characters joining the lines in the string.
@@ -301,13 +301,13 @@ A good example of when you would use this is when you parse JSON or YAML text; y
 An earlier example would be more simply specified using this mode, since `STDIN.read` could be replaced with `self`:
 
 ```
-➜  ~   echo $EUR_RATES_JSON | rexe -ib -r awesome_print,json 'ap JSON.parse(self)'
+➜  ~   echo $EUR_RATES_JSON | rexe -mb -r awesome_print,json 'ap JSON.parse(self)'
 ```
 
-#### -in "No Input" Executor Mode -- The Default
+#### -mn "No Input" Executor Mode -- The Default
 
 Examples up until this point have all used the default
-`-in` mode. This is the simplest use case, where `self`
+`-mn` mode. This is the simplest use case, where `self`
 does not evaluate to anything useful, and if you cared about standard
 input, you would have to code it yourself (e.g. as we did earlier with `STDIN.read`).
 
@@ -316,31 +316,31 @@ input, you would have to code it yourself (e.g. as we did earlier with `STDIN.re
 
 If you may have more input than would fit in memory, you can do the following:
 
-* use `-il` (line) mode so you are fed only 1 line at a time
-* use an Enumerator, either by specifying the `-ie` (enumerator) mode option,
- or using `-in` (no input) mode in conjunction with something like `STDIN.each_line`. Then: 
+* use `-ml` (line) mode so you are fed only 1 line at a time
+* use an Enumerator, either by specifying the `-me` (enumerator) mode option,
+ or using `-mn` (no input) mode in conjunction with something like `STDIN.each_line`. Then: 
 ** Make sure not to call any methods (e.g. `map`, `select`)
  that will produce an array of all the input because that will pull all the records into memory, or:
 ** use lazy enumerators
  
 
 
-### Output Modes
+### Output Formats
 
-Several output modes are provided for your convenience. Here they are in alphabetical order:
+Several output formats are provided for your convenience. Here they are in alphabetical order:
 
-* `-a` (Awesome Print) - calls `.ai` on the object to get the string that `ap` would print
-* `-i` (Inspect) - calls `inspect` on the object
-* `-j` (JSON) - calls `to_json` on the object
-* `-J` (Pretty JSON) calls `JSON.pretty_generate` with the object
-* `-n` (No Output) - output is suppressed
-* `-p` (Puts) - produces what `puts` would output
-* `-s` (To String) - calls `to_s` on the object
-* `-y` (YAML) - calls `to_yaml` on the object
+* `-oa` (Awesome Print) - calls `.ai` on the object to get the string that `ap` would print
+* `-oi` (Inspect) - calls `inspect` on the object
+* `-oj` (JSON) - calls `to_json` on the object
+* `-oJ` (Pretty JSON) calls `JSON.pretty_generate` with the object
+* `-on` (No Output) - output is suppressed
+* `-op` (Puts) - produces what `puts` would output
+* `-os` (To String) - calls `to_s` on the object
+* `-oy` (YAML) - calls `to_yaml` on the object
 
-All modes will implicitly `require` anything needed to accomplish their task (e.g. `require 'yaml'`).
+All formats will implicitly `require` anything needed to accomplish their task (e.g. `require 'yaml'`).
 
-You may wonder why these modes are provided, given that their functionality 
+You may wonder why these formats are provided, given that their functionality 
 could be included in the custom code instead. Here's why:
 
 * The savings in command line length goes a long way to making these commands more readable and feasible.
@@ -401,7 +401,7 @@ Feel free to fall back on Ruby's super useful `%q{}` and `%Q{}`, equivalent to s
 You may want to support arguments in your code. One of the previous examples downloaded currency conversion rates. Let's find out the available currency codes:
 
 ```
-➜  /   echo $EUR_RATES_JSON | rexe -rjson -ib \
+➜  /   echo $EUR_RATES_JSON | rexe -rjson -mb \
         "JSON.parse(self)['rates'].keys.sort.join(' ')"
 AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR NOK NZD PHP PLN RON RUB SEK SGD THB TRY USD ZAR
 ```
@@ -409,7 +409,7 @@ AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR 
  Here would be a way to output a single rate:
  
 ```
-➜  ~   echo PHP | rexe -il -rjson \
+➜  ~   echo PHP | rexe -ml -rjson \
         "rate = JSON.parse(ENV['EUR_RATES_JSON'])['rates'][self];\
         %Q{1 EUR = #{rate} #{self}}"
 
@@ -437,7 +437,7 @@ whose values will be the display names of the currencies, e.g "Australian Dollar
 After copying this line to the clipboard, I could run this:
 
 ```
-➜  ~   pbpaste | rexe -il "split.map(&:downcase).map { |s| %Q{    #{s}: '',} }.join(%Q{\n})"
+➜  ~   pbpaste | rexe -ml "split.map(&:downcase).map { |s| %Q{    #{s}: '',} }.join(%Q{\n})"
     aud: '',
     bgn: '',
     brl: '',
@@ -457,21 +457,21 @@ Here are some more examples to illustrate the use of `rexe`.
 Show disk space used/free on a Mac's main hard drive's main partition:
 
 ```
-➜  ~   df -h | grep disk1s1 | rexe -il \
+➜  ~   df -h | grep disk1s1 | rexe -ml \
 "x = split; puts %Q{#{x[4]} Used: #{x[2]}, Avail #{x[3]}}"
 91% Used: 412Gi, Avail 44Gi
 ```
 
-(Note that `split` is equivalent to `self.split`, and because the `-il` option is used, `self` is the line of text.
+(Note that `split` is equivalent to `self.split`, and because the `-ml` option is used, `self` is the line of text.
 
 ----
 
 Print yellow (trust me!):
 
 ```
-➜  ~   cowsay hello | rexe -ie "print %Q{\u001b[33m}; puts to_a"
+➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m}; puts to_a"
 ➜  ~     # or
-➜  ~   cowsay hello | rexe -ib "print %Q{\u001b[33m}; puts self"
+➜  ~   cowsay hello | rexe -mb "print %Q{\u001b[33m}; puts self"
 ➜  ~     # or
 ➜  ~   cowsay hello | rexe "print %Q{\u001b[33m}; puts STDIN.read"
   _______
@@ -491,7 +491,7 @@ Print yellow (trust me!):
 Show the 3 longest file names of the current directory, with their lengths, in descending order:
 
 ```
-➜  ~   ls  | rexe -il "%Q{[%4d] %s} % [length, self]" | sort -r | head -3
+➜  ~   ls  | rexe -ml "%Q{[%4d] %s} % [length, self]" | sort -r | head -3
 [  50] Agoda_Booking_ID_9999999 49_–_RECEIPT_enclosed.pdf
 [  40] 679a5c034994544aab4635ecbd50ab73-big.jpg
 [  28] 2018-abc-2019-01-16-2340.zip
@@ -518,7 +518,7 @@ lib/rock_books/documents/journal_entry.rb:
 So this is what worked well for me:
 
 ```
-➜  ~   grep Struct **/*.rb | grep -v OpenStruct | rexe -il \
+➜  ~   grep Struct **/*.rb | grep -v OpenStruct | rexe -ml \
 "a = \
  gsub('lib/rock_books/', '')\
 .gsub('< Struct.new',    '')\
@@ -617,7 +617,7 @@ Admittedly, the time it took to do this with rexe probably exceeded the time to 
 but it was an interesting exercise and made it easy to try different formats. Here it is:
 
 ```
-➜  ~   pbpaste | rexe -il "sub(%q{'}, '-o').sub(%q{' =>}, %q{ })"
+➜  ~   pbpaste | rexe -ml "sub(%q{'}, '-o').sub(%q{' =>}, %q{ })"
                                  -oi  Inspect
                                  -oj  JSON
                                  -oJ  Pretty JSON
