@@ -61,7 +61,7 @@ line, tipping the scale so that it is practical to do it more often.
 Here is `rexe`'s help text as of the time of this writing:
 
 ```
-rexe -- Ruby Command Line Executor/Filter -- v0.10.2 -- https://github.com/keithrbennett/rexe
+rexe -- Ruby Command Line Executor/Filter -- v0.11.0 -- https://github.com/keithrbennett/rexe
 
 Executes Ruby code on the command line, optionally taking standard input and writing to standard output.
 
@@ -186,17 +186,30 @@ and the execution time of your Ruby code:
  
 ```
 ➜  ~   echo $EUR_RATES_JSON | rexe -v -rjson,awesome_print "ap JSON.parse(STDIN.read)"
-rexe version 0.7.0 -- 2019-03-03 18:18:14 +0700
-Source Code: ap JSON.parse(STDIN.read)
-Options: {:input_mode=>:no_input, :loads=>[], :requires=>["json", "awesome_print"], :verbose=>true}
-Loading global config file /Users/kbennett/.rexerc
-...
-rexe time elapsed: 0.085913 seconds.
+---
+:count: 0
+:rexe_version: 0.11.0
+:start_time: '2019-03-11T20:16:02+07:00'
+:source_code: ap JSON.parse(STDIN.read)
+:options:
+  :input_format: :none
+  :input_mode: :no_input
+  :loads: []
+  :output_format: :puts
+  :requires:
+  - json
+  - awesome_print
+  :verbose: true
+  :noop: false
+:duration_secs: 0.032174
 ``` 
  
 This extra output is sent to standard error (_stderr_) instead of standard output
 (_stdout_) so that it will not pollute the "real" data when stdout is piped to
 another command.
+
+As you can see, the data is the YAML representation of a hash, so you could easily ingest it and
+use it programatically.
 
 If you would like to append this informational output to a file, you could do something like this:
 
@@ -341,6 +354,24 @@ could be included in the custom code instead. Here's why:
 * It's much simpler to use multiple formats, as there is no need to change the code itself. This also enables
 parameterization of the output format.
 
+
+### The $RC Global OpenStruct
+
+For your convenience, the information displayed in verbose mode is available to your code at runtime
+by accessing the `$RC` global variable, which contains an OpenStruct. Probably most useful in that object
+is the record count (as `$RC.count`). This is only really useful in line mode, because in the others
+it will always be 0 or 1. Here is an example of how you might use it:
+
+```
+➜  ~   ➜  ~   find / | rexe -ml -on \
+'n = $RC.count; if n % 1000 == 0; puts %Q{File entry ##{n} is #{self}}; end'
+
+...
+File entry #106000 is /usr/local/Cellar/go/1.11.5/libexec/src/cmd/vendor/github.com/google/pprof/internal/driver/driver_test.go
+File entry #107000 is /usr/local/Cellar/go/1.11.5/libexec/src/go/types/testdata/cycles1.src
+File entry #108000 is /usr/local/Cellar/go/1.11.5/libexec/src/runtime/os_linux_novdso.go
+...
+```
 
 ### Implementing Domain Specific Languages (DSL's)
 
@@ -528,15 +559,14 @@ Files loaded with the `-l` option are treated the same way.
 
 ### Beware of Configured Requires
 
-Requiring gems and modules for _all_ invocations of `rexe` will make your commands simpler and more concise, but will be a waste of execution time if they are not needed. You can inspect the execution times to see just how much time is being wasted. For example, we can find out that nokogiri takes about 0.7 seconds to load on my laptop by observing and comparing the execution times with and without the require (output has been abbreviated):
+Requiring gems and modules for _all_ invocations of `rexe` will make your commands simpler and more concise, but will be a waste of execution time if they are not needed. You can inspect the execution times to see just how much time is being wasted. For example, we can find out that nokogiri takes about 0.15 seconds to load on my laptop by observing and comparing the execution times with and without the require (output has been abbreviated using the redirection and grep):
 
 ```
-➜  ~   rexe -v
-rexe time elapsed: 0.094946 seconds.
+➜  ~   rexe -v 2>&1 | grep duration
+:duration_secs: 0.0012
 
-➜  ~   rexe -v -r nokogiri
-rexe time elapsed: 0.165996 seconds.
-```
+➜  ~   rexe -v -r nokogiri 2>&1 | grep duration
+:duration_secs: 0.148671```
 
 
 
