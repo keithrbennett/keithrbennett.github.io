@@ -566,7 +566,8 @@ Requiring gems and modules for _all_ invocations of `rexe` will make your comman
 :duration_secs: 0.0012
 
 ➜  ~   rexe -v -r nokogiri 2>&1 | grep duration
-:duration_secs: 0.148671```
+:duration_secs: 0.148671
+```
 
 
 
