@@ -82,8 +82,9 @@ Options:
                              -ml  line mode; each line is ingested as a separate string
                              -me  enumerator mode
                              -mb  big string mode; all lines combined into single multiline string
-                             -mn  (default) no input mode; no special handling of input; self is an Object.new 
--n, --[no-]noop            Do not execute the code (useful with -g); see note (1) below
+                             -mn  (default) no input mode; no special handling of input; self is an Object.new
+-n, --[no-]noop            Do not execute the code (useful with -g); the following are valid:
+                             -n no, -n yes, -n false, -n true, -n n, -n y, -n +, but not -n -
 -o, --output_format FORMAT Output format (defaults to puts):
                              -oi  Inspect
                              -oj  JSON
@@ -95,14 +96,11 @@ Options:
                              -oy  YAML
 -r, --require REQUIRE(S)   Gems and built-in libraries to require, comma separated, or ! to clear
 
-If there is an .rexerc file in your home directory, it will be run as Ruby code 
+If there is an .rexerc file in your home directory, it will be run as Ruby code
 before processing the input.
 
 If there is a REXE_OPTIONS environment variable, its content will be prepended to the command line
 so that you can specify options implicitly (e.g. `export REXE_OPTIONS="-r awesome_print,yaml"`)
-
-(1) For boolean 'noop' option, the following are valid:
--n no, -n yes, -n false, -n true, -n n, -n y, -n +, but not -n -
 ```
 
 ### Simplifying the Rexe Invocation
