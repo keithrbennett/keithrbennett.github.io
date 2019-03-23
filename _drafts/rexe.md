@@ -8,13 +8,13 @@ and the source code, and at minimum, reading the Conclusion.]_
 
 ----
 
-I love the power of the command line, but not the awkwardness of shell scripting
-languages. Sure, there's a lot that can be done with them, but it doesn't take
-long before I get frustrated with their bluntness and verbosity.
-
+Shell scripting is great for simple tasks but for anything nontrivial
+it can easily get cryptic and awkward (pun intended!).
+ 
 Often, I solve this problem by writing a Ruby script instead. Ruby gives me fine
-grained control in a "real" programming language with which I am comfortable.
-However, when there are multiple OS commands to be called, then Ruby can be
+grained control in a language that is all about clarity, conciseness, and expressiveness.
+
+Unfortunately, when there are multiple OS commands to be called, then Ruby can be
 awkward too.
 
 ### Using the Ruby Interpreter on the Command Line
@@ -137,7 +137,8 @@ you can do this:
 ➜  ~   rexe WifiWand::MacOsModel.new.wifi_info
 ```
 
-This effectively creates custom defaults, and is useful when you use options in most or all of your commands. Any options specified on the `rexe`
+Putting configuration options in `REXE_OPTIONS` effectively creates custom defaults,
+ and is useful when you use options in most or all of your commands. Any options specified on the `rexe`
 command line will override the environment variable options.
 
 Like any environment variable, `REXE_OPTIONS` could also be set in your startup script, input on a command line using `export`, or in another script loaded with `source` or `.`.
@@ -194,6 +195,8 @@ end
 
 (You need to quote the `play` call because otherwise the shell will process and remove the parentheses.
 Alternatively you could escape the parentheses with backslashes.)
+
+One of the examples at the end of this articles shows how you could have different music play for success and failure.
 
 
 ### Logging
@@ -282,7 +285,7 @@ eybdoog
   
 Be aware that, in this mode, although you can control the _content_ of output records, 
 there is no way to selectively _exclude_ records from being output. Even if the result of the code
-is nil or the empty string, a newline will be output. If this is an issue, you could do one of the following:
+is nil or the empty string, a newline will be output. To prevent this, you can do one of the following:
  
  * use `-me` Enumerator mode and call `select`, `filter`, `reject`, etc.
  * use the `-on` _no output_ mode and call `puts` explicitly for the output you _do_ want
@@ -389,7 +392,7 @@ This is only really useful in line mode, because in the others
 it will always be 0 or 1. Here is an example of how you might use it as a kind of progress indicator:
 
 ```
-➜  ~   ➜  ~   find / | rexe -ml -on \
+➜  ~   find / | rexe -ml -on \
 'if $RC.i % 1000 == 0; puts %Q{File entry ##{$RC.i} is #{self}}; end'
 ...
 File entry #106000 is /usr/local/Cellar/go/1.11.5/libexec/src/cmd/vendor/github.com/google/pprof/internal/driver/driver_test.go
