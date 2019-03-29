@@ -430,6 +430,29 @@ So the example we gave above:
 Another possible win for using `-f` is that since it is a command line option, it could be specified in `REXE_OPTIONS`.
 This could be useful if you are doing many operations on the same file.
 
+
+### 'self' as Default Source Code
+
+To make `rexe` even more concise, you do not need to specify any source code when you want that source code
+to be `self`. This would be the case for simple format conversions, such as the following JSON to YAML conversion
+of the currency coversion rates:
+
+```
+➜ ~  rexe -f eur_rates.json -oy
+# or
+➜ ~  echo $EUR_RATES_JSON | rexe -mb -ij -oy
+
+---
+rates:
+  JPY: 126.63
+  BRL: 4.3012
+  NOK: 9.6915
+  ...
+```
+
+This feature is probably only useful in the filter modes, since in the executor mode (`-mn`) self is a new
+instance of `Object` and hardly ever useful as an output value.
+
 ### The $RC Global OpenStruct
 
 For your convenience, the information displayed in verbose mode is available to your code at runtime
