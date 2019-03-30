@@ -68,7 +68,7 @@ line, tipping the scale so that it is practical to do it more often.
 Here is `rexe`'s help text as of the time of this writing:
 
 ```
-rexe -- Ruby Command Line Executor/Filter -- v0.13.0 -- https://github.com/keithrbennett/rexe
+rexe -- Ruby Command Line Executor/Filter -- v0.15.1 -- https://github.com/keithrbennett/rexe
 
 Executes Ruby code on the command line, optionally automating management of standard input
 and standard output, and optionally parsing input and formatting output with YAML, JSON, etc.
@@ -101,12 +101,15 @@ Options:
                              -oj  JSON
                              -oJ  Pretty JSON
                              -om  Marshal
-                             -on  No Output
-                             -op  Puts (default)
+                             -on  No Output (default)
+                             -op  Puts
                              -os  to_s
                              -oy  YAML
 -r, --require REQUIRE(S)   Gems and built-in libraries to require, comma separated;
                              ! to clear all, or precede a name with '-' to remove
+
+If source code is not specified, it will default to 'self', which is most likely useful
+only in a filter mode (-ml, -me, -mb).
 
 If there is an .rexerc file in your home directory, it will be run as Ruby code 
 before processing the input.
