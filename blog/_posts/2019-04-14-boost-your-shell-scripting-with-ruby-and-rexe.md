@@ -33,9 +33,11 @@ Sometimes a good solution is to combine Ruby and shell scripting on the same com
 
 Let's start by seeing what the Ruby interpreter already provides. Here we use `ruby` on the command line, using an intermediate environment variable to simplify the logic and save the data for use by future commands. An excerpt of the output follows the code:
 
-```
+```bash
 ➜  ~   export EUR_RATES_JSON=`curl https://api.exchangeratesapi.io/latest`
 ➜  ~   echo $EUR_RATES_JSON | ruby -r json -r yaml -e 'puts JSON.parse(STDIN.read).to_yaml'
+```
+```yaml
 ---
 rates:
   MXN: 21.96
@@ -52,13 +54,13 @@ Unfortunately, the configuration setup (the `require`s) along with the reading, 
 
 Rexe [see footnote ^1 regarding its origin] can simplify such commands. Among other things, rexe provides switch-activated input parsing and output formatting so that converting from one format to another is trivial. The previous `ruby` command can be expressed in `rexe` as:
 
-```
+```bash
 ➜  ~   echo $EUR_RATES_JSON | rexe -mb -ij -oy self
 ```
 
 Or, even more concisely (`self` is the default Ruby source code for rexe commands):
 
-```
+```bash
 ➜  ~   echo $EUR_RATES_JSON | rexe -mb -ij -oy
 ```
 
@@ -70,7 +72,7 @@ The command options may seem cryptic, but they're logical so it shouldn't take l
  
 If input comes from a JSON or YAML file, rexe determines the input format from the file's extension, and it's even simpler:
 
-```
+```bash
 ➜  ~   rexe -f eur_rates.json -oy
 ```
 
@@ -83,17 +85,20 @@ Here is rexe's help text as of the time of this writing:
 ```
 rexe -- Ruby Command Line Executor/Filter -- v1.0.0 -- https://github.com/keithrbennett/rexe
 
-Executes Ruby code on the command line, optionally automating management of standard input
-and standard output, and optionally parsing input and formatting output with YAML, JSON, etc.
+Executes Ruby code on the command line, 
+optionally automating management of standard input and standard output,
+and optionally parsing input and formatting output with YAML, JSON, etc.
 
 rexe [options] [Ruby source code]
 
 Options:
 
 -c  --clear_options        Clear all previous command line options specified up to now
--f  --input_file           Use this file instead of stdin; autodetects YAML and JSON file extensions
-                           If YAML or JSON: parses file in that mode, sets input mode to -mb
--g  --log_format FORMAT    Log format, logs to stderr, defaults to none (see -o for format options)
+-f  --input_file           Use this file instead of stdin for preprocessed input; 
+                           if filespec has a YAML and JSON file extension,
+                           sets input format accordingly and sets input mode to -mb
+-g  --log_format FORMAT    Log format, logs to stderr, defaults to none
+                           (see -o for format options)
 -h, --help                 Print help and exit
 -i, --input_format FORMAT  Input format
                              -ij  JSON
@@ -102,13 +107,14 @@ Options:
                              -iy  YAML
 -l, --load RUBY_FILE(S)    Ruby file(s) to load, comma separated;
                              ! to clear all, or precede a name with '-' to remove
--m, --input_mode MODE      Mode with which to handle input (i.e. what `self` will be in your code):
-                             -ml  line mode; each line is ingested as a separate string
-                             -me  enumerator mode
-                             -mb  big string mode; all lines combined into single multiline string
-                             -mn  (default) no input mode; no special handling of input; self is an Object.new 
--n, --[no-]noop            Do not execute the code (useful with -g); the following are valid:
-                             -n no, -n yes, -n false, -n true, -n n, -n y, -n +, but not -n -
+-m, --input_mode MODE      Input preprocessing mode (determines what `self` will be):
+                             -ml  line; each line is ingested as a separate string
+                             -me  enumerator (each_line on STDIN or File)
+                             -mb  big string; all lines combined into one string
+                             -mn  none (default); no input preprocessing; 
+                                  self is an Object.new 
+-n, --[no-]noop            Do not execute the code (useful with -g);
+                           For true: yes, true, y, +; for false: no, false, n
 -o, --output_format FORMAT Output format (defaults to puts):
                              -oi  Inspect
                              -oj  JSON
@@ -128,7 +134,7 @@ In many cases you will need to enclose your source code in single or double quot
 If source code is not specified, it will default to 'self', 
 which is most likely useful only in a filter mode (-ml, -me, -mb).
 
-If there is an .rexerc file in your home directory, it will be run as Ruby code 
+If there is a .rexerc file in your home directory, it will be run as Ruby code 
 before processing the input.
 
 If there is a REXE_OPTIONS environment variable, its content will be prepended
@@ -151,13 +157,13 @@ The `REXE_OPTIONS` environment variable can contain command line options that wo
 
 Instead of this:
 
-```
-➜  ~   rexe -r wifi-wand -oa  WifiWand::MacOsModel.new.wifi_info
+```bash
+➜  ~   rexe -r wifi-wand -oa WifiWand::MacOsModel.new.wifi_info
 ```
 
 you can do this:
 
-```
+```bash
 ➜  ~   export REXE_OPTIONS="-r wifi-wand -oa"
 ➜  ~   rexe WifiWand::MacOsModel.new.wifi_info
 ➜  ~   # [more rexe commands with the same options]
@@ -173,7 +179,7 @@ The environment variable approach works well for command line _options_, but wha
 
 For this, rexe lets you _load_ Ruby files, using the `-l` option, or implicitly (without your specifying it) in the case of the `~/.rexerc` file. Here is an example of something you might include in such a file:
 
-```
+```ruby
 # Open YouTube to Wagner's "Ride of the Valkyries"
 def valkyries
   `open "http://www.youtube.com/watch?v=P73Z6291Pt8&t=0m28s"`
@@ -186,7 +192,7 @@ To digress a bit, why would you want this? You might want to be able to go to an
 
 Here is an example of how you might use the `valkyries` method, assuming the above configuration is loaded from your `~/.rexerc` file or an explicitly loaded file:
 
-```
+```bash
 ➜  ~   tar czf /tmp/my-whole-user-space.tar.gz ~ ; rexe valkyries
 ```
 
@@ -196,7 +202,7 @@ You might be thinking that creating an alias or a minimal shell script (instead 
 
 For example, you could have something like this in a gem or loaded file:
 
-```
+```ruby
 def play(piece_code)
   pieces = {
     hallelujah: "https://www.youtube.com/watch?v=IUZEtVbJT5c&t=0m20s",
@@ -210,7 +216,7 @@ end
 
 ...which you could then call like this:
 
-```
+```bash
 ➜  ~   tar czf /tmp/my-whole-user-space.tar.gz ~ ; rexe 'play(:hallelujah)'
 ```
 
@@ -223,13 +229,14 @@ One of the examples at the end of this articles shows how you could have differe
 
 A log entry is optionally output to standard error after completion of the code. This entry is a hash representation (to be precise, `to_h`) of the `$RC` OpenStruct described in the $RC section below. It contains the version, date/time of execution, source code to be evaluated, options (after parsing both the `REXE_OPTIONS` environment variable and the command line), and the execution time of your Ruby code:
  
+```bash
+➜  ~   echo $EUR_RATES_JSON | rexe -gy -ij -mb -oa -n self
 ```
-➜  ~   echo $EUR_RATES_JSON | rexe -gy -ij -mb -oa self
-...
+```yaml
 ---
-:count: 1
+:count: 0
 :rexe_version: 1.0.0
-:start_time: '2019-04-14T19:15:50+08:00'
+:start_time: '2019-04-15T13:12:15+08:00'
 :source_code: self
 :options:
   :input_filespec:
@@ -242,9 +249,9 @@ A log entry is optionally output to standard error after completion of the code.
   - json
   - yaml
   :log_format: :yaml
-  :noop: false
-:duration_secs: 0.064798
-``` 
+  :noop: true
+:duration_secs: 0.050326
+```
 
 We specified `-gy` for YAML format; there are other formats as well (see the help output or this document) and the default is `-gn`, which means don't output the log entry at all.
 
@@ -254,7 +261,7 @@ This extra output is sent to standard error (_stderr_) instead of standard outpu
 
 If you would like to append this informational output to a file(e.g. `rexe.log`), you could do something like this:
 
-```
+```bash
 ➜  ~   rexe ... -gy 2>>rexe.log
 ```
 
@@ -281,7 +288,7 @@ The last (and default) is the _executor_ mode. It merely assists you in executin
 
 In this mode, your code would be called once per line of input, and in each call, `self` would evaluate to each line of text:
 
-```
+```bash
 ➜  ~   echo "hello\ngoodbye" | rexe -ml puts reverse
 olleh
 eybdoog
@@ -303,7 +310,7 @@ Dealing with input as an enumerator enables you to use the wealth of `Enumerable
 
 Here is an example of using `-me` to add line numbers to the first 3 files in the directory listing:
 
-```
+```bash
 ➜  ~   ls / | rexe -me "first(3).each_with_index { |ln,i| puts '%5d  %s' % [i, ln] }"
 
     0  AndroidStudioProjects
@@ -381,12 +388,12 @@ You may wonder why these formats are provided, given that their functionality co
 
 Rexe also simplifies getting input from a file rather than standard input. The `-f` option takes a filespec and does with its content exactly what it would have done with standard input. This shortens:
 
-```
+```bash
 ➜  ~   cat filename.ext | rexe ...
 ```
 ...to...
 
-```
+```bash
 ➜  ~   rexe -f filename.ext ...
 ```
 
@@ -397,13 +404,13 @@ This becomes even more useful if you are using files whose extensions are `.yml`
 
 So the example we gave above:
 
-```
+```bash
 ➜  ~   export EUR_RATES_JSON=`curl https://api.exchangeratesapi.io/latest`
 ➜  ~   echo $EUR_RATES_JSON | rexe -mb -ij -oy self
 ```
 ...could be changed to:
 
-```
+```bash
 ➜  ~   curl https://api.exchangeratesapi.io/latest > eur_rates.json
 ➜  ~   rexe -f eur_rates.json -oy self
 ``` 
@@ -412,7 +419,7 @@ Another possible win for using `-f` is that since it is a command line option, i
 
 If you need to override the input mode and format automatically configured for file input, you can simply specify the desired options on the command line _after_ the `-f`:
 
-```
+```bash
 ➜  ~   rexe -f eur_rates.json -mb -in 'puts self.class, self[0..20]'
 String
 {"base":"EUR","rates"
@@ -423,11 +430,12 @@ String
 
 To make rexe even more concise, you do not need to specify any source code when you want that source code to be `self`. This would be the case for simple format conversions, as in JSON to YAML conversion mentioned above:
 
-```
+```bash
 ➜ ~  rexe -f eur_rates.json -oy
 # or
 ➜ ~  echo $EUR_RATES_JSON | rexe -mb -ij -oy
-
+```
+```yaml
 ---
 rates:
   JPY: 126.63
@@ -440,35 +448,38 @@ This feature is probably only useful in the filter modes, since in the executor 
 
 ### The $RC Global OpenStruct
 
-For your convenience, the information displayed in verbose mode is available to your code at runtime by accessing the `$RC` global variable, which contains an OpenStruct. Let's print out its contents using AwesomePrint:
+For your convenience, the information displayed in verbose mode is available to your code at runtime by accessing the `$RC` global variable, which contains an OpenStruct. Let's print out its contents using YAML:
  
+```bash
+➜  ~   rexe -oy '$RC'
 ```
-➜  ~   rexe -oa '$RC'
-OpenStruct {
-           :count => 0,
-    :rexe_version => "1.0.0",
-      :start_time => "2019-04-14T19:16:26+08:00",
-     :source_code => "$RC",
-         :options => {
-        :input_filespec => nil,
-          :input_format => :none,
-            :input_mode => :none,
-                 :loads => [],
-         :output_format => :awesome_print,
-              :requires => [
-            [0] "awesome_print"
-        ],
-            :log_format => :none,
-                  :noop => false
-    }
-}
+```yaml
+--- !ruby/object:OpenStruct
+table:
+  :count: 0
+  :rexe_version: 1.0.0
+  :start_time: '2019-04-15T13:25:56+08:00'
+  :source_code: "$RC"
+  :options:
+    :input_filespec:
+    :input_format: :none
+    :input_mode: :none
+    :loads: []
+    :output_format: :yaml
+    :requires:
+    - yaml
+    :log_format: :none
+    :noop: false
+modifiable: true
 ``` 
  
 Probably most useful in that object at runtime is the record count, accessible with both `$RC.count` and `$RC.i`. This is only really useful in line mode, because in the others it will always be 0 or 1. Here is an example of how you might use it as a kind of progress indicator:
 
-```
+```bash
 ➜  ~   find / | rexe -ml -on \
 'if $RC.i % 1000 == 0; puts %Q{File entry ##{$RC.i} is #{self}}; end'
+```
+```
 ...
 File entry #106000 is /usr/local/Cellar/go/1.11.5/libexec/src/cmd/vendor/github.com/google/pprof/internal/driver/driver_test.go
 File entry #107000 is /usr/local/Cellar/go/1.11.5/libexec/src/go/types/testdata/cycles1.src
@@ -483,14 +494,14 @@ Note that a single quote was used for the Ruby code here; if a double quote were
 
 Defining methods in your loaded files enables you to effectively define a [DSL](https://en.wikipedia.org/wiki/Domain-specific_language) for your command line use. You could use different load files for different projects, domains, or contexts, and define aliases or one line scripts to give them meaningful names. For example, if you had Ansible helper code in `~/projects/ansible-tools/rexe-ansible.rb`, you could define an alias in your startup script:
 
-```
+```bash
 ➜  ~   alias rxans="rexe -l ~/projects/ansible-tools/rexe-ansible.rb $*"
 ```
 ...and then you would have an Ansible DSL available for me to use by calling `rxans`.
 
 In addition, since you can also call `pry` on the context of any object, you can provide a DSL in a [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) (shell) trivially easily. Just to illustrate, here's how you would open a REPL on the File class:
 
-```
+```bash
 ➜  ~   ruby -r pry -e File.pry
 # or
 ➜  ~   rexe -r pry File.pry
@@ -498,9 +509,10 @@ In addition, since you can also call `pry` on the context of any object, you can
 
 `self` would evaluate to the `File` class, so you could call class methods using only their names:
 
-```
+```bash
 ➜  ~   rexe -r pry File.pry
-
+```
+```
 [6] pry(File)> size '/etc/passwd'
 6804
 [7] pry(File)> directory? '.'
@@ -511,8 +523,10 @@ true
 
 This could be really handy if you call `pry` on a custom object that has methods especially suited to your task:
 
-```
+```bash
 ➜  ~   rexe -r wifi-wand,pry  WifiWand::MacOsModel.new.pry
+```
+```
 [1] pry(#<WifiWand::MacOsModel>)> random_mac_address
 "a1:ea:69:d9:ca:05"
 [2] pry(#<WifiWand::MacOsModel>)> connected_network_name
@@ -530,7 +544,7 @@ Personally, I find single quotes more useful since I usually don't want special 
 
 Sometimes it doesn't matter:
 
-```
+```bash
 ➜  ~   rexe 'puts "hello"'
 hello
 ➜  ~   rexe "puts 'hello'"
@@ -539,7 +553,7 @@ hello
 
 We can also use `%q` or `%Q`, and sometimes this eliminates the needs for the outer quotes altogether:
 
-```
+```bash
 ➜  ~   rexe puts %q{hello}
 hello
 ➜  ~   rexe puts %Q{hello}
@@ -548,28 +562,32 @@ hello
 
 Sometimes the quotes to use on the outside (quoting your command in the shell) need to be chosen based on which quotes are needed on the inside. For example, in the following command, we need double quotes in Ruby in order for interpolation to work, so we use single quotes on the outside:
 
-```
+```bash
 ➜  ~   rexe puts '"The time is now #{Time.now}"'
+```
+```
 The time is now 2019-03-29 16:41:26 +0800
 ```
 
 In this case we also need to use single quotes on the outside, because we need literal double quotes in a `%Q{}` expression:
 
-```
+```bash
 ➜  ~   rexe 'puts %Q{The operating system name is "#{`uname`.chomp}".}'
+```
+```
 The operating system name is "Darwin".
 ```
 
 We can eliminate the need for any quotes in the Ruby code using `%Q{}`:
 
-```
+```bash
 ➜  ~   rexe puts '%Q{The time is now #{Time.now}}'
+```
+```
 The time is now 2019-03-29 17:06:13 +0800
 ```
 
 Of course you can always escape the quotes with backslashes instead, but that is probably more difficult to read.
-
-
 
 
 ### No Op Mode
@@ -583,15 +601,17 @@ You may want to support arguments in your rexe commands. It's a little kludgy, b
 
 One of the previous examples downloaded currency conversion rates. To prepare for an example of how to do this, let's find out the available currency codes:
 
-```
+```bash
 ➜  /   echo $EUR_RATES_JSON | \
 rexe -ij -mb -op "self['rates'].keys.sort.join(' ')"
+```
+```
 AUD BGN BRL CAD CHF CNY CZK DKK GBP HKD HRK HUF IDR ILS INR ISK JPY KRW MXN MYR NOK NZD PHP PLN RON RUB SEK SGD THB TRY USD ZAR
 ```
 
 The codes output are the legal arguments that could be sent to rexe's stdin as an argument in the command below. Let's find out the Euro exchange rate for _PHP_, Philippine Pesos:
  
-```
+```bash
 ➜  ~   echo PHP | rexe -ml -op -rjson \
         "rate = JSON.parse(ENV['EUR_RATES_JSON'])['rates'][self];\
         %Q{1 EUR = #{rate} #{self}}"
@@ -623,14 +643,15 @@ AUD BGN BRL PHP TRY USD ZAR
 
 We could manually select that text and use system menu commands or keys to copy it to the clipboard, or we could do this:
 
-```
+```bash
 ➜  ~   echo AUD BGN BRL PHP TRY USD ZAR | pbcopy
 ```
 
 After copying this line to the clipboard, we could run this:
 
-```
-➜  ~   pbpaste | rexe -ml -op "split.map(&:downcase).map { |s| %Q{    #{s}: '',} }.join(%Q{\n})"
+```bash
+➜  ~   pbpaste | rexe -ml -op \
+        "split.map(&:downcase).map { |s| %Q{    #{s}: '',} }.join(%Q{\n})"
     aud: '',
     bgn: '',
     brl: '',
@@ -647,10 +668,11 @@ Although rexe is cleanest with short one liners, you may want to use it to inclu
 
 What might not be so obvious is that you will often need to use semicolons as statement separators. For example, here is an example without a semicolon:
 
-```
+```bash
 ➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m} \
 puts to_a"
-
+```
+```
 rexe: (eval):1: syntax error, unexpected tIDENTIFIER, expecting '}'
 ...new { print %Q{\u001b[33m} puts to_a }
 ...                           ^~~~
@@ -658,15 +680,17 @@ rexe: (eval):1: syntax error, unexpected tIDENTIFIER, expecting '}'
 
 The shell combines all backslash terminated lines into a single line of text, so when the Ruby interpreter sees your code, it's all in a single line:
 
-```
+```bash
 ➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m} puts to_a"
 ```
 
 Adding the semicolon fixes the problem:
 
-```
+```bash
 ➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m}; \
 puts to_a"
+```
+```
  _______
 < hello >
  -------
@@ -686,7 +710,7 @@ There may be times when you have specified a load or require on the command line
 
 2) Unspecify individual requires or loads by preceding the name with `-`, e.g. `-r -rails`. Array subtraction is used, and array subtraction removes _all_ occurrences of each element of the subtracted (subtrahend) array, so:
 
-```
+```bash
 ➜  ~   rexe -n -r rails,rails,rails,-rails -gP
 ...
    :requires=>["pp"],
@@ -697,7 +721,7 @@ There may be times when you have specified a load or require on the command line
 
 We could have also extracted the requires list programmatically using `$RC` (described above) by doing this:
 
-```
+```bash
 ➜  ~   rexe -oP -r rails,rails,rails,-rails '$RC[:options][:requires]'
 ["pp"]
 ```    
@@ -712,7 +736,7 @@ You can also clear _all_ options specified up to a certain point in time with th
 
 For consistency with the `ruby` interpreter, rexe supports requires with the `-r` option, but also allows grouping them together using commas:
 
-```
+```bash
                                     vvvvvvvvvvvvvvvvvvvvv
 ➜  ~   echo $EUR_RATES_JSON | rexe -r json,awesome_print 'ap JSON.parse(STDIN.read)'
                                     ^^^^^^^^^^^^^^^^^^^^^
@@ -725,7 +749,7 @@ Files loaded with the `-l` option are treated the same way.
 
 Requiring gems and modules for _all_ invocations of rexe will make your commands simpler and more concise, but will be a waste of execution time if they are not needed. You can inspect the execution times to see just how much time is being consumed. For example, we can find out that rails takes about 0.63 seconds to load on one system by observing and comparing the execution times with and without the require (output has been abbreviated using `grep`):
 
-```
+```bash
 ➜  ~   rexe -gy -r rails 2>&1 | grep duration
 :duration_secs: 0.660138
 ➜  ~   rexe -gy          2>&1 | grep duration
@@ -749,28 +773,28 @@ Here are some more examples to illustrate the use of rexe.
 
 To output the result to stdout, you can either call `puts` or specify the `-op` option:
 
-```
+```bash
 ➜  ~   rexe puts 1 / 3.0
 0.3333333333333333
 ```
 
 or:
 
-```
+```bash
 ➜  ~   rexe -op 1 / 3.0
 0.3333333333333333
 ```
 
 Since `*` is interpreted by the shell, if we do multiplication, we need to quote the expression:
 
-```
+```bash
 ➜  ~   rexe -op '2 * 7'
 14
 ```
 
 Of course, if you put the `-op` in the `REXE_OPTIONS` environment variable, you don't need to be explicit about the output:
 
-```
+```bash
 ➜  ~   export REXE_OPTIONS=-op
 ➜  ~   rexe '2 * 7'
 14
@@ -783,8 +807,10 @@ Of course, if you put the `-op` in the `REXE_OPTIONS` environment variable, you 
 
 Output the contents of `ENV` using AwesomePrint [see footnote ^4 regarding ENV.to_s]:
 
-```
+```bash
 ➜  ~   rexe -oa ENV
+```
+```
 {
 ...
   "LANG" => "en_US.UTF-8",
@@ -800,7 +826,7 @@ Output the contents of `ENV` using AwesomePrint [see footnote ^4 regarding ENV.t
 
 Show disk space used/free on a Mac's main hard drive's main partition:
 
-```
+```bash
 ➜  ~   df -h | grep disk1s1 | rexe -ml \
 "x = split; puts %Q{#{x[4]} Used: #{x[2]}, Avail: #{x[3]}}"
 91% Used: 412Gi, Avail: 44Gi
@@ -814,7 +840,7 @@ Show disk space used/free on a Mac's main hard drive's main partition:
     
 Show the 3 longest file names of the current directory, with their lengths, in descending order:
 
-```
+```bash
 ➜  ~   ls  | rexe -ml -op "%Q{[%4d] %s} % [length, self]" | sort -r | head -3
 [  50] Agoda_Booking_ID_9999999 49_–_RECEIPT_enclosed.pdf
 [  40] 679a5c034994544aab4635ecbd50ab73-big.jpg
@@ -829,12 +855,14 @@ When you right align numbers using printf formatting, sorting the lines alphabet
 
 This uses an [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code) to output text to the terminal in yellow:
 
-```
+```bash
 ➜  ~   cowsay hello | rexe -me "print %Q{\u001b[33m}; puts to_a"
 ➜  ~     # or
 ➜  ~   cowsay hello | rexe -mb "print %Q{\u001b[33m}; puts self"
 ➜  ~     # or
 ➜  ~   cowsay hello | rexe "print %Q{\u001b[33m}; puts STDIN.read"
+```
+```
   _______
  < hello >
   -------
@@ -854,7 +882,7 @@ Let's take the YouTube example from the "Loading Files" section further. Let's h
 
 If we put this in a load file (such as ~/.rexerc):
 
-```
+```ruby
 def play(piece_code)
   pieces = {
     hallelujah: "https://www.youtube.com/watch?v=IUZEtVbJT5c&t=0m20s",
@@ -876,18 +904,17 @@ end
 def play_result_by_exit_code
   play_result(STDIN.read.chomp == '0')
 end
-
 ```
 
 Then when we issue a command that succeeds, the Hallelujah Chorus is played [see footnote ^2]:
 
-```
+```bash
 ➜  ~   uname; echo $? | rexe play_result_by_exit_code
 ```
 
 ...but when the command fails, in this case, with an executable which is not found, it plays Rick Astley's "Never Gonna Give You Up":
 
-```
+```bash
 ➜  ~   uuuuu; echo $? | rexe play_result_by_exit_code
 ```
 
@@ -897,7 +924,7 @@ Then when we issue a command that succeeds, the Hallelujah Chorus is played [see
 
 Another formatting example...I wanted to reformat this source code...
 
-```
+```ruby
          'i' => Inspect
          'j' => JSON
          'J' => Pretty JSON
@@ -909,7 +936,7 @@ Another formatting example...I wanted to reformat this source code...
 
 ...into something more suitable for my help text. Admittedly, the time it took to do this with rexe probably exceeded the time to do it manually, but it was an interesting exercise and made it easy to try different formats. Here it is, after copying the original text to the clipboard:
 
-```
+```bash
 ➜  ~   pbpaste | rexe -ml -op "sub(%q{'}, '-o').sub(%q{' =>}, %q{ })"
          -oi  Inspect
          -oj  JSON
@@ -927,7 +954,7 @@ Another formatting example...I wanted to reformat this source code...
 
 I travel a lot, and when I visit a country for the first time I often get confused by the exchange rate. I put this in my `~/.rexerc`:
 
-```
+```ruby
 # Conversion rate to US Dollars
 module Curr
   module_function
@@ -940,7 +967,7 @@ end
 
 If I'm lucky enough to be at my computer when I need to do a conversion, for example, to find the value of 150 Malaysian ringits in US dollars, I can do this:
 
-```
+```bash
 ➜  rexe git:(master) ✗   rexe puts 150 / Curr.myr
 36.76470588235294
 ```
@@ -954,7 +981,7 @@ Obviously rates will change over time, but this will give me a general idea, whi
 
 I was recently asked to provide a schema for the data in my `rock_books` accounting gem. `rock_books` data is intended to be very small in size, and no data base is used. Instead, the input data is parsed on every run, and reports generated on demand. However, there are data structures (actually class instances) in memory at runtime, and their classes inherit from `Struct`. The definition lines look like this one:
  
-```
+```ruby
 class JournalEntry < Struct.new(:date, :acct_amounts, :doc_short_name, :description, :receipts)
 ```
 
@@ -966,7 +993,7 @@ lib/rock_books/documents/journal_entry.rb:
 
 So this is what worked well for me:
 
-```
+```bash
 ➜  ~   grep Struct **/*.rb | grep -v OpenStruct | rexe -ml -op \
 "a =                            \
  gsub('lib/rock_books/', '')    \
