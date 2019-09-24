@@ -105,7 +105,7 @@ One case where the shell's expansion would be preferable is with the use of envi
 * This workflow can be used with any multimedia files recognized by MPlayer, and that includes audio files.
 * There are many, many nice-to-have features that have not been implemented, since speed of implementation was a high priority. Feel free to add your own!
 * Although using Ruby probably enables writing the most concise and intention-revealing code, other languages such as Python would do fine as well.
-* The code for this script ("organize-av-files.rb") is currently at [https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b](https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b).
+* The code for this script ("organize-av-files") is currently at [https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b](https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b).
 
 
 
