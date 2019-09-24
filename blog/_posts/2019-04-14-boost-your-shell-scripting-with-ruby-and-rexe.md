@@ -1,5 +1,6 @@
 ---
 title: Boost Your Shell Scripting with Ruby and Rexe
+date: 2019-04-14
 published: true
 description: Using the Rexe Ruby Gem
 tags: #ruby #shell #script
