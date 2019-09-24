@@ -14,7 +14,7 @@ I recently decided that it would be nice to trim my collection of many video fil
 
 [MPlayer](http://www.mplayerhq.hu/) is a Unix _command line_ multimedia player that can be installed with your favorite package manager (e.g. `brew`, `apt`, or `yum`). By driving MPlayer from Ruby, we can create a workflow that will enable you to view and decide about video files with a minimum of keystrokes, _without needing to use the mouse_.
 
-Files to view are specified on the command line. Multiple arguments can be specified, either absolute or relative, either with or without wildcards. All filespecs will be normalized to their absolute form so that duplicates can be eliminated.
+Files to process are specified on the command line. Multiple arguments can be specified, either absolute or relative, and either with or without wildcards. All filespecs are normalized to their absolute form so that duplicates can be eliminated.
  
  MPlayer plays each file for the user, responding to cursor keys to move forward and backward in time, change the speed, etc. I recommend viewing the man page (`man mplayer`), but here are the most relevant options:
   
@@ -35,9 +35,9 @@ keyboard control
 
 ```
   
- When the user has seen enough to make a decision, `q` can be pressed, and MPlayer returns control to the Ruby script, which accepts a one character response to save, delete, or mark as undecided for future review.
+ When the user has seen enough to make a decision, `q` or `[ESC]` can be pressed, and MPlayer returns control to the Ruby script, which accepts a one character response to mark it to be saved, deleted, or marked as undecided for future reprocessing.
 
-At any time, the entire process can be aborted by pressing `Ctrl-C`. Any files already processed will not be reverted to their original state, but the current file will not be moved.
+At any time, the entire process can be aborted by pressing `Ctrl-C`. Files already processed will not be reverted to their original state, but the current file will not be processed.
 
 
 ### The High Level View
@@ -61,15 +61,14 @@ end
 
 
 ### Using Subdirectories
-You may notice that each file is moved to a subdirectory specified by the user. `create_dirs` creates three subdirectories:
+
+For simplicity of implementation and added safety, the application "marks" each multimedia file by moving it to one of the three subdirectories it has created, based on the user's choice. The user selects `d` for deletes, `s` for saves, or  `u` for undecideds. `create_dirs` creates the three subdirectories:
 
 ```ruby
 def create_dirs
   %w{deletes  saves  undecideds}.each { |dir| FileUtils.mkdir_p(dir) }
 end
 ```
-
-For simplicity of implementation and added safety, user choices result in merely moving the file to a subdirectory. The user selects `d` for deletes, `s` for saves, or  `u` for undecideds.
 
 When the user is finished processing all files, they will probably want to move any files that have been moved to `./undecided` back to `.` and run the program again.
 
@@ -96,7 +95,7 @@ Type your response choice and then `[Enter]`. The program will move the file as 
 
 ### Shell vs. Ruby Wildcard Expansion
 
-Be careful when using wildcards. If you enter `*mp4` in a directory with 10,000 files, the shell will try to expand it into 10,000 arguments, which might exceed the maximum command line size and result in an error. You can instead quote the filemask (as `'*mp4'`, and it will then be passed to Ruby as a single argument, and Ruby will perform the expansion. You can usually use double quotes, but be aware that the single and double quotes behavior differs (see [this helpful StackOverflow article](https://stackoverflow.com/questions/6697753/difference-between-single-and-double-quotes-in-bash)).
+Be careful when using wildcards. If you enter `*mp4` in a directory with 10,000 MP4 files, the shell will try to expand it into 10,000 arguments, which might exceed the maximum command line size and result in an error. You can instead quote the filemask (as `'*mp4'`), and it will then be passed to Ruby as a single argument, and Ruby will perform the expansion. You can usually use double quotes, but be aware that the single and double quotes behavior differs (see [this helpful StackOverflow article](https://stackoverflow.com/questions/6697753/difference-between-single-and-double-quotes-in-bash)).
 
 One case where the shell's expansion would be preferable is with the use of environment variables in the filespec (`$FOO` is more concise than `ENV['FOO']`), and in the case of using `~` for users other than the current user (e.g. `~someoneelse`).
 
