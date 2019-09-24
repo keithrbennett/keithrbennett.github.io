@@ -115,3 +115,143 @@ I hope you can see that with a modest amount of code you can build a highly usef
  
  Ruby is a great tool for this sort of thing. Why not use it?
  
+ ----
+ 
+ For your convenience, the script is displayed below:
+ 
+ ```ruby
+#!/usr/bin/env ruby
+
+require 'date'
+require 'fileutils'
+require 'set'
+
+
+def create_dirs
+  %w{deletes  saves  undecideds}.each { |dir| FileUtils.mkdir_p(dir) }
+end
+
+
+def prompt(filename)
+  "Playing #{filename}. Use cursor keys to navigate, 'q' to finish viewing/listening to file."
+end
+
+
+def check_presence_of_mplayer
+  if `which mplayer`.chomp.size == 0
+    raise "mplayer not detected. Please install it (with apt, brew, yum, etc.)"
+  end
+end
+
+
+# Takes all ARGV elements, expands any wildcards, converts to normalized (absolute) form,
+# and eliminates duplicates.
+# Note: Ruby's `Dir#[]` does not understand `~`
+def files_to_process
+
+  # Dir[] does not understand ~, need to process it ourselves.
+  # This does *not* handle the `~username` form.
+  replace_tilde_if_needed = ->(filespec) do
+    filespec.start_with?('~/')                    \
+        ? File.join(ENV['HOME'], filespec[2, -1]) \
+        : filespec
+  end
+
+  # When Dir[] gets a directory it returns no files. Need to add '/*' to it.
+  add_star_to_dirspec_if_needed = ->(filespec) do
+    File.directory?(filespec)      \
+        ? File.join(filespec, '*') \
+        : filespec
+  end
+
+  ARGV[0] ||= '*'  # default to all files in current directory but not its subdirectories
+
+  all_filespecs = ARGV.each_with_object(Set.new) do |filemask, all_filespecs|
+    filemask = replace_tilde_if_needed.(filemask)
+    filemask = add_star_to_dirspec_if_needed.(filemask)
+
+    Dir[filemask]                          \
+        .map { |f| File.absolute_path(f) } \
+        .select { |f| File.file?(f) }      \
+        .each do |filespec|
+      all_filespecs << filespec
+    end
+  end
+  all_filespecs.sort
+end
+
+
+def greeting
+  puts <<~GREETING
+      process-av-files
+
+      Enables the vetting of audio and video files. 
+
+      For each file, plays it with mplayer, and prompts for what you would like to do 
+      with that file, moving the file to one of the following subdirectories:
+
+      * deletes
+      * saves
+      * undecideds
+
+      This software uses mplayer to play audio files. Use cursor keys to move forwards/backwards in time.
+      Press 'q' or 'ESC' to abort playback and specify disposition of that file.
+
+      Run `man mplayer` for more on mplayer.
+
+      Assumes all files in the current directory are files playable by mplayer.
+      Creates subdirectories in the current directory: deletes, saves, undecideds.
+      Logs to hidden directory '.process-av-files.log'
+
+  GREETING
+end
+
+
+def play_file(filespec)
+  # If you have problems with mplayer, remove the redirection ("2> /dev/null")
+  `mplayer #{filespec} 2> /dev/null`
+end
+
+
+def disposition_prompt(filespec)
+  "#{filespec}:   s = save, d = delete, u = undecided: "
+end
+
+
+def get_disposition_from_user
+  loop do
+    response = $stdin.gets.chomp.downcase
+    if %w(s d u).include?(response)
+      return {
+          's' => 'saves',
+          'd' => 'deletes',
+          'u' => 'undecideds'
+      }[response]
+    else
+      print "s = save, d = delete, u = undecided: "
+    end
+  end
+end
+
+
+def log(filespec, destination_subdir)
+  `echo "#{destination_subdir[0].upcase}  #{Time.now}  #{filespec}" >> process-av-files.log`
+end
+
+
+def main
+  check_presence_of_mplayer
+  create_dirs
+  puts greeting
+  files_to_process.each do |filespec|
+    play_file(filespec)
+    print disposition_prompt(filespec)
+    destination_subdir = get_disposition_from_user
+    `mv #{filespec} #{destination_subdir}`
+    log(filespec, destination_subdir)
+  end
+end
+
+
+main
+```
