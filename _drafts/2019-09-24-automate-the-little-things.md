@@ -11,9 +11,11 @@ I recently decided that it would be nice to trim my collection of many video fil
 
 ### Integrating MPlayer and Ruby
 
-[MPlayer](http://www.mplayerhq.hu/) is a Unix _command line_ multimedia player that can be installed with your favorite package manager (brew/apt/yum). By driving it from Ruby, we can create a tool that will enable you to view and decide about video files with a minimum of keystrokes, _and no need to use the mouse_.
+[MPlayer](http://www.mplayerhq.hu/) is a Unix _command line_ multimedia player that can be installed with your favorite package manager (e.g. `brew`, `apt`, or `yum`). By driving MPlayer from Ruby, we can create a workflow that will enable you to view and decide about video files with a minimum of keystrokes, _and no need to use the mouse_.
 
-Files to view are specified on the command line. For each file, MPlayer presents it to the user, responding to cursor keys to move forward and backward. When the user has seen enough to make a decision, `q` can be pressed, and MPlayer returns control to the Ruby script. The Ruby script accepts a one character response to save, delete, or do neither.
+Files to view are specified on the command line. Multiple arguments can be specified, either absolute or relative, either with or without wildcards. All filespecs will be normalized to their absolute form so that duplicates can be eliminated.
+ 
+ For each file, MPlayer presents it to the user, responding to cursor keys to move forward and backward in time. When the user has seen enough to make a decision, `q` can be pressed, and MPlayer returns control to the Ruby script. The Ruby script accepts a one character response to save, delete, or mark as undecided for future review.
 
 There are many, many nice-to-have features that have not been implemented, since speed of implementation was a high priority. Feel free to add your own!
 
@@ -38,7 +40,7 @@ end
 ```
 
 ### Using Subdirectories
-You may notice that the file is moved to a subdirectory specified by the user. `create_dirs` creates three subdirectories:
+You may notice that each file is moved to a subdirectory specified by the user. `create_dirs` creates three subdirectories:
 
 ```ruby
 def create_dirs
@@ -46,8 +48,14 @@ def create_dirs
 end
 ```
 
-This workflow is not completely automated. Files marked for deletion are only moved to a subdirectory named `deletes`. This gives an added level of protection. When done, it's a simple matter to execute a `rm -rf deletes`.
+For simplicity of implementation and added safety, user choices result in merely moving the file to a subdirectory; the user selects 'd' for `deletes`, 's' for `saves`, or any other character for `undecideds`.
 
-For files that may require further research, one can send them to the `undecideds` directory. This defers the decision and excludes the file from a future search of the same input directory.
+When the user is finished processing all files, they will probably want to move any files that have been moved to `./undecided` back to `.` and run the program again.
 
-Files 
+Finally, when there are no files left in undecided, one will probably want to do something like this:
+
+    rmdir undecideds
+    rm -rf deletes
+    mv saves/* .
+    rmdir saves
+
