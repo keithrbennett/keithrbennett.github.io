@@ -1016,7 +1016,8 @@ So this is what worked well for me:
 .split('.rb:')                  \
 .map(&:strip);                  \
                                 \
-%q{%-40s %-s} % [a[0] + %q{.rb}, a[1]]"
+%q(%-40s %-s) % [a[0] + %q(.rb), a[1]]"
+
 ```
 
 ...which produced this output:
