@@ -5,9 +5,10 @@ description: Using Ruby for Primitive but Productive Workflows
 tags: #ruby #shell #script
 ---
 
-We developers automate highly complex tasks, but when it comes to the smaller repetitive tasks, we tend to do things manually, or fail to do them at all. By combining Ruby with command line tools such as MPlayer, we can save ourselves lots of time and have fun in the process.
+We developers automate highly complex tasks, but when it comes to the smaller repetitive tasks, we tend to do things manually, or fail to do them at all. By combining Ruby with robust and richly functional command line tools such as MPlayer, we can save ourselves lots of time and have fun in the process.
 
 I recently decided that it would be nice to trim my collection of many video files downloaded from my phones over the years. Realizing this would be quite tedious, I asked myself "would this be easier with Ruby?" The answer, of course, was _Yes!_
+
 
 ### Integrating MPlayer and Ruby
 
@@ -58,6 +59,7 @@ def main
 end
 ```
 
+
 ### Using Subdirectories
 You may notice that each file is moved to a subdirectory specified by the user. `create_dirs` creates three subdirectories:
 
@@ -67,40 +69,50 @@ def create_dirs
 end
 ```
 
-For simplicity of implementation and added safety, user choices result in merely moving the file to a subdirectory. The user selects 'd' for `deletes`, 's' for `saves`, or any other character for `undecideds`.
+For simplicity of implementation and added safety, user choices result in merely moving the file to a subdirectory. The user selects `d` for deletes, `s` for saves, or  `u` for undecideds.
 
 When the user is finished processing all files, they will probably want to move any files that have been moved to `./undecided` back to `.` and run the program again.
 
-Finally, when there are no files left in undecided, one will probably want to do something like this:
+Finally, when there are no files left in `undecided`, one will probably want to do something like this:
 
     rmdir undecideds
     rm -rf deletes
     mv saves/* .
     rmdir saves
 
+
 ### An Example
 
 For example, let's say you run the following command:
 
-`process-av-files **/*mp4 **/*mp3`
+`organize-av-files 'video/*mp4' 'audio/*mp3'`
 
-MPlayer will begin playing the file. When you are ready to finish viewing it, you will press `q` or `ESC`, and be presented with a prompt like this:
+MPlayer will begin playing the first file. When you are ready to finish viewing it, you will press `q` or `ESC`, and be presented with a prompt like this:
 
 `/Users/kbennett/android/video/20160102_234426.mp4:   s = save, d = delete, u = undecided:`
 
 Type your response choice and then `[Enter]`. The program will move the file as appropriate, and immediately start playing the next file.
 
+
 ### Shell vs. Ruby Wildcard Expansion
 
-Be careful when using wildcards. If you enter `*mp4` in a directory with 10,000 files, the shell will try to expand it into 10,000 arguments, which might blow the stack. You can instead quote the filemask (as `'*mp4'`, and it will then be passed to Ruby as a single argument. Ruby will perform the expansion. You can usually use double quotes, but be aware that the single and double quotes behavior differs (see [this helpful StackOverflow article](https://stackoverflow.com/questions/6697753/difference-between-single-and-double-quotes-in-bash)).
+Be careful when using wildcards. If you enter `*mp4` in a directory with 10,000 files, the shell will try to expand it into 10,000 arguments, which might exceed the maximum command line size and result in an error. You can instead quote the filemask (as `'*mp4'`, and it will then be passed to Ruby as a single argument, and Ruby will perform the expansion. You can usually use double quotes, but be aware that the single and double quotes behavior differs (see [this helpful StackOverflow article](https://stackoverflow.com/questions/6697753/difference-between-single-and-double-quotes-in-bash)).
+
+One case where the shell's expansion would be preferable is with the use of environment variables in the filespec (`$FOO` is more concise than `ENV['FOO']`), and in the case of using `~` for users other than the current user (e.g. `~someoneelse`).
+
 
 ### Also...
 
 * This workflow can be used with any multimedia files recognized by MPlayer, and that includes audio files.
 * There are many, many nice-to-have features that have not been implemented, since speed of implementation was a high priority. Feel free to add your own!
 * Although using Ruby probably enables writing the most concise and intention-revealing code, other languages such as Python would do fine as well.
+* The code for this script ("organize-av-files.rb") is currently at [https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b](https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b).
 
-I hope you can see that with a modest amount of code you can build a highly useful (albeit not fancy) automation tool. The amount of expected use and the benefit per use determines the optimum amount of effort, and you have the freedom to sit at any point in that continuum. The notion that any code needs to be feature-rich is not a useful one, and often results in inaction altogether.
+
+
+### Conclusion
+
+I hope you can see that with a modest amount of code you can build a highly useful (albeit not fancy) automation tool. The amount of expected use and the benefit per use determines the optimum amount of effort, and you have the freedom to choose any point in that continuum. The notion that all applications need to be feature-rich is not a useful one, and often results in inaction altogether.
  
  Ruby is a great tool for this sort of thing. Why not use it?
  
