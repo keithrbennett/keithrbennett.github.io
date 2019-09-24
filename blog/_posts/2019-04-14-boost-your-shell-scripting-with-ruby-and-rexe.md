@@ -83,7 +83,7 @@ Rexe is at https://github.com/keithrbennett/rexe and can be installed with `gem 
 Here is rexe's help text as of the time of this writing:
 
 ```
-rexe -- Ruby Command Line Executor/Filter -- v1.0.3 -- https://github.com/keithrbennett/rexe
+rexe -- Ruby Command Line Executor/Filter -- v1.3.1 -- https://github.com/keithrbennett/rexe
 
 Executes Ruby code on the command line, 
 optionally automating management of standard input and standard output,
@@ -117,14 +117,18 @@ Options:
 -n, --[no-]noop            Do not execute the code (useful with -g);
                            For true: yes, true, y, +; for false: no, false, n
 -o, --output_format FORMAT Output format, defaults to -on (no output):
+                             -oa  Awesome Print
                              -oi  Inspect
                              -oj  JSON
                              -oJ  Pretty JSON
                              -om  Marshal
                              -on  No Output (default)
                              -op  Puts
+                             -oP  Pretty Print
                              -os  to_s
                              -oy  YAML
+                             If 2 letters are provided, 1st is for tty devices, 2nd for block
+--project-url              Outputs project URL on Github, then exits
 -r, --require REQUIRE(S)   Gems and built-in libraries to require, comma separated;
                              ! to clear all, or precede a name with '-' to remove
 -v, --version              Prints version and exits
@@ -237,8 +241,8 @@ A log entry is optionally output to standard error after completion of the code.
 ```yaml
 ---
 :count: 0
-:rexe_version: 1.0.0
-:start_time: '2019-04-15T13:12:15+08:00'
+:rexe_version: 1.3.1
+:start_time: '2019-09-11T13:28:46+07:00'
 :source_code: self
 :options:
   :input_filespec:
@@ -246,13 +250,15 @@ A log entry is optionally output to standard error after completion of the code.
   :input_mode: :one_big_string
   :loads: []
   :output_format: :awesome_print
+  :output_format_tty: :awesome_print
+  :output_format_block: :awesome_print
   :requires:
   - awesome_print
   - json
   - yaml
   :log_format: :yaml
   :noop: true
-:duration_secs: 0.050326
+:duration_secs: 0.095705
 ```
 
 We specified `-gy` for YAML format; there are other formats as well (see the help output or this document) and the default is `-gn`, which means don't output the log entry at all.
@@ -380,6 +386,8 @@ All formats will implicitly `require` anything needed to accomplish their task (
 
 The default is `-on` to produce no output at all (unless explicitly coded to do so). If you prefer a different default such as `-op` for _puts_ mode, you can specify that in your `REXE_OPTIONS` environment variable.
 
+If two letters are provided, the first will be used for tty devices (e.g. the terminal when not redirected or piped), and the second for block devices (e.g. when redirected or piped to another process).
+
 You may wonder why these formats are provided, given that their functionality could be included in the custom code instead. Here's why:
 
 * The savings in command line length goes a long way to making these commands more readable and feasible.
@@ -460,15 +468,17 @@ For your convenience, the information displayed in verbose mode is available to 
 --- !ruby/object:OpenStruct
 table:
   :count: 0
-  :rexe_version: 1.0.0
-  :start_time: '2019-04-15T13:25:56+08:00'
+  :rexe_version: 1.3.1
+  :start_time: '2019-09-11T13:25:53+07:00'
   :source_code: "$RC"
   :options:
-    :input_filespec:
+    :input_filespec: 
     :input_format: :none
     :input_mode: :none
     :loads: []
     :output_format: :yaml
+    :output_format_tty: :yaml
+    :output_format_block: :yaml
     :requires:
     - yaml
     :log_format: :none
