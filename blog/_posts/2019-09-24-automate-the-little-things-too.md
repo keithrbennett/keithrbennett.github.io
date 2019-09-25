@@ -122,6 +122,9 @@ I hope you can see that with a modest amount of code you can build a highly usef
  ```ruby
 #!/usr/bin/env ruby
 
+# organize-av-files - Organizes files playable by mplayer
+# into 'saves', 'deletes', and 'undecideds' subdirectories.
+#
 # stored at https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b
 
 
@@ -137,7 +140,7 @@ end
 
 
 def check_presence_of_mplayer
-  if `which xmplayer`.chomp.size == 0
+  if `which mplayer`.chomp.size == 0
     raise "mplayer not detected. "
         "Please install it (with apt, brew, yum, etc.)"
   end
