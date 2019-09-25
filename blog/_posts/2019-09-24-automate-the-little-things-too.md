@@ -88,7 +88,11 @@ For example, let's say you run the following command:
 
 MPlayer will begin playing the first file. When you are ready to finish viewing it, you will press `q` or `ESC`, and be presented with a prompt like this:
 
-`/Users/kbennett/android/video/20160102_234426.mp4:   s = save, d = delete, u = undecided:`
+```
+/Users/kbennett/android/video/20160102_234426.mp4:
+s = save, d = delete, u = undecided, q = quit:
+```
+ 
 
 Type your response choice and then `[Enter]`. The program will move the file as appropriate, and immediately start playing the next file.
 
@@ -125,7 +129,8 @@ I hope you can see that with a modest amount of code you can build a highly usef
 # organize-av-files - Organizes files playable by mplayer
 # into 'saves', 'deletes', and 'undecideds' subdirectories.
 #
-# stored at https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b
+# stored at:
+# https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b
 
 
 require 'date'
@@ -160,14 +165,16 @@ def files_to_process
         : filespec
   end
 
-  # When Dir[] gets a directory it returns no files. Need to add '/*' to it.
+  # When Dir[] gets a directory it returns no files.
+  # Need to add '/*' to it.
   add_star_to_dirspec_if_needed = ->(filespec) do
     File.directory?(filespec)      \
         ? File.join(filespec, '*') \
         : filespec
   end
 
-  # Default to all nonhidden files in current directory but not its subdirectories
+  # Default to all nonhidden files in current directory
+  # but not its subdirectories.
   ARGV[0] ||= '*'
 
   all_filespecs = ARGV.each_with_object(Set.new) do |filemask, all_filespecs|
@@ -212,7 +219,8 @@ end
 
 
 def play_file(filespec)
-  # If you have mplayer problems, remove the redirection ("2> /dev/null") to see errors
+  # If you have mplayer problems, remove the redirection ("2> /dev/null")
+  # to see any errors.
   `mplayer #{filespec} 2> /dev/null`
 end
 
@@ -242,7 +250,8 @@ end
 
 
 def log(filespec, destination_subdir)
-  log_message = "#{destination_subdir[0].upcase}  #{Time.now}  #{filespec}"
+  dest_abbrev = destination_subdir[0].upcase # 'S' for saves, etc.
+  log_message = "#{dest_abbrev}  #{Time.now}  #{filespec}"
   `echo #{log_message} >> #{LOG_FILESPEC}`
 end
 
