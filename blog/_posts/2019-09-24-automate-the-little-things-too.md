@@ -122,31 +122,31 @@ I hope you can see that with a modest amount of code you can build a highly usef
  ```ruby
 #!/usr/bin/env ruby
 
+# stored at https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b
+
+
 require 'date'
 require 'fileutils'
 require 'set'
 
+LOG_FILESPEC = 'organize-av-files.log'
 
 def create_dirs
   %w{deletes  saves  undecideds}.each { |dir| FileUtils.mkdir_p(dir) }
 end
 
 
-def prompt(filename)
-  "Playing #{filename}. Use cursor keys to navigate, 'q' to finish viewing/listening to file."
-end
-
-
 def check_presence_of_mplayer
-  if `which mplayer`.chomp.size == 0
-    raise "mplayer not detected. Please install it (with apt, brew, yum, etc.)"
+  if `which xmplayer`.chomp.size == 0
+    raise "mplayer not detected. "
+        "Please install it (with apt, brew, yum, etc.)"
   end
 end
 
 
-# Takes all ARGV elements, expands any wildcards, converts to normalized (absolute) form,
+# Takes all ARGV elements, expands any wildcards,
+# converts to normalized (absolute) form,
 # and eliminates duplicates.
-# Note: Ruby's `Dir#[]` does not understand `~`
 def files_to_process
 
   # Dir[] does not understand ~, need to process it ourselves.
@@ -164,7 +164,8 @@ def files_to_process
         : filespec
   end
 
-  ARGV[0] ||= '*'  # default to all files in current directory but not its subdirectories
+  # Default to all nonhidden files in current directory but not its subdirectories
+  ARGV[0] ||= '*'
 
   all_filespecs = ARGV.each_with_object(Set.new) do |filemask, all_filespecs|
     filemask = replace_tilde_if_needed.(filemask)
@@ -183,7 +184,7 @@ end
 
 def greeting
   puts <<~GREETING
-      process-av-files
+      organize-av-files
 
       Enables the vetting of audio and video files. 
 
@@ -201,41 +202,45 @@ def greeting
 
       Assumes all files in the current directory are files playable by mplayer.
       Creates subdirectories in the current directory: deletes, saves, undecideds.
-      Logs to hidden directory '.process-av-files.log'
+      Logs to file '#{LOG_FILESPEC}'
 
   GREETING
 end
 
 
 def play_file(filespec)
-  # If you have problems with mplayer, remove the redirection ("2> /dev/null")
+  # If you have mplayer problems, remove the redirection ("2> /dev/null") to see errors
   `mplayer #{filespec} 2> /dev/null`
 end
 
 
 def disposition_prompt(filespec)
-  "#{filespec}:   s = save, d = delete, u = undecided: "
+  "\n\n#{filespec}:\ns = save, d = delete, u = undecided, q = quit: "
 end
 
 
 def get_disposition_from_user
   loop do
     response = $stdin.gets.chomp.downcase
-    if %w(s d u).include?(response)
+
+    if response == 'q'
+      exit
+    elsif %w(s d u).include?(response)
       return {
           's' => 'saves',
           'd' => 'deletes',
           'u' => 'undecideds'
       }[response]
     else
-      print "s = save, d = delete, u = undecided: "
+      print "s = save, d = delete, u = undecided, q = quit: "
     end
   end
 end
 
 
 def log(filespec, destination_subdir)
-  `echo "#{destination_subdir[0].upcase}  #{Time.now}  #{filespec}" >> process-av-files.log`
+  log_message = "#{destination_subdir[0].upcase}  #{Time.now}  #{filespec}"
+  `echo #{log_message} >> #{LOG_FILESPEC}`
 end
 
 
