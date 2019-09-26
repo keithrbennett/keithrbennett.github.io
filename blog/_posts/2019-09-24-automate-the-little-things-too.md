@@ -35,9 +35,7 @@ keyboard control
 
 ```
   
- When the user has seen enough to make a decision, `q` or `[ESC]` can be pressed, and MPlayer returns control to the Ruby script, which accepts a one character response to mark it to be saved, deleted, or marked as undecided for future reprocessing.
-
-At any time, the entire process can be aborted by pressing `Ctrl-C`. Files already processed will not be reverted to their original state, but the current file will not be processed.
+ When the user has seen enough to make a decision, `q` or `[ESC]` can be pressed, and MPlayer returns control to the Ruby script, which accepts a one character response to mark it to be saved (`s`), deleted (`d`), or marked as undecided (`u`) for future reprocessing; or `q` to quit the application.
 
 
 ### The High Level View
