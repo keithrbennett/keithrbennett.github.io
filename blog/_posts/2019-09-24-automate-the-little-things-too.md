@@ -117,6 +117,14 @@ I hope you can see that with a modest amount of code you can build a highly usef
  
  Ruby is a great tool for this sort of thing. Why not use it?
  
+ --- The End ---
+ 
+ ----
+ 
+
+
+[Note: This article is occasionally improved. Its commit history is [here](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/blog/_posts/2019-09-24-automate-the-little-things-too.md).]
+ 
  ----
  
  For your convenience, the script is displayed below:
