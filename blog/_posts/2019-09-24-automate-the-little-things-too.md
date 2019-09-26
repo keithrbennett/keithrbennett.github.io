@@ -216,7 +216,7 @@ def greeting
 
       Run `man mplayer` for more on mplayer.
 
-      Assumes all files in the current directory are files playable by mplayer.
+      Assumes all files specified are playable by mplayer.
       Creates subdirectories in the current directory: deletes, saves, undecideds.
       Logs to file '#{LOG_FILESPEC}'
 
