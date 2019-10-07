@@ -133,7 +133,13 @@ I hope you can see that with a modest amount of code you can build a highly usef
 #!/usr/bin/env ruby
 
 # organize-av-files - Organizes files playable by mplayer
-# into 'saves', 'deletes', and 'undecideds' subdirectories.
+# into 'saves', 'deletes', and 'undecideds' subdirectories
+# of the current working directory.
+#
+# Be careful, if you specify files to process in multiple directories,
+# they will all be moved to the same subdirectories, so they will no
+# longer be organized by directory, and if there are multiple files
+# of the same name, some may be lost if overwritten.
 #
 # stored at:
 # https://gist.github.com/keithrbennett/4d9953e66ea35e2c52abae52650ebb1b
