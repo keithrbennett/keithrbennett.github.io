@@ -47,7 +47,7 @@ I once worked on a project where I needed to implement buffering of multiple kin
 
 Realizing that #1 would be common and identical to all cases, and only #2 would vary, I thought about how wasteful it would be to implement #1 separately in all cases. I thought about the admonition about high cohesion / low coupling, and the Unix axiom "do one thing well", and decided to separate the two.
 
-The most natural way to design this functionality in Ruby is with an [_Enumerable_](https://ruby-doc.org/core-2.5.1/Enumerable.html), which will have access to all kinds of functional wizardry thanks to the methods it gets for free by including the `Enumerable` module. In addition, it can easily used to generate an array by calling its `to_a` method.
+The most natural way to design this functionality in Ruby is with an [_Enumerable_](https://ruby-doc.org/core-2.5.1/Enumerable.html), which will have access to all kinds of functional wizardry thanks to the methods it gets for free by including the `Enumerable` module. In addition, it can easily be used to generate an array by calling its `to_a` method.
 
 This is the origin of the  [_BufferedEnumerable_](https://github.com/keithrbennett/trick_bag/blob/master/lib/trick_bag/enumerables/buffered_enumerable.rb) class in my [_trick_bag_](https://github.com/keithrbennett/trick_bag/) gem. This class manages buffering but has no idea how to fetch chunks of data, nor what else to do at each such fetch; for that, the caller provides callables such as lambdas. (Upon user request, the ability to subclass it and override its methods was also added.) The result is a dramatic simplification, where the logic of buffering is defined in only one place, and the places it is used need not be concerned with its implementation (or its testing!).
 
@@ -200,7 +200,7 @@ You can find me on:
 * [StackOverflow](https://stackoverflow.com/users/501266/keith-bennett)
 * [Twitter](https://twitter.com/keithrbennett)
 
-Also, for more information about lambdas, feel free to check out my Ruby lambdas presentation on [Speakerdeck slideshow  PDF](https://speakerdeck.com/keithrbennett/ruby-lambdas-functional-conf-bangalore-oct-2014) and [YouTube video](https://www.youtube.com/watch?v=hyRgf6Qc5pw).
+Also, for more information about lambdas, feel free to check out my Ruby lambdas presentation ([Speakerdeck slideshow](https://speakerdeck.com/keithrbennett/ruby-lambdas-functional-conf-bangalore-oct-2014) and [YouTube video](https://www.youtube.com/watch?v=nGEy-vFJCSE)).
 
 ----
 
@@ -210,9 +210,9 @@ Also, for more information about lambdas, feel free to check out my Ruby lambdas
 
 * as nested functions
 * as truly private functions (which, unlike private methods, cannot be accessed with `send`
-* for self invoking anonymous functions to hide variables
+* for self invoking anonymous functions, to hide variables
 * for defining functions where methods cannot be defined (e.g. in some RSpec code)
-* for defining classes dynamically with the `class...end` notation which may be easier to understand than the `define_method` approach.
+* for defining classes dynamically with the `class...end` notation which may be easier to understand than the `Class.new` approach.
 * for chaining operations, as in an array of lambdas
 
 (2) Polymorphism by inheritance is a key characteristic of object oriented design whereby, by virtue of having a common ancestor in the class hierarchy that contains the method in question, objects of different classes can respond to the same message (typically identified by a method or function name) differently. This can be a nice design in some cases, but in others it is an overly heavy handed solution to a simple problem, as it forces the developer to create multiple classes in a class hierarchy.
