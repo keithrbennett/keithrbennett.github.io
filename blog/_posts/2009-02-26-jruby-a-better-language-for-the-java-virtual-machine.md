@@ -27,7 +27,7 @@ In order to contrast Java and JRuby, and showcase the above features, we will im
 
 Here is an image of the application's sole window.  There are text fields for entering the temperature, and buttons and menu items to perform the conversions, clear the text fields, and exit the program.
 
-{% include image.html img="/assets/fahrenheit-celsius-converter.png" title="Fahrenheit-Celsius Converter" %}
+![Fahrenheit-Celsius Converter](/assets/fahrenheit-celsius-converter.png)
 
 We'll get to JRuby soon, but first a little about the Swing issues we'll be addressing in comparing JRuby with Java.
 
