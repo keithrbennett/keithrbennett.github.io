@@ -72,17 +72,20 @@ When the user is finished processing all files, they will probably want to move 
 
 Finally, when there are no files left in `undecided`, one will probably want to do something like this:
 
-    rmdir undecideds
-    rm -rf deletes
-    mv saves/* .
-    rmdir saves
-
+```
+rmdir undecideds
+rm -rf deletes
+mv saves/* .
+rmdir saves
+```
 
 ### An Example
 
 For example, let's say you run the following command:
 
-`organize-av-files 'video/*mp4' 'audio/*mp3'`
+```
+organize-av-files 'video/*mp4' 'audio/*mp3'
+```
 
 MPlayer will begin playing the first file. When you are ready to finish viewing it, you will press `q` or `ESC`, and be presented with a prompt like this:
 
