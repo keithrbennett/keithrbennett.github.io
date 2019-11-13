@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-# Companion source code to blog article at
-# ...
+# Companion source code to blog article at:
+# https://bbs-software.com/blog/2019/11/13/enumerables-short-and-sweet.html
 
 require 'yaml'
 
