@@ -1085,3 +1085,7 @@ Here is a _start_ at a method that opens a resource portably across operating sy
 ```
 
 [4]: It is an interesting quirk of the Ruby language that `ENV.to_s` returns `"ENV"` and not the contents of the `ENV` object. As a result, many of the other output formats will also return some form of `"ENV"`. You can handle this by specifying `ENV.to_h`.
+
+----
+
+This article may be improved over time. To see its revisions you can go to its [Github commit history](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/blog/_posts/2019-04-14-boost-your-shell-scripting-with-ruby-and-rexe.md).
