@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# Companion source code to blog article at
+# ...
+
 require 'yaml'
 
 def filtered_and_transformed_records_1(records)

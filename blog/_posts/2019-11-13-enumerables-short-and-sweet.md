@@ -41,7 +41,7 @@ end
 
 (I say _function-local_ because we do need the _block-local_ variable `results` inside the `each_with_object` block.) We've narrowed the scope of the `results` variable, and that's always a good thing.
 
-`each_with_object` is like `each` except that it will pass _two_ variables to the block instead of one. In addition to the object from the Enumerable that `each` passes, it passes the object you are using to accumulate results. You initialize the accumulator by passing it to the `each_with_object` method. In this case we are passing a newly created empty array.
+`each_with_object` is like `each` except that it will pass _two_ variables to the block instead of one. In addition to the object from the Enumerable that `each` passes, it passes the object you are using to accumulate results. You initialize the accumulator by passing its initial value to the `each_with_object` method. In this case we are passing a newly created empty array.
 
 `each_with_object`'s return value is the accumulator object, so you don't need to specify the accumulator explicitly for it to be the value returned by the method.
 
@@ -67,11 +67,12 @@ def filtered_and_transformed_records_4(records)
 end
 ```
 
-This eliminates all the [incidental complexity]() of the original version of the method, distilling the code into a one-liner that is way easier for the reader to parse.
+Although as software developers our mission is to deliver functionality, the other side of that coin is to do so as simply as possible. Put otherwise, we need to remove _accidental complexity_ (aka _incidental complexity_) so that only the _essential complexity_ remains. The functional approaches described here are extremely effective at doing this. We've ended up with a simple one-liner.
+ 
+* * * *
+
+Whenever you start feeling that your code is getting verbose or awkward, ask yourself "could I improve this code with `Enumerable`?" The answer may well be _yes_.
 
 * * * *
 
-In conclusion, whenever I start feeling that my code is getting verbose or awkward, I ask myself "could I improve this code with `Enumerable`?" Often the answer is yes.
-
-For your reference, here is 
- Below is some source code that illustrates the approac
+For your reference, [here](https://github.com/keithrbennett/keithrbennett.github.io/blob/master/source-code/short_sweet.rb) is a file that contains the methods in the article, and verifies that they all produce the same result.
