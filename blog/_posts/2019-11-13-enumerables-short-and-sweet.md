@@ -1,6 +1,5 @@
 ---
-title: Using Ruby Enumerables to Make Your Code Short and Sweet
-date: 2019-11-12
+title: Ruby Enumerables Make Your Code Short and Sweet
 ---
 
 One of the most amazing things about Ruby is the richness of its `Enumerable` library; there are _so many_ things it can do. Another is Ruby's ability to express intent with the utmost conciseness and clarity. However, out in the wild I very often see code that fails to take full advantage of these qualities.
@@ -39,7 +38,7 @@ def filtered_and_transformed_records_2(records)
 end
 ```
 
-(I say _function-local_ because we do need the _block-local_ variable `results` inside the `each_with_object` block.) We've narrowed the scope of the `results` variable, and that's always a good thing.
+I say _function-local_ because we do need the _block-local_ variable `results` inside the `each_with_object` block. However, we've narrowed the scope of the `results` variable, and that's always a good thing.
 
 `each_with_object` is like `each` except that it will pass _two_ variables to the block instead of one. In addition to the object from the Enumerable that `each` passes, it passes the object you are using to accumulate results. You initialize the accumulator by passing its initial value to the `each_with_object` method. In this case we are passing a newly created empty array.
 
@@ -67,7 +66,7 @@ def filtered_and_transformed_records_4(records)
 end
 ```
 
-Although as software developers our mission is to deliver functionality, the other side of that coin is to do so as simply as possible. Put otherwise, we need to remove _accidental complexity_ (aka _incidental complexity_) so that only the _essential complexity_ remains. The functional approaches described here are extremely effective at doing this. We've ended up with a simple one-liner.
+Although as software developers our mission is to deliver functionality, the other side of that coin is to do so as simply as possible. Put otherwise, we need to remove _accidental complexity_ (a.k.a. _incidental complexity_) so that only the _essential complexity_ remains. The functional approaches described here are extremely effective at doing this. We've ended up with a simple one-liner.
  
 * * * *
 
@@ -76,3 +75,7 @@ Whenever you start feeling that your code is getting verbose or awkward, ask you
 * * * *
 
 For your reference, [here](https://github.com/keithrbennett/keithrbennett.github.io/blob/master/source-code/short_sweet.rb) is a file that contains the methods in the article, and verifies that they all produce the same result.
+
+* * * *
+
+[Note: This article may occasionally be improved. Its commit history is [here](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/blog/_posts/2019-11-13-enumerables-short-and-sweet.md).]
