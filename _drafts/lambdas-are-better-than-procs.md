@@ -1,5 +1,5 @@
 ---
-title: lambdas Are Better than procs
+title: lambdas Are Better Than procs
 ---
 
 Functional programming in Ruby is productive and fun, but sadly it's a lesser known aspect of the language. This article is one of several in which I share some things that will hopefully remedy that, if even a little (1).
@@ -8,15 +8,15 @@ Many Rubyists believe that lambda and nonlambda Procs are pretty much the same a
 
 This article will attempt to achieve two purposes:
 
-1) to explain the difference between lambda and nonlambda `Proc`s
-2) to persuade you to use `lambda`s unless there is a compelling reason not to
+1) to explain the difference between lambdas and procs
 
-There are many resources explaining lambda and nonlambda `Proc`s, and I will assume you know at least a little about them.
+2) to persuade you to use lambdas unless there is a compelling reason not to
+
+There are many resources available that explain lambdas and procs, and I will assume you know at least a little about them.
 
 Here are some important points:
 
-* a `Proc` instance can be either lambda or a nonlambda
-* names for these are `lambda` and `proc`, respectively (2)
+* a `Proc` instance can be either lambda or a proc (2)
 * all `lambda`s are `Proc`s
 * all `proc`s are `Proc`s
 * code blocks behave like `proc`s
@@ -35,7 +35,7 @@ A `lambda`, like a method, strictly enforces its argument count, but a `proc` do
  => nil
 ```
 
-In contrast, when we do the same with a lambda, we get an error (3)(4):
+In contrast, when we do the same with a lambda, we get an error (4):
 
 ```
 2.6.5 :002 > lfn = ->(arg) {}
@@ -53,7 +53,7 @@ Clearly, arity checking is helpful, and we abandon it at our peril.
 
 ### Return Behavior Differences
  
-What happens when you pass a code block somewhere, and it executes a `return`? Does it return from the block? Well, yes, but it does much more than that; it returns from the method that _yielded_ to the block. `proc`s behave the same way:
+What happens when you pass a code block somewhere, and it executes a `return`? Does it return from the block? Well, yes, but it does much more than that; it returns from the method that _yielded_ to the block. `proc`s behave the same way; in addition to returning from themselves, they will return from the method in which they were called:
 
 ```
 def using_proc
@@ -69,7 +69,7 @@ Before calling
 
 ```
 
-Before proceeding to the lambda behavior, I'd like to point out that this `proc` behavior is such that implicit and explicit returns do very different things! An implicit return will return from the proc, but an explicit return will return from the context that called it! Here is the same code, but without the explicit return; the proc will end and exit naturally:
+Before proceeding to the lambda behavior, I'd like to point out that this `proc` behavior is such that implicit and explicit returns do very different things! An implicit return will return from the proc, but an explicit return will return from the context that called it! Weird, eh? Here is the same code, but without the explicit return; the proc will end and exit naturally:
 
 ```
 def using_proc_without_return
