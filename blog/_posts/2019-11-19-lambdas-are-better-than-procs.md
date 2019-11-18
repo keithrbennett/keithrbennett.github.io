@@ -1,5 +1,6 @@
 ---
 title: lambdas Are Better Than procs
+published: false
 ---
 
 Functional programming in Ruby is productive and fun, but sadly it's a lesser known aspect of the language. This article is one of several in which I share some things that will hopefully remedy that, if even a little (1).
@@ -145,3 +146,6 @@ You may think you don't need the added protection of the lambda. Maybe you're ne
 (4) The shorthand `->` can be used in place of the `lambda` keyword to more succinctly define a lambda.
 
 
+----
+
+This article may be improved over time. To see its revisions you can go to its [Github commit history](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/blog/_posts/2019-04-14-boost-your-shell-scripting-with-ruby-and-rexe.md).
