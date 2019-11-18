@@ -10,6 +10,7 @@ By varying behaviors, I mean situations where the code that needs to run is not 
 
 Many developers are already familiar with using lambdas for _event handling_ (implemented with the  `function` keyword in JavaScript and also as arrow functions in ES6) , but there are many other cases in which they are helpful, a couple of which I will describe below.
 
+----
 
 ### The Problem with Non-Lambda Approaches
 
@@ -29,7 +30,7 @@ A better solution is using _callables_ such as lambdas.
 
 ----
 
-#### Callables as a Superset of Lambdas
+### Callables as a Superset of Lambdas
 
 In traditional object oriented languages such as Java and C++, polymorphism is (in general) implemented by inheritance. Ruby does this also (3), but in addition, Ruby uses _duck typing_, meaning that _any_ object that responds to the method name can be used, regardless of its position in the class hierarchy.
 
