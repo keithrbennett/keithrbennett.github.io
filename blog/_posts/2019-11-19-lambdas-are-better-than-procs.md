@@ -148,4 +148,4 @@ You may think you don't need the added protection of the lambda. Maybe you're ne
 
 ----
 
-This article may be improved over time. To see its revisions you can go to its [Github commit history](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/blog/_posts/2019-04-14-boost-your-shell-scripting-with-ruby-and-rexe.md).
+This article may be improved over time. To see its revisions you can go to its [Github commit history](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/blog/_posts/2019-11-19-lambdas-are-better-than-procs.md).
