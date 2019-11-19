@@ -13,7 +13,7 @@ This article will attempt to achieve two purposes:
 
 There are many resources available that explain lambdas and procs (1), and I will assume you know at least a little about them.
 
-Here are some important points:
+Before we look at some examples, here are some characteristics of lambdas and procs:
 
 * a `Proc` instance can be either lambda or a proc (2)
 * all `lambda`s are `Proc`s
