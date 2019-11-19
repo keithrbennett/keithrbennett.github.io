@@ -129,7 +129,7 @@ Here are some principles I've learned to code by:
 * specify things with minimal ambiguity
 * use language features that minimize the risk of errors
 
-Regarding everything said so far, the lambda wins over the proc. There is no reason to use a proc unless you specifically need the odd and potentially hazardous behaviors specified above.
+Regarding everything said so far, the lambda wins over the proc. There is no reason to use a proc unless you specifically need the odd and potentially hazardous behaviors described above.
  
 You may think it will never matter in your case. Maybe you're never calling the lambda yourself, but passing it to a framework such as Rails that is doing all the calling. Nevertheless, if given the added protection for free, why would you _not_ want it? Especially since the `->` notation is somewhat pictorial and more concise?
 
