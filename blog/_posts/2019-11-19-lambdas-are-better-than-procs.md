@@ -1,9 +1,7 @@
 ---
 title: lambdas Are Better Than procs
-published: false
+published: true
 ---
-
-Functional programming in Ruby is productive and fun, but sadly it's a lesser known aspect of the language. This article is one of several in which I share some things that will hopefully remedy that, if even a little (1).
 
 Many Rubyists believe that lambda and nonlambda Procs are pretty much the same and that choosing which one to use is a subjective preference. This is an unfortunate fallacy.
 
@@ -13,7 +11,7 @@ This article will attempt to achieve two purposes:
 
 2) to persuade you to use lambdas unless there is a compelling reason not to
 
-There are many resources available that explain lambdas and procs, and I will assume you know at least a little about them.
+There are many resources available that explain lambdas and procs (1), and I will assume you know at least a little about them.
 
 Here are some important points:
 
@@ -29,7 +27,7 @@ Here are some important points:
 
 A `lambda`, like a method, strictly enforces its argument count, but a `proc` does not. When we call a `proc` with the wrong number of arguments, there are no complaints by the Ruby runtime (3):
 
-```
+```ruby
 2.6.5 :006 > pfn = proc { |arg| }
  => #<Proc:0x00007f93828bd298@(irb):6>
 2.6.5 :007 > pfn.call
@@ -38,7 +36,7 @@ A `lambda`, like a method, strictly enforces its argument count, but a `proc` do
 
 In contrast, when we do the same with a lambda, we get an error (4):
 
-```
+```ruby
 2.6.5 :002 > lfn = ->(arg) {}
     => #<Proc:0x00007f9383118ed8@(irb):2 (lambda)>
    2.6.5 :003 > lfn.call
@@ -56,7 +54,7 @@ Clearly, arity checking is helpful, and we abandon it at our peril.
  
 What happens when you pass a code block somewhere, and it executes a `return`? Does it return from the block? Well, yes, but it does much more than that; it returns from the method that _yielded_ to the block. `proc`s behave the same way; in addition to returning from themselves, they will return from the method in which they were called:
 
-```
+```ruby
 def using_proc
   pfn = proc { return }
   puts "Before calling"
@@ -70,9 +68,9 @@ Before calling
 
 ```
 
-Before proceeding to the lambda behavior, I'd like to point out that this `proc` behavior is such that implicit and explicit returns do very different things! An implicit return will return from the proc, but an explicit return will return from the context that called it! Weird, eh? Here is the same code, but without the explicit return; the proc will end and exit naturally:
+Before proceeding to the lambda behavior, I'd like to point out that this `proc` behavior is such that implicit and explicit returns do very different things. An implicit return will return from the proc, but an explicit return will return from the context that called it! Weird, eh? Here is the same code, but without the explicit return; the proc will end and exit naturally:
 
-```
+```ruby
 def using_proc_without_return
   pfn = proc { }
   puts "Before calling"
@@ -89,7 +87,7 @@ When we first learn Ruby, we learn that a `return` at the end of a method is red
 
 In contrast, a `lambda`'s `return` returns from itself to the context that called it:
 
-```
+```ruby
 def using_lambda
   lfn = -> { return }
   puts "Before calling"
@@ -104,19 +102,19 @@ After calling
 
 ----
 
-### A `lambda` Resembles a Method More Closely Than Does a `proc`
+### A `lambda` is More Method-Like Than a `proc`
 
-In both of the above cases, the lambda behaves more like a method than does a proc. In fact, the newer `->(...)` notation for creating a lambda reveals that intent since its syntax defines the arguments as does a method's syntax, and is therefore preferable to the older `lambda` notation:
+In both of the above cases, the lambda behaves more like a method than a proc does. The newer `->(args)` notation for creating a lambda reveals that intent by defining the arguments as a method does, in a parenthesized list, and is therefore preferable to the older `lambda` notation:
 
 New:
 
-```
+```ruby
 fn = ->(arg1, arg2) { ... }
 ```
 
 Old:
 
-```
+```ruby
 fn = lambda { |arg1, arg2| ... }
 ```
 
@@ -124,17 +122,23 @@ fn = lambda { |arg1, arg2| ... }
 
 ### Conclusion
 
-There is a principle in software engineering, but I can't name it. These phrases come to mind: "limit things to the narrowest possible scope", "specify things with minimal ambiguity", "use language features that minimize the risk of errors".
+Here are some principles I've learned to code by:
 
-Based on everything said so far, the lambda variant of Proc is clearly the winner.
+* prefer simplicity to complexity
+* limit things to the narrowest possible scope
+* specify things with minimal ambiguity
+* use language features that minimize the risk of errors
+
+Regarding everything said so far, the lambda wins over the proc. There is no reason to use a proc unless you specifically need the odd and potentially hazardous behaviors specified above.
  
-You may think you don't need the added protection of the lambda. Maybe you're never calling the lambda yourself, but passing it to a framework such as Rails that is doing all the calling. Nevertheless, if given the added protection for free, why would you _not_ want it? Especially since the `->` notation is somewhat pictorial and more concise?
+You may think it will never matter in your case. Maybe you're never calling the lambda yourself, but passing it to a framework such as Rails that is doing all the calling. Nevertheless, if given the added protection for free, why would you _not_ want it? Especially since the `->` notation is somewhat pictorial and more concise?
 
 ----
 
 ### Footnotes
 
-(1) Other articles and a conference talk include:
+(1) There are many good resources; here are some that I have produced (articles and a conference talk):
+
 * [Using Lambdas to Simplify Varying Behaviors in Your Code](https://dev.to/keithrbennett/using-lambdas-to-simplify-varying-behaviors-in-your-code-1d5ff)
 * [Ruby Enumerables Make Your Code Short and Sweet](https://dev.to/keithrbennett/ruby-enumerables-make-your-code-short-and-sweet-2nl0)
 * [Functional Programming in Ruby](https://www.youtube.com/watch?v=nGEy-vFJCSE), video of a talk given at Functional Conf in Bangalore, India in 2014 
