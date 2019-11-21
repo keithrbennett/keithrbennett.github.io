@@ -11,11 +11,11 @@ This article will attempt to achieve two purposes:
 
 2) to persuade you to use lambdas unless there is a compelling reason not to
 
-There are many resources available that explain lambdas and procs (1), and I will assume you know at least a little about them.
+There are many resources available that explain lambdas and procs <sup id="a1">[[1](#f1)]</sup>, and I will assume you know at least a little about them.
 
 Before we look at some examples, here are some characteristics of lambdas and procs:
 
-* a `Proc` instance can be either lambda or a proc (2)
+* a `Proc` instance can be either lambda or a proc <sup id="a2">[[2](#f2)]</sup>
 * all `lambda`s are `Proc`s
 * all `proc`s are `Proc`s
 * code blocks behave like `proc`s
@@ -25,7 +25,7 @@ Before we look at some examples, here are some characteristics of lambdas and pr
 
 ### Arity (Argument Count) Checking Behavior Differences
 
-A `lambda`, like a method, strictly enforces its argument count, but a `proc` does not. When we call a `proc` with the wrong number of arguments, there are no complaints by the Ruby runtime (3):
+A `lambda`, like a method, strictly enforces its argument count, but a `proc` does not. When we call a `proc` with the wrong number of arguments, there are no complaints by the Ruby runtime <sup id="a3">[[3](#f3)]</sup>:
 
 ```ruby
 2.6.5 :006 > pfn = proc { |arg| }
@@ -34,7 +34,7 @@ A `lambda`, like a method, strictly enforces its argument count, but a `proc` do
  => nil
 ```
 
-In contrast, when we do the same with a lambda, we get an error (4):
+In contrast, when we do the same with a lambda, we get an error <sup id="a4">[[4](#f4)]</sup>:
 
 ```ruby
 2.6.5 :002 > lfn = ->(arg) {}
@@ -137,18 +137,21 @@ You may think it will never matter in your case. Maybe you're never calling the 
 
 ### Footnotes
 
-(1) There are many good resources; here are some that I have produced (articles and a conference talk):
+<b id="f1">[1]</b> There are many good resources; here are some that I have produced (articles and a conference talk):
 
 * [Using Lambdas to Simplify Varying Behaviors in Your Code](https://dev.to/keithrbennett/using-lambdas-to-simplify-varying-behaviors-in-your-code-1d5ff)
 * [Ruby Enumerables Make Your Code Short and Sweet](https://dev.to/keithrbennett/ruby-enumerables-make-your-code-short-and-sweet-2nl0)
-* [Functional Programming in Ruby](https://www.youtube.com/watch?v=nGEy-vFJCSE), video of a talk given at Functional Conf in Bangalore, India in 2014 
+* [Functional Programming in Ruby](https://www.youtube.com/watch?v=nGEy-vFJCSE), video of a talk given at Functional Conf in Bangalore, India in 2014
+[↩](#a1)
 
-(2) This terminology is unfortunate, as `Proc` and `proc`, when spoken, sound identical.
+<b id="f2">[2]</b>This terminology is unfortunate, as `Proc` and `proc`, when spoken, sound identical.
+[↩](#a2)
 
-(3) In this article I've used the `.call` variant of calling a Proc because it is the most obvious for the reader, but in practice I prefer the shorthand notation `.()`.
+<b id="f3">[3]</b>In this article I've used the `.call` variant of calling a Proc because it is the most obvious for the reader, but in practice I prefer the shorthand notation `.()`.
+[↩](#a3)
 
-(4) The shorthand `->` can be used in place of the `lambda` keyword to more succinctly define a lambda.
-
+<b id="f4">[4]</b>The shorthand `->` can be used in place of the `lambda` keyword to more succinctly define a lambda.
+[↩](#a4)
 
 ----
 
