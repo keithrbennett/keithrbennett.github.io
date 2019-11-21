@@ -144,13 +144,13 @@ You may think it will never matter in your case. Maybe you're never calling the 
 * [Functional Programming in Ruby](https://www.youtube.com/watch?v=nGEy-vFJCSE), video of a talk given at Functional Conf in Bangalore, India in 2014
 [↩](#a1)
 
-<b id="f2">[2]</b>This terminology is unfortunate, as `Proc` and `proc`, when spoken, sound identical.
+<b id="f2">[2]</b> This terminology is unfortunate, as `Proc` and `proc`, when spoken, sound identical.
 [↩](#a2)
 
-<b id="f3">[3]</b>In this article I've used the `.call` variant of calling a Proc because it is the most obvious for the reader, but in practice I prefer the shorthand notation `.()`.
+<b id="f3">[3]</b> In this article I've used the `.call` variant of calling a Proc because it is the most obvious for the reader, but in practice I prefer the shorthand notation `.()`.
 [↩](#a3)
 
-<b id="f4">[4]</b>The shorthand `->` can be used in place of the `lambda` keyword to more succinctly define a lambda.
+<b id="f4">[4]</b> The shorthand `->` can be used in place of the `lambda` keyword to more succinctly define a lambda.
 [↩](#a4)
 
 ----
