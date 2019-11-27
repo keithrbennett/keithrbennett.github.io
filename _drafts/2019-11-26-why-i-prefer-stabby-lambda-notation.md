@@ -16,7 +16,7 @@ The picture-like notation `->` is quite different from the `lambda` and `proc` f
  
 The striking appearance of `->` says to the reader "take note, something different is happening here, this is the definition of a executable code that will probably be called somewhere _else_". If a picture is worth a thousand words, then a text picture like `->` is worth, well, at least ten.
  
-In addition, the conciseness of the notation lowers the cost of using it, thereby encouraging its use. In my opinion, encouraging lambdas is a Good Thing, as lambdas are underused in the Ruby community, resulting in many missed opportunities for clearer code.
+In addition, the conciseness of the notation lowers the cost of using it (in space on the line, if not typing speed), thereby encouraging its use. 
 
 ### The Need for Visual Differentiation
 
@@ -36,5 +36,6 @@ I believe that the Rubocop default should be changed to prefer `->` in all cases
 
 Lambdas are, thankfully, first class objects in Ruby. That is, they can be passed to and returned from methods, and can be assigned to variables. This is a pretty major construct, and I believe a major form of notation (`->`), rather than a method name (`lambda`) is justified and helpful.
 
+The conciseness and pictorial nature of `->` encourage the use of lambdas, and in my opinion, that is a Good Thing, as lambdas are underused in the Ruby community, resulting in many missed opportunities for cleaner and clearer code.
 
 
