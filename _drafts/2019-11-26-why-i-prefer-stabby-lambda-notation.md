@@ -14,7 +14,7 @@ In a previous article, "[lambdas Are Better Than procs](https://dev.to/keithrben
 So it makes sense that `->` should create a lambda and not a proc. (As an aside, it always puzzles me when people use the term stabby _proc_, when it creates a lambda.)
 
 One way to look at it is, by using the stabby lambda notation, we are
-saying "make me Ruby's implementation of an objectless function", which is at a level higher than "make me a lambda" or "make me a proc", which, in a way, is probably a better interface to the programmer, especially the newer Rubyist.
+saying "make me Ruby's implementation of an objectless function". This is at a level higher than "make me a lambda" or "make me a proc", and is probably a better interface to the programmer, especially the newer Rubyist.
 
 
 ### `->`'s Picture-Like Notation
@@ -26,7 +26,7 @@ The striking appearance of `->` says to the reader "take note, something differe
 
 ### The Need for Visual Differentiation
 
-Unlike other code in a method, a lambda's code is not called in sequence (unless it is immediately called as a self invoking anonymous function, but this is rare). Also, sometimes a lambda can be used as if it were a nested method, containing lower level code that may be called multiple times in the method. For these reasons, a pictorial indication setting it apart from other code in the method is especially helpful.
+Unlike other code in a method, a lambda's code is not called in sequence (unless it is immediately called as a self invoking anonymous function, but this is rare). Also, sometimes a lambda can be used as if it were a nested method, containing lower level code that may be called multiple times in the method in which it was defined. For these reasons, a pictorial indication setting it apart from other code in the method is especially helpful.
 
 ### Rubocop
 
@@ -42,5 +42,5 @@ I believe that the Rubocop default should be changed to prefer (or at minimum pe
 
 Lambdas are, thankfully, first class objects in Ruby. That is, they can be passed to and returned from methods, and can be assigned to variables. This is a pretty major construct, and I believe a special notation (`->`), rather than a method name (`lambda`) is justified and helpful. While it is true that `class`, `module`, and `def` also mark the beginning of major language constructs, they are likely to be the first token on a line, whereas lambdas are usually assigned to variables or passed to methods or other lambdas, and are not.
 
-The conciseness and pictorial nature of `->` encourage the use of lambdas, and in my opinion, that is a Good Thing, as lambdas are underused in the Ruby community, resulting in many missed opportunities for cleaner and clearer code.
+The conciseness and pictorial nature of `->` encourage the use of lambdas, and in my opinion, that is a Good Thing. Lambdas are underused in the Ruby community, and many opportunities for cleaner and clearer code are missed.
 
