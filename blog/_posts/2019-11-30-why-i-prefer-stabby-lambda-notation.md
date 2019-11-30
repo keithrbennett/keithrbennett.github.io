@@ -44,3 +44,6 @@ Lambdas are, thankfully, first class objects in Ruby. That is, they can be passe
 
 The conciseness and pictorial nature of `->` encourage the use of lambdas, and in my opinion, that is a Good Thing. Lambdas are underused in the Ruby community, and many opportunities for cleaner and clearer code are missed.
 
+----
+
+This article may be improved over time. To see its revisions you can go to its [Github commit history](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/blog/_posts/2019-11-30-why-i-prefer-stabby-lambda-notation.md).
