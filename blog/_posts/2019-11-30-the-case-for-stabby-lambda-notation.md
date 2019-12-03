@@ -34,7 +34,7 @@ Rubocop is a very useful tool for normalizing code style. For better or worse th
 
 Rubocop's [default setting for lambdas](https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/Lambda) is to use `->` with lambda one-liners but `lambda` for multiline lambdas. While this is not a matter of monumental importance, I believe it's misguided and should be changed.
 
-My guess is that it is intended to mirror the Ruby code block notation convention of `{..}` for single line blocks and `do...end` for multi-line blocks. However, in the code block case the `do` and `end` are at the end and beginning of the line, respectively, and easy to spot and mentally parse, whereas the `lambda` is likely in the middle of the line and does not stand out as would the `->`.
+My guess is that it is intended to mirror the Ruby code block notation convention of `{..}` for single line blocks and `do...end` for multi-line blocks. However, the code block case is different because the `do` and `end` are at the end and beginning of the line, respectively (though it is true that if there are arguments they will appear after the `do`). More importantly though, the indentation of the code block within the `do...end` makes it easy to spot and mentally parse, whereas the `lambda` is likely in the middle of the line and does not stand out as would the `->`.
 
 I believe that the Rubocop default should be changed to prefer (or at minimum permit) `->` in all cases.
 
