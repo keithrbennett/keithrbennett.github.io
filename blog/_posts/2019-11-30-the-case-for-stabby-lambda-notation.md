@@ -1,5 +1,5 @@
 ---
-title: Why I Prefer Stabby Lambda Notation
+title: The Case for Stabby Lambda Notation
 published: true
 ---
 
