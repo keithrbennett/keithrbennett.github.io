@@ -38,7 +38,8 @@ My guess is that it is intended to mirror the Ruby code block notation conventio
 
 I believe that the Rubocop default should be changed to prefer (or at minimum permit) `->` in all cases.
 
-[Note: Since writing this article I posted an issue on the Rubocop project site at https://github.com/rubocop-hq/rubocop/issues/7566](https://github.com/rubocop-hq/rubocop/issues/7566)
+Note: Since writing this article I posted an issue on the Rubocop project site 
+[here](https://github.com/rubocop-hq/rubocop/issues/7566).
 
 ### Conclusion
 
