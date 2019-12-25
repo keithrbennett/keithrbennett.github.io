@@ -38,6 +38,8 @@ My guess is that it is intended to mirror the Ruby code block notation conventio
 
 I believe that the Rubocop default should be changed to prefer (or at minimum permit) `->` in all cases.
 
+[Note: Since writing this article I posted an issue on the Rubocop project site at https://github.com/rubocop-hq/rubocop/issues/7566](https://github.com/rubocop-hq/rubocop/issues/7566)
+
 ### Conclusion
 
 Lambdas are, thankfully, first class objects in Ruby. That is, they can be passed to and returned from methods, and can be assigned to variables. This is a pretty major construct, and I believe a special notation (`->`), rather than a method name (`lambda`) is justified and helpful. While it is true that `class`, `module`, and `def` also mark the beginning of major language constructs, they are likely to be the first token on a line, whereas lambdas are usually assigned to variables or passed to methods or other lambdas, and are not.
