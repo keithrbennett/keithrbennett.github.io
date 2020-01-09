@@ -21,7 +21,7 @@ saying "make me Ruby's implementation of an objectless function". This is at a l
 
 The picture-like notation `->` is quite different from the `lambda` and `proc` forms, because although all result in method calls that create `Proc` instances, `lambda` and `proc` _look like_ method calls, while `->` does not, instead appearing more like a _language construct_. On the higher level, it really _is_ a language construct, and the fact that a method needs to be called to create a lambda is an implementation detail that should not matter to the programmer.
  
-The striking appearance of `->` says to the reader "take note, something different is happening here, this marks the beginning of a definition of a executable code that will probably be called somewhere _else_". If a picture is worth a thousand words, then a text picture like `->` is worth, well, at least ten.
+The striking appearance of `->` says to the reader "take note, something different is happening here, this marks the beginning of a definition of executable code that will probably be called somewhere _else_". If a picture is worth a thousand words, then a text picture like `->` is worth, well, at least ten.
  
 
 ### The Need for Visual Differentiation
