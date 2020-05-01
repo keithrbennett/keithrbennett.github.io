@@ -31,14 +31,14 @@ curl -o bootstrap.patch https://raw.githubusercontent.com/keithrbennett/rails-bo
 Then apply the patch:
 
 ```
-patch -p0 < bootstrap.patch
+git apply bootstrap.patch
 ```
 
 
 Alternatively, you can combine the above two steps into one:
 
 ```
-curl -o bootstrap.patch https://raw.githubusercontent.com/keithrbennett/rails-bootstrap-example/master/0001-Apply-patch-for-Bootstrap.patch | patch -p0 -
+curl https://raw.githubusercontent.com/keithrbennett/rails-bootstrap-example/master/0001-Apply-patch-for-Bootstrap.patch | git apply -
 ```
 
 
