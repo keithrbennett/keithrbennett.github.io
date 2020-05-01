@@ -141,4 +141,4 @@ git apply something.patch
 
 I hope that the hours I invested in creating and documenting this simplifying procedure will pay off
 in the form of time saved for you. If you think I could be useful on your project, or would just like
-to say hello, please give me a holler at kbennett@bbs-software.com.
+to say hello, please give me a holler at [kbennett@bbs-software.com](mailto:kbennett@bbs-software.com).
