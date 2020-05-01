@@ -120,13 +120,25 @@ in the names. This was not something I did myself, this was done automatically b
 and all I needed to do to generate the patches was issue this command:
 
 ```
-git format-patch HEAD~4
+$ git format-patch HEAD~4
+0001-rails-g-controller-home-index.patch
+0002-Change-root-route-to-go-to-new-page.patch
+0003-Add-Bootstrap-color-border-spinners-to-page.patch
+0004-Add-patch-files-git-format-patch-HEAD-4.patch
 ```
 
 The `HEAD~4` told git how far back I wanted to start (4 commits).
 
-As you saw above, applying the patch to a code base is as simple as:
+As you saw above, applying a patch to a code base is as simple as:
 
 ```
 git apply something.patch
 ```
+
+----
+
+### Conclusion
+
+I hope that the hours I invested in creating and documenting this simplifying procedure will pay off
+in the form of time saved for you. If you think I could be useful on your project, or would just like
+to say hello, please give me a holler at kbennett@bbs-software.com.
