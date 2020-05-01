@@ -112,3 +112,21 @@ This is all you should need to do! At this point you can run `rails s` and conne
 If all goes well you will see something like this:
 
 ![successful Bootstrap page](/assets/success-page.png)
+
+### Git's Patch Support
+
+You may have noticed that the patch file names were numbered and contained the first part of the commit messages
+in the names. This was not something I did myself, this was done automatically by git. Git has great patch support,
+and all I needed to do to generate the patches was issue this command:
+
+```
+git format-patch HEAD~4
+```
+
+The `HEAD~4` told git how far back I wanted to start (4 commits).
+
+As you saw above, applying the patch to a code base is as simple as:
+
+```
+git apply something.patch
+```
