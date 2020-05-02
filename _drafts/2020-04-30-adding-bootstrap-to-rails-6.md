@@ -40,7 +40,7 @@ before you apply the patch; this will make it easier to revert the change or lim
 to only Bootstrap configuration.
 
 You can download the patch in its 
-F[raw format](https://raw.githubusercontent.com/keithrbennett/rails-bootstrap-example/master/0001-Add-Bootstrap-configuration.patch)
+[raw format](https://raw.githubusercontent.com/keithrbennett/rails-bootstrap-example/master/0001-Add-Bootstrap-configuration.patch)
 to your local filesystem with the following command:
 
 ```
