@@ -31,16 +31,16 @@ In order to even further simplify the process for future developers, I generated
 to make the changes needed to provide the correct configuration. (These changes do assume a new Rails application,
 so it's possible that some modification to the changes would be required for existing projects.)
 
-Here's how to do it. You can make the changes to your existing project or a fresh one generated with `rails new`.
+You can make the changes to your existing project or a fresh one generated with `rails new`. Here's how to do it:
 
 Change directory to your project root.
 
-I suggest you have a "clean working tree" (no git-relevant changes since the previous commit)
+I suggest you have a "clean working tree" (no git-relevant changes since the most recent commit)
 before you apply the patch; this will make it easier to revert the change or limit your next commit
-to only Bootstrap configuration.
+to only the Bootstrap configuration change.
 
 You can download the patch in its 
-[raw format](https://raw.githubusercontent.com/keithrbennett/rails-bootstrap-example/master/0001-Add-Bootstrap-configuration.patch)
+[raw format](https://raw.githubusercontent.com/keithrbennett/rails-bootstrap-example/master/0001-Add-Bootstrap-configuration.patch) (i.e. only the unadorned text and not the HTML web page displaying it)
 to your local filesystem with the following command:
 
 ```
@@ -100,9 +100,9 @@ Here is a list of all the patches:
 These patches are in the [project root of the sample repo](https://github.com/keithrbennett/rails-bootstrap-example).
 
 Applying patches #2 through #4 will set up the sample code to show that Bootstrap is working. 
-Here are commands that will apply the patches directly from Github (without creating patch files on your system):
+Here are commands that will apply the patches directly from Github (without creating patch files on your local filesystem):
 
-```
+```˚
 curl https://raw.githubusercontent.com/keithrbennett/rails-bootstrap-example/master/0002-rails-g-controller-home-index.patch | git apply -
 curl https://raw.githubusercontent.com/keithrbennett/rails-bootstrap-example/master/0003-Change-root-route-to-go-to-new-page.patch | git apply -
 curl https://raw.githubusercontent.com/keithrbennett/rails-bootstrap-example/master/0004-Add-Bootstrap-color-border-spinners-to-page.patch | git apply -
