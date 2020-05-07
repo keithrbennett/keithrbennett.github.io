@@ -1,5 +1,5 @@
 ---
-title: Adding Bootstrap to Your Rails 6 Application
+title: Add Bootstrap to Rails with Two Shell Commands
 published: true
 ---
 
