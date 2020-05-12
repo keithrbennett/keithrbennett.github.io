@@ -4,6 +4,7 @@ date: 2019-04-14
 published: true
 description: Using the Rexe Ruby Gem
 tags: #ruby #shell #script
+canonical_url: https://blog.bbs-software.com/blog/2019/04/14/boost-your-shell-scripting-with-ruby-and-rexe.html
 ---
 
 [Caution: This is a long article! 

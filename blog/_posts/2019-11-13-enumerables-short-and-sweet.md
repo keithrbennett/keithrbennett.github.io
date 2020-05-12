@@ -1,5 +1,7 @@
 ---
 title: Ruby Enumerables Make Your Code Short and Sweet
+tags: ruby, enumerable, functional
+canonical_url: https://blog.bbs-software.com/blog/2019/11/13/enumerables-short-and-sweet.html
 ---
 
 One of the most amazing things about Ruby is the richness of its `Enumerable` library; there are _so many_ things it can do. Another is Ruby's ability to express intent with the utmost conciseness and clarity. However, out in the wild I very often see code that fails to take full advantage of these qualities.

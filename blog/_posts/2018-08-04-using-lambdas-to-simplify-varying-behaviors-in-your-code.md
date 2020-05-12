@@ -1,6 +1,8 @@
 ---
 title: Using Lambdas to Simplify Varying Behaviors in Your Code
 date: 2018-08-04
+tags: ruby, functional, lambda
+canonical_url: https://blog.bbs-software.com/blog/2018/08/04/using-lambdas-to-simplify-varying-behaviors-in-your-code.html
 ---
 
 

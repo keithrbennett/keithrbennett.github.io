@@ -3,6 +3,7 @@ title: Automate the Little Things Too
 published: true
 description: Using Ruby for Primitive but Productive Workflows
 tags: #ruby #shell #script
+canonical_url: https://blog.bbs-software.com/blog/2019/09/24/automate-the-little-things-too.html
 ---
 
 We developers automate highly complex tasks, but when it comes to the smaller repetitive tasks, we tend to do things manually, or fail to do them at all. By combining Ruby with robust and richly functional command line tools such as MPlayer, we can save ourselves lots of time and have fun in the process.

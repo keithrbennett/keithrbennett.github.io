@@ -1,6 +1,8 @@
 ---
 title: lambdas Are Better Than procs
 published: true
+tags: ruby, functional, lambda
+canonical_url: https://blog.bbs-software.com/blog/2019/11/19/lambdas-are-better-than-procs.html
 ---
 
 Many Rubyists believe that lambda and nonlambda Procs are pretty much the same and that choosing which one to use is a subjective preference. This is an unfortunate fallacy.

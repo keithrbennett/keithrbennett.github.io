@@ -1,6 +1,8 @@
 ---
 title: Add Bootstrap to Rails 6 with Two Shell Commands
 published: true
+tags: rails, bootstrap, web
+canonical_url: https://blog.bbs-software.com/blog/2020/05/07/add-bootstrap-to-rails-6-with-two-shell-commands.html
 ---
 
 ### Introduction

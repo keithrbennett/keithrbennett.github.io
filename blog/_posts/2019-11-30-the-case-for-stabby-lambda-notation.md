@@ -1,6 +1,8 @@
 ---
 title: The Case for Stabby Lambda Notation
 published: true
+tags: ruby, functional, lambda
+canonical_url: https://blog.bbs-software.com/blog/2019/11/30/the-case-for-stabby-lambda-notation.html
 ---
 
 ### The Stabby Lambda (`->`)
