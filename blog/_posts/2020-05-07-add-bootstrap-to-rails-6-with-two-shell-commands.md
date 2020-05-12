@@ -146,7 +146,12 @@ in the form of time saved for you. If you think I could be useful on your projec
 to say hello, please give me a holler at [kbennett@bbs-software.com](mailto:kbennett@bbs-software.com).
 
 
+    A   ----
+
+This article may be improved over time. To see its revisions you can go to its [Github commit history](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/blog/_posts/2020-05-07-adding-bootstrap-to-rails-6.md).
 
 ----
 
-This article may be improved over time. To see its revisions you can go to its [Github commit history](https://github.com/keithrbennett/keithrbennett.github.io/commits/master/blog/_posts/2020-05-07-adding-bootstrap-to-rails-6.md).
+Note: The patch (#1) originally published with this article did not include some configuration code needed to
+expose JQuery and Popper, which could have been a problem implementing customizations. 
+It was fixed on 2020-05-12. You can see the changes [here](https://gist.github.com/keithrbennett/1ee95d21ab9597602184ab689ca0a6f1/revisions). 
