@@ -2,6 +2,7 @@
 title: Installing International Language Keyboard Input Methods on Linux Mint 20 Cinnamon & Mate
 published: true
 tags: linux, mint, cinnamon, mate, I18N, internationalization, unicode
+canonical_url: https://blog.bbs-software.com/blog/2020/08/23/language-input-on-linux-mint-20.html
 ---
 
 I just started using a desktop system using Linux Mint 20 Cinnamon, and wanted to make sure that 
