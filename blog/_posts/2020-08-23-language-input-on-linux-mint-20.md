@@ -1,7 +1,7 @@
 ---
 title: Installing International Language Keyboard Input Methods on Linux Mint 20 Cinnamon & Mate
 published: true
-tags: linux, mint, cinnamon, I18N, internationalization
+tags: linux, mint, I18N, internationalization
 canonical_url: https://blog.bbs-software.com/blog/2020/08/23/language-input-on-linux-mint-20.html
 ---
 
@@ -10,23 +10,6 @@ I just started using a desktop system using Linux Mint 20 Cinnamon, and wanted t
 I've also briefly tested that this procedure works with Arabic, French, Hebrew, Russian, and Swedish, so I'm fairly confident that it will work for any supported language and input method.
 
 Below are the instructions for Linux Mint Cinnamon; I believe they will be identical for Mate.
-
-
-### Install IBus
-
-**Install the IBus keyboard input management framework and the Hangul (native Korean alphabet) support:**
-
-`sudo apt install -y ibus-m17n ibus-hangul`
-
-##### Configure the IBus daemon to start up automatically on system startup:
- 
-Press the {Super} (Windows/Mac) key, type `startup` and select "Startup Applications".
-
-* Click the "+" button.
-* Select "Custom command".
-* For Name: `IBus Daemon`
-* For Command: `ibus-daemon`
-* Click "Add".
 
 
 ### Language Support
@@ -44,32 +27,54 @@ There may not be any confirmation that it has completed.
 and click the "Install Language Packs" button.
 * Confirm any confirmation dialogs as necessary.
 
-Reboot the system when all your desired languages have been installed.
+
+### If...
+
+The remainder of work to be done involves the IBus input method framework.
+
+If at any point during this procedure, you see a dialog saying "The IBus daemon is not running. Do you wish to start it?", click "Yes".
+
+Also, if you encounter a dialog saying "IBus has been started! If you cannot use IBus, add the following lines...", just click OK. I have seen this happen but have never needed the information displayed in the dialog.
 
 
-### Configure iBus
+### Install IBus
 
-Press the {Super} key and type `ibus`. Select "iBus Preferences". If you see a dialog saying "The iBus daemon is not running. Do you wish to start it?", click "Yes".
+**Install the IBus keyboard input management framework and the Hangul (native Korean alphabet) support:**
 
-You may see a dialog saying "IBus has been started! If you cannot use IBus, add the following lines...". I have not needed to do the extra step described here, so I just click OK wihtout saving the information anywhere.
+`sudo apt install -y ibus-m17n ibus-hangul`
 
+
+### Add IBus to the Startup Applications List
+ 
+Press the {Super} (Windows/Mac) key, type `startup` and select "Startup Applications".
+
+* Click the "+" button.
+* Select "Custom command".
+* For Name: `IBus`
+* For Command: `ibus-daemon`
+* Click "Add".
+
+
+### Configure IBus
+
+Press the {Super} key and type `ibus`. Select "IBus Preferences".
 
 #### Add a keyboard shortcut
 
-Cinnamon uses {Super}{Space} to navigate panel entries, and I have not found a way to disable that, so I assign another shortcut for language switching, {Ctrl}{Super}{Alt}-i. Here's how:
+Cinnamon uses {Super}{Space} to navigate panel entries, and I have not found a way to disable that, so I assign another shortcut for language switching, {Ctrl}{Super}{Alt}-k ("k" for keyboard). Here's how:
 
 On the "General" tab:
 
 * click the button labelled "..." to the right of the "Next Input Method" text field
 * with "{Super}<space>" selected, click the "Delete" button
-* Replace any text in the "Key code" input field with "i"
+* Replace any text in the "Key code" input field with "k"
 * check "Control", "Alt", and "Super"
 * click the "Add" button
 * click the "OK" button
 
 You may not need to do this if you are using Mate and the {Super}{Space} key combination is available for IBus to use.
 
-Also, I found that {Ctrl}{Super}{Alt}-i _did not work_ when pressed while certain input methods were active. I briefly researched how to disable Cinnamon's use of {Super}{Space} but could not find an answer. Anyone? Assigning multiple key combinations to this action is supported, so that is another approach.
+Also, I found that {Ctrl}{Super}{Alt}-k _did not work_ when pressed while certain input methods were active. I briefly researched how to disable Cinnamon's use of {Super}{Space} but could not find an answer. Anyone? Assigning multiple key combinations to this action is supported, so that is another approach.
 
 #### Add input methods
 
@@ -77,16 +82,30 @@ On the "Input Method" tab, click "Add".
 
 For each desired input method, click your desired language, or if it is not listed (as with Korean and Thai), click the three vertical dots entry, click the text field to give it focus, and type the language into the text field, then select the entry below the language name that you want. In the case of Korean, there is only one ("Hangul"). Click "Add".
 
+
+### Reboot and Test
+
+Reboot the system. (If you want to save time, you could log out and then in again instead of rebooting, but that will not verify that IBus was started on system startup.)
+ 
+Test switching input methods with {Ctrl}{Super}{Alt}-k, and typing text into an application that can accept it. 
+
+### The Language Panel Applet
+
+There are two methods for invoking input method selection:
+
+* the keyboard shortcut ({Ctrl}{Super}{Alt}-k, {Super}{Space}, etc.)
+* the panel applet
+
+The panel applet is on the system panel, and will display the currently selected language. Clicking it will display a list of languages from which you can select a different one. This applet can be used as a fallback mechanism for changing language if the keyboard shortcut does not work.
+
+Unfortunately, the text on this indicator is displayed in a dark blue text that is difficult to see against the black background, so it may take some effort to find. The Korean language setting deals with this by showing a colorful icon instead of text.
+
+
 ### Cautions
 
 **Invoking Input Method Selection**
 
-There are two methods for invoking input method selection:
-
-* the keyboard shortcut ({Ctrl}{Super}{Alt}-i, {Super}{Space}, etc.)
-* the panel applet
-
-Beware, the keyboard shortcut may not work with some input methods (as previously mentioned), and the panel applet is barely visible due to its tiny size and dark blue color that's very difficult to see against the panel's dark background. 
+As mentioned, if the keyboard shortcut for selecting an input method does not work, remember the panel applet and use that instead.
 
 **Know Your Input Methods**
 
@@ -100,4 +119,4 @@ There may be language specific requirements with other languages like the need t
 
 ### You're done! 
 
-Thanks for reading, and let me know if you have any corrections or improvements to offer.
+Thanks for reading, and let me know in a comment on the [dev.to article page](https://dev.to/keithrbennett/installing-international-language-keyboard-input-methods-on-linux-mint-20-cinnamon-mate-3d6d) if you have any corrections or improvements to offer.
