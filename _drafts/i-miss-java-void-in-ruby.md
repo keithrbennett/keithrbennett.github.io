@@ -9,15 +9,15 @@ However, I have come to miss _some_ Java features. One of them is the ability to
 
 When I say _meaningful_ return value, I say that because in Ruby, all methods return a value; in the absence of an explicit return value, `nil` is returned.
 
-Because of this, it is sometimes difficult to know by looking at a method if the nil value returned has any meaning. In Java, the `void` keyword applied to a method tells the compiler and the reader that this method will not return _anything_.
+Because of this, it is sometimes difficult to know by looking at a method if the nil value returned in Ruby (explicitly or implicitly) has any meaning. In Java, the `void` keyword applied to a method tells the compiler and the reader that this method will not return _anything_.
 
-A similar Ruby `void` keyword might not prevent a method from returning nil, but it _could_ be used at runtime to check that no value _other than nil_ is returned. It might also check at runtime that the caller is not using the returned `nil`.
+A similar Ruby `void` keyword or method might not prevent a method from returning nil, but it _could_ be used at runtime to check that no value _other than nil_ is returned. It might also check at runtime that the caller is not using the returned `nil`.
 
 This would, of course, slow down the runtime somewhat, but if it were controlled by a Ruby command line option or environment variable, then the user could enable it selectively.
 
 Even if that runtime checking were _never_ enabled, IDE's and other code analyzers could use it.
 
-Why is this important or helpful? If you are writing a method that others will subclass, then it will be obvious whether or not to return a value in the subclass methods.
+Why is this important or helpful? If you are writing a method that others will override in a subclass, then it will be obvious whether or not to return a value in the subclass methods.
 
 If you are using methods in a library, and those methods are returning the value of another method, how do you know if the return value is intentional or coincidental? How do you know if other implementations of that method
 
