@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Note: This application cannot be updated to Ruby 3 yet, see https://talk.jekyllrb.com/t/error-no-implicit-conversion-of-hash-into-integer/5890
-ruby '3.1.3'
+ruby '3.2.0'
 
 # Hello! This is where you manage which Jekyll version is used to run.
 # When you want to use a different version, change it below, save the
