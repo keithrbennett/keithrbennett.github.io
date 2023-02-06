@@ -247,17 +247,17 @@ GEM
       unf_ext
     unf_ext (0.0.8.2)
     unicode-display_width (1.8.0)
-    webrick (1.7.0)
+    webrick (1.8.1)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  github-pages (>= 227)
+  github-pages (>= 228)
   jekyll-feed (~> 0.15)
   minima (~> 2.0)
   tzinfo-data
-  webrick
+  webrick (>= 1.8.1, < 2)
 
 RUBY VERSION
    ruby 3.2.0p0
