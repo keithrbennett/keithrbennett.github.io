@@ -1,4 +1,9 @@
-# AutoPilot, CoPilot, or AI Assistant?
+---
+title: AutoPilot, CoPilot, or AI Assistant?
+published: false
+tags: ai, copilot, github, quality
+canonical_url: https://blog.bbs-software.com/blog/2024/01/30/autopilot-copilot-or-ai-assistant.html
+---
 
 ### AI Downsides
 
