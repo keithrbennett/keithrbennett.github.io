@@ -1,6 +1,6 @@
 ---
 title: AutoPilot, CoPilot, or AI Assistant?
-published: false
+published: true
 tags: ai, copilot, github, quality
 canonical_url: https://blog.bbs-software.com/blog/2024/01/30/autopilot-copilot-or-ai-assistant.html
 ---
@@ -9,7 +9,7 @@ canonical_url: https://blog.bbs-software.com/blog/2024/01/30/autopilot-copilot-o
 
 In [New GitHub Copilot Research Finds 'Downward Pressure on Code Quality'](https://visualstudiomagazine.com/articles/2024/01/25/copilot-research.aspx), Visual Studio magazine cites a [GitClear study](https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality) that points out that AI for coding results in less maintainable (and therefore costlier) code.
 
-They point out, for example, that copying and pasting code whereever it is needed is prone to producing repetitive code, that is, code that is not [DRY](https://en.wikipedia.org/wiki/Don't_repeat_yourself).
+They point out, for example, that copying and pasting code in multiple locations where it is needed, rather than moving it to a single location and referring to it there, is prone to producing repetitive code, that is, code that is not [DRY](https://en.wikipedia.org/wiki/Don't_repeat_yourself).
 
 In addition, at the time of this writing (January 2024), AI still makes _plenty_ of mistakes; that is, a) misunderstandings of intent, b) hallucinations, and c) downright errors.
 
