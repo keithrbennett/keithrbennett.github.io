@@ -1,15 +1,15 @@
 source "https://rubygems.org"
 
-ruby '3.2.2'
+ruby '3.3.4'
 
-gem "github-pages", ">= 228", group: :jekyll_plugins
+gem "github-pages", ">= 232", group: :jekyll_plugins
 
 # This is the default theme for new Jekyll sites. You may change this to anything you like.
-gem "minima", "~> 2.0"
+gem "minima", ">= 2.5.1", '< 3'
 
 # If you have any plugins, put them here!
 group :jekyll_plugins do
-  gem "jekyll-feed", "~> 0.15"
+  gem "jekyll-feed", "~> 0.17"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
