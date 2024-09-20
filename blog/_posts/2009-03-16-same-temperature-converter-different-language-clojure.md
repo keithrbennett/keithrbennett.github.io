@@ -20,7 +20,7 @@ Code written in Lisp or Clojure may appear to the uninitiated to be a confusing 
 
 The Clojure community is a bright and helpful bunch; I often consulted them on the _#clojure_ IRC channel, and the Google group at <http://groups.google.com/group/clojure> has had some very useful information as well.
 
-The previous article ([JRuby — A Better Language for the Java Virtual Machine]({% post_url blog/2009-02-26-jruby-a-better-language-for-the-java-virtual-machine %})) discussed using JRuby as a better language for programming on the JVM, and used as an example a Fahrenheit/Celsius temperature conversion Swing program. I've ported this program to Clojure so that we can contrast Clojure with Java and JRuby using a known quantity.
+The previous article ([JRuby — A Better Language for the Java Virtual Machine]({% post_url 2009-02-26-jruby-a-better-language-for-the-java-virtual-machine %})) discussed using JRuby as a better language for programming on the JVM, and used as an example a Fahrenheit/Celsius temperature conversion Swing program. I've ported this program to Clojure so that we can contrast Clojure with Java and JRuby using a known quantity.
 
 Here is an image of the application's sole window. There are text fields for entering the temperature, and buttons and menu items to perform the conversions, clear the text fields, and exit the program.<figure id="attachment_13" class="thumbnail wp-caption aligncenter" style="width: 509px">
 
@@ -38,7 +38,7 @@ If you can access the REPL interactive Clojure command line, you can issue the f
 
 The strengths of Clojure are many, and a Swing application is not the best program with which to showcase them. Therefore, it would not be fair to judge Clojure based solely on the content of this article, because I am intentionally excluding its greatest strengths -- they are outside of the scope of porting this Swing application, and I am not yet expert enough to be qualified to teach about them. However, this article _is_ useful in illustrating some of the mechanics and philosophy of the language that can be used in general programming.
 
-Firstly, Clojure (and, by extension, Lisp) struck me as a language that easily enables the writing of clear, concise, and logically structured code. I'm a big fan of this, as you will know if you have read my [Applying User Interface Design to Source Code]({% post_url blog/2008-11-28-applying-user-interface-design-to-source-code %}) article.
+Firstly, Clojure (and, by extension, Lisp) struck me as a language that easily enables the writing of clear, concise, and logically structured code. I'm a big fan of this, as you will know if you have read my [Applying User Interface Design to Source Code]({% post_url 2008-11-28-applying-user-interface-design-to-source-code %}) article.
 
 # Let
 
