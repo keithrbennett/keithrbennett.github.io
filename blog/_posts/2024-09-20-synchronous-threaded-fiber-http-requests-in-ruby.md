@@ -1,14 +1,14 @@
 ---
 title: Fiber, Thread, and Synchronous HTTP Requests in Ruby
 date: 2024-09-20
-published: true
+published: false
 ---
 
 ## Introduction
 
 In this article, we will explore different ways to make HTTP requests in Ruby and compare their performance. We will focus on three approaches: synchronous, threaded, and fiber-based. We will use a simple example of checking the availability of the same URL multiple times.
 
-Why do I care? I have a Ruby on Rails web site containing many web links, mostly on YouTube, and wanted to automate as a rake task the checking of these links for availability. The links are stored in the project in a YAML file, so it's easy to read them into memory. However, how would I check them for accessibility?
+Why do I care? I have a Ruby on Rails web site containing many links to YouTube song videos, and they are subject to being pulled by their owner or taken down due to copyright issues.I wanted to automate as a rake task the checking of these links for availability, so that I can do the check with minimal effort from time to time. The links are stored in the project in a YAML file, so it's easy to read them into memory. However, how would I check them for accessibility?
 
 To simplify the examples below, instead of fetching the real URL's, I will fetch the same URL multiple times. I'll use a URL built with `"https://httpbin.org/delay/#{sleep_seconds}"` to access the Internet and simulate a nonzero delay. The examples will return an array containing the responses.
 
