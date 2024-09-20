@@ -3,11 +3,17 @@ title: Fiber, Thread, and Synchronous HTTP Requests in Ruby
 date: 2024-09-07
 ```
 
-I have a web site containing many web links, and wanted to automate the checking of these links for availability. I decided to write a rake task for it, but how would I implement it?
+## Introduction
+
+In this article, we will explore different ways to make HTTP requests in Ruby and compare their performance. We will focus on three approaches: synchronous, threaded, and fiber-based. We will use a simple example of checking the availability of the same URL multiple times.
+
+Why do I care? I have a Ruby on Rails web site containing many web links, mostly on YouTube, and wanted to automate as a rake task the checking of these links for availability. The links are stored in the project in a YAML file, so it's easy to read them into memory. However, how would I check them for accessibility?
+
+To simplify the examples below, instead of fetching the real URL's, I will fetch the same URL multiple times. I'll use a URL built with `"https://httpbin.org/delay/#{sleep_seconds}"` to access the Internet and simulate a nonzero delay. The examples will return an array containing the responses.
 
 ### The Synchronous Approach
 
-I started out the conventional way, using `Net::HTTP` (for simplicity sake I will post code that just gets the same URL *n* times):
+I started out the simple and conventional way, using `Net::HTTP`:
 
 ```ruby
 def get_responses_synchrously(count)
@@ -22,7 +28,7 @@ However, the time it took was frustratingly long. How could I make this faster?
 
 ### The Thread Approach
 
-Having been a fan of threads for a long time, I then tried doing it with threads. Since the number of links was just a few dozen, this number was low enough that creating a thread for each link was feasible:
+Having been a fan of threads for a long time, this was the next thing I tried. Since the number of links was just a few dozen, this number was low enough that creating a thread for each link was feasible:
 
 ```ruby
 def get_responses_using_threads(count)
@@ -38,7 +44,7 @@ As you can guess, this was *way* faster.
 
 ### The Fiber Approach
 
-I wasn't done though -- recently I _finally_ got around to learning about Ruby fibers, and wanted to try them here. Rather than write the low level Fiber code myself, it was simpler to use @ioquatix's (Samuel Williams') excellent `async` Ruby gems (I needed `async` and `async-http`) to do the heavy lifting. The resulting code was more complex than the previous two approaches, but not too bad (run `gem install async-http` if necessary):
+I wasn't done though -- recently I _finally_ got around to learning about Ruby fibers, and wanted to try them here. Rather than write the low level Fiber code myself, it was simpler to use @ioquatix's (Samuel Williams') excellent `async` Ruby gems (I needed `async` and `async-http`) to handle the low level plumbing. The resulting code was more complex than the previous two approaches, but not too bad (run `gem install async-http` if necessary):
 
 ```ruby
 def get_responses_using_fibers(count)
@@ -65,19 +71,25 @@ def get_responses_using_fibers(count)
 end
 ```
 
-The magic is in the `Async` framework and `Async::HTTP::Internet`'s `get` method, which is fiber-aware and yields controlf ot the CPU while waiting for a response.
+The magic is in the `Async` framework and `Async::HTTP::Internet`'s `get` method, which is fiber-aware and yields controlf of the CPU while waiting for a response.
 
 ### Comparing the Performance Results
 
-I did a benchmark to compare the results of fetching request counts for powers of 2 from 1 to 256 (`[1, 2, 4, 8, 16, 32, 64, 128, 256]`).
+I did a benchmark to compare the results of fetching request counts for powers of 2 from 1 to 256 (1, 2, 4, 8, 16, 32, 64, 128, and 256).
 
-Here are the results comparing all three approaches:
+Here are the results comparing all three approaches, using the averages of several test runs:
+
+![Synchronous, Threaded, and Fiber-based](../_site/assets/requests-article-fibers-threads-synchronous-graph.png)
+
+To zoom in on the difference between the thread and fiber approach, this graph omits the synchronous approach:
+
+![Threaded and Fiber-based](/_site/assets/requests-article-fibers-threads-graph.png)
 
 As expected, the synchronous approach was by far the slowest, since only one request could be active at any given time. Both the thread and fiber approach were dramatically faster, and not that different from each other. What do we make of this though? Which should we choose to use?
 
 ### Fibers vs. Threads
 
-If one knows that the numbers will always fall within the bounds of 1 to 256, then it probably doesn't much matter which to use. However, if there is a possibility of higher request counts, then fibers make more sense:
+If one knows that the numbers will always fall within the bounds of 1 to 256, then it probably doesn't much matter which to use. However, if there is a possibility of higher request counts, then fibers make more sense. Here are some ways in which threads and fibers differ:
 
 **Threads:**
 
