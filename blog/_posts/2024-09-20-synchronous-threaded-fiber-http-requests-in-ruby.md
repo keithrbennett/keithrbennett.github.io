@@ -104,10 +104,210 @@ If one knows that the numbers will always fall within the bounds of 1 to 256, th
 - **Cooperative Scheduling:** Fibers explicitly yield control to each other, making context switching much faster and less resource-intensive.
 - **Lightweight:** Due to their cooperative nature and shared resources, fibers have a much smaller memory footprint than threads.
 
-### Operating System Open File Descriptor Limits
+### Operating System Open File Handle Limits
 
-In general, the synchronous approach results in only one file handle being used at a time for all the requests. In contrast, the thread and fiber approaches may theoretically have file handles open for all the requests at the same time, since they do not wait for one to finish to start another.
+A file handle (aka "file descriptor") is an object (typically a small non-negative integer) stored in a variable on the OS level used to refer to a resource, which can be a file, pipe, socket, or terminal. The OS restricts the number of file handles that can be used by a given process. In our testing, we need to stay within or increase that limit.
 
-Even with as few as 256 simultaneous requests, the operating system session's file handle limit may be exceeded. If you get an error saying that all the process' file handles have been used, in Linux and Mac OS you can use `ulimit` to increase the maximum file descriptor count (used for both files and network sockets) for the terminal session, and then rerun the program. For example: `ulimit -n 2048 && my-program`. However, `ulimit` will only do this successfully if the systemwide maximum file count is large enough to accommodate it.
+In general, the synchronous approach results in only one file handle being used at a time for all the requests. In contrast, the thread and fiber approaches may theoretically use file handles for all the requests at the same time, since they do not wait for one to finish to start another.
+
+Even with as few as 256 simultaneous requests, the operating system session's file handle limit may be exceeded. If you get an error saying that all the process' file handles have been used, in Linux and Mac OS you can use `ulimit` to increase the maximum file handle count (used for both files and network sockets) for the terminal session, and then rerun the program. For example: `ulimit -n 2048 && my-program`. However, `ulimit` will only do this successfully if the systemwide maximum file count is large enough to accommodate it.
 
 Threads are orders of magnitude more heavyweight than fibers, so for large request counts, one would need to implement some kind of thread pooling, and this would probably result in far fewer requests per second than fibers. Sam Williams posted a YouTube video ([RubyConf Taiwan 2019 - The Journey to One Million by Samuel Williams - YouTube](https://www.youtube.com/watch?v=Dtn9Uudw4Mo)) in which he showed one million fibers running network requests!
+
+### JRuby
+
+No discussion of Ruby concurrency is complete without a reminder that even with multiple threads, C Ruby's Global Interpreter Lock (aka "the GIL") guarantees that only one CPU can be used at a time. In contrast, JRuby (Ruby running on the Java Virtual Machine), threads _do_ run truly concurrently, on multiple CPU's. This can make threading in JRuby much more performant.
+
+That said, these requests are not making heavy use of the CPU, and JRuby threads (really, Java threads) are still far more heavyweight than fibers.
+
+### Conclusion
+
+Which approach to use depends on a number of factors:
+
+* What will be the _average_ request count?
+* What will be the _maximum_ request count?
+* How often will this be used?
+* How important is faster completion?
+* Do I want or need to avoid the additional dependency of the async gems?
+* How important is code simplicity?
+
+Thorough research may be necessary to determine the very best approach for any given situation, but here is one policy that balances performance and simplicity:
+
+| Request Count |  Approach   |
+|:-------------:|:-----------:|
+|    n <= 3     | Synchronous |
+| 4 <= n <= 16  |  Threaded   |
+|    n > 16     |    Fiber    |
+
+### Addendum
+
+Here is the complete Ruby program used to measure request performance:
+
+```ruby
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# IMPORTANT: You may need to increase the number of available file handles available to this process.
+# The number should be greater than the maximum number of requests you want to make, because each process
+# opens at least 3 file handles (stdin, stdout, stderr), and other files may be opened during the program's
+# run (e.g. for the logger).
+# ulimit -n 300 && scripts/compare_request_methods.rb
+
+require 'async/http/internet' # gem install async-http if necessary
+require 'awesome_print'
+require 'benchmark'
+require 'json'
+require 'logger'
+require 'net/http'
+require 'pry'
+require 'yaml'
+
+# These are the external gems that must be installed for the program to run.
+REQUIRED_EXTERNAL_GEMS = %w[async-http awesome_print pry].freeze
+
+Thread.abort_on_exception = true
+Thread.report_on_exception = true
+
+class Benchmarker
+  attr_reader :logger, :request_count_per_run, :sleep_seconds, :url
+
+  def initialize(request_count_per_run, sleep_seconds, logger)
+    @request_count_per_run = request_count_per_run
+    @sleep_seconds = sleep_seconds
+    @logger = logger
+    @url = "https://httpbin.org/delay/#{sleep_seconds}"
+  end
+
+  def get_responses_synchrously(count)
+    logger.debug("Getting #{count} responses synchronously")
+    count.times.with_object([]) do |_n, responses|
+      responses << Net::HTTP.get(URI(url))
+    end
+  end
+
+  def get_responses_using_threads(count)
+    logger.debug("Getting #{count} responses using threads")
+    threads = Array.new(count) do
+      Thread.new { Net::HTTP.get(URI(url)) }
+    end
+    threads.map(&:value)
+  end
+
+  def get_responses_using_fibers(count)
+    logger.debug("Getting #{count} responses using fibers")
+    responses = []
+    Async do
+      begin
+        internet = Async::HTTP::Internet.new(connection_limit: count)
+        count.times do
+          Async do
+            begin
+              response = internet.get(url)
+              responses << response
+            ensure
+              response&.finish
+            end
+          end
+        end
+      ensure
+        internet&.close
+      end
+    end.wait
+    responses
+  end
+
+  def self.call(request_count_per_run, sleep_seconds, logger)
+    self.new(request_count_per_run, sleep_seconds, logger).call
+  end
+
+  def output_results(results)
+    logger.info('-' * 60)
+    logger.info(results.to_json)
+    ap(results)
+  end
+
+  def call
+    logger.info("Starting run with #{request_count_per_run} requests each sleeping #{sleep_seconds} seconds")
+    results = {
+      time:        Time.new.utc,
+      sleep:       sleep_seconds,
+      count:       request_count_per_run,
+      fibers:      Benchmark.measure { get_responses_using_fibers(request_count_per_run) }.real,
+      threads:     Benchmark.measure { get_responses_using_threads(request_count_per_run) }.real,
+      synchronous: Benchmark.measure { get_responses_synchrously(request_count_per_run) }.real,
+    }
+    output_results(results)
+    results
+  end
+end
+
+class Runner
+  def self.call() = new.call
+
+  def setup_logger
+    logger = Logger.new('compare_request_methods.log')
+    logger.level = Logger::INFO
+
+    logger.info('=' * 60)
+    logger
+  end
+
+  # Measure the time it takes to run a block of code
+  # @return [Array] The return value of the block and the duration in seconds
+  def time_it
+    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    return_value = yield
+    end_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    duration_in_seconds = end_time - start_time
+    [return_value, duration_in_seconds]
+  end
+
+  def write_results(logger, results, duration_secs)
+    timestamp = Time.now.utc.strftime('%Y-%m-%d-%H-%M-%S')
+    File.write("#{timestamp}-results.yaml", results.to_yaml)
+    logger.info(results.to_json)
+    puts("Done. Entire suite took #{duration_secs.round(2)} seconds.")
+  end
+
+  def call
+    counts = [1, 2, 4, 8, 16, 32, 64, 128, 256]
+    # counts = [1]
+    logger = setup_logger
+    puts "Starting run with counts: #{counts.join(', ')}"
+
+    results, duration_secs = time_it do
+      counts.map { |count| Benchmarker.call(count, 0.0001, logger) }
+    end
+
+    write_results(logger, results, duration_secs)
+  end
+end
+
+class GemChecker
+  def self.call(required_external_gems) = new.ensure_gems_available(required_external_gems)
+
+  def gem_exists?(gem_name)
+    begin
+      gem(gem_name)
+      true
+    rescue Gem::MissingSpecError
+      false
+    end
+  end
+
+  def find_missing_gems(required_gems)
+    required_gems.reject { |name| gem_exists?(name) }
+  end
+
+  def ensure_gems_available(required_external_gems)
+    missing_gems = find_missing_gems(required_external_gems)
+    if missing_gems.any?
+      puts "Need to install missing gems: #{missing_gems.join(', ')}"
+      exit(-1)
+    end
+  end
+end
+
+GemChecker.call(REQUIRED_EXTERNAL_GEMS)
+Runner.call
+```
