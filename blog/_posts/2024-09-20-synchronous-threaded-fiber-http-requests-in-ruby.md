@@ -1,7 +1,7 @@
 ---
 title: Synchronous, Thread, and Fiber HTTP Requests in Ruby
 date: 2024-09-20
-published: false
+published: true
 ---
 
 ## Introduction
@@ -141,7 +141,7 @@ Thorough research may be necessary to determine the very best approach for any g
 
 ### Addendum
 
-Here is the complete Ruby program used to measure request performance:
+The complete Ruby program used to measure request performance can be found at https://gist.github.com/keithrbennett/719af73894458a4378aa3e3a5cc9b70a and is also pasted here:
 
 ```ruby
 #!/usr/bin/env ruby
@@ -271,7 +271,6 @@ class Runner
 
   def call
     counts = [1, 2, 4, 8, 16, 32, 64, 128, 256]
-    # counts = [1]
     logger = setup_logger
     puts "Starting run with counts: #{counts.join(', ')}"
 
