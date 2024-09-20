@@ -1,16 +1,16 @@
 ---
-title: Fiber, Thread, and Synchronous HTTP Requests in Ruby
+title: Synchronous, Thread, and Fiber HTTP Requests in Ruby
 date: 2024-09-20
 published: false
 ---
 
 ## Introduction
 
-In this article, we will explore different ways to make HTTP requests in Ruby and compare their performance. We will focus on three approaches: synchronous, threaded, and fiber-based. We will use a simple example of checking the availability of the same URL multiple times.
+In this article, we will explore different ways to make HTTP requests in Ruby and compare their performance. We will focus on three approaches: synchronous, threaded, and fiber-based. We will use a simple example of checking the availability of the same URL multiple times. Our tests will measure sending 1 to 256 requests using the different approaches.
 
-Why do I care? I have a Ruby on Rails web site containing many links to YouTube song videos, and they are subject to being pulled by their owner or taken down due to copyright issues.I wanted to automate as a rake task the checking of these links for availability, so that I can do the check with minimal effort from time to time. The links are stored in the project in a YAML file, so it's easy to read them into memory. However, how would I check them for accessibility?
+Why do I care? I have a Ruby on Rails web site containing many links to YouTube song videos, and they are subject to being pulled by their owner or taken down due to copyright issues. I wanted to automate as a rake task the checking of these links for availability, so that I can do the check with minimal effort from time to time. The links are stored in the project in a YAML file, so it's easy to read them into memory. However, how would I check them for accessibility?
 
-To simplify the examples below, instead of fetching the real URL's, I will fetch the same URL multiple times. I'll use a URL built with `"https://httpbin.org/delay/#{sleep_seconds}"` to access the Internet and simulate a nonzero delay. The examples will return an array containing the responses.
+To simplify the examples below, instead of fetching the real URL's, I will fetch the same URL multiple times. I'll use a URL built with `"https://httpbin.org/delay/#{sleep_seconds}"` to access the Internet and simulate the response delay with a sleep on the server. The examples will return an array containing the responses.
 
 ### The Synchronous Approach
 
@@ -29,7 +29,7 @@ However, the time it took was frustratingly long. How could I make this faster?
 
 ### The Thread Approach
 
-Having been a fan of threads for a long time, this was the next thing I tried. Since the number of links was just a few dozen, this number was low enough that creating a thread for each link was feasible:
+Having been a fan of threads for a long time, this was the next thing I tried. Since the number of links was just a few dozen, this number was low enough that creating a thread for each link was feasible. Note that we still use `Net::HTTP.get`, but each call runs in its own thread. Fortunately, `Net::HTTP.get` supports threaded use by yielding its thread's control after sending the request, thereby avoiding wasting CPU time waiting for the response:
 
 ```ruby
 def get_responses_using_threads(count)
@@ -82,11 +82,11 @@ Here are the results comparing all three approaches, using the averages of sever
 
 ![Synchronous, Threaded, and Fiber-based](/assets/requests-article-fibers-threads-synchronous-graph.png)
 
-To zoom in on the difference between the thread and fiber approach, this graph omits the synchronous approach:
+As expected, the synchronous approach was by far the slowest, since only one request could be active at any given time. Both the thread and fiber approach were dramatically faster, and not that different from each other. To zoom in on the difference between the thread and fiber approach, this graph omits the synchronous approach:
 
 ![Threaded and Fiber-based](/assets/requests-article-fibers-threads-graph.png)
 
-As expected, the synchronous approach was by far the slowest, since only one request could be active at any given time. Both the thread and fiber approach were dramatically faster, and not that different from each other. What do we make of this though? Which should we choose to use?
+ What do we make of this though? Which should we choose to use?
 
 ### Fibers vs. Threads
 
@@ -104,14 +104,10 @@ If one knows that the numbers will always fall within the bounds of 1 to 256, th
 - **Cooperative Scheduling:** Fibers explicitly yield control to each other, making context switching much faster and less resource-intensive.
 - **Lightweight:** Due to their cooperative nature and shared resources, fibers have a much smaller memory footprint than threads.
 
-### Operating System Open File Limits
+### Operating System Open File Descriptor Limits
 
 In general, the synchronous approach results in only one file handle being used at a time for all the requests. In contrast, the thread and fiber approaches may theoretically have file handles open for all the requests at the same time, since they do not wait for one to finish to start another.
 
-Even with as few as 256 simultaneous requests, the operating system session's file handle limit may be exceeded. If you get an error saying that all the process' file handles have been used, you can use `ulimit` to increase the maximum file handle count for the terminal session, and then rerun the program. For example: `ulimit -n 2048 && my-program`.
+Even with as few as 256 simultaneous requests, the operating system session's file handle limit may be exceeded. If you get an error saying that all the process' file handles have been used, in Linux and Mac OS you can use `ulimit` to increase the maximum file descriptor count (used for both files and network sockets) for the terminal session, and then rerun the program. For example: `ulimit -n 2048 && my-program`. However, `ulimit` will only do this successfully if the systemwide maximum file count is large enough to accommodate it.
 
-However, `ulimit` will only do this successfully if the systemwide maximum file count is large enough to accommodate it.Threads are orders of magnitude more heavyweight than fibers, so for large request counts, fibers will probably work best. Sam Williams posted a YouTube video ([RubyConf Taiwan 2019 - The Journey to One Million by Samuel Williams - YouTube](https://www.youtube.com/watch?v=Dtn9Uudw4Mo)) in which he showed one million fibers running!
-
-### Test Results
-
-I ran multiple suites of tests, where each test computed the duration of `n` requests, where `n` was a power of 2 ranging from 0 to 8 (`[1, 2, 4, 8, 16, 32, 64, 128, 256]`), and then averaged the results. These results then produced the graphs below. The first compares all three approaches, whereas the second compares only fibers and threads.
+Threads are orders of magnitude more heavyweight than fibers, so for large request counts, one would need to implement some kind of thread pooling, and this would probably result in far fewer requests per second than fibers. Sam Williams posted a YouTube video ([RubyConf Taiwan 2019 - The Journey to One Million by Samuel Williams - YouTube](https://www.youtube.com/watch?v=Dtn9Uudw4Mo)) in which he showed one million fibers running network requests!
