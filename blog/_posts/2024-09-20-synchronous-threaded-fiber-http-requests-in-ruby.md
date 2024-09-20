@@ -141,7 +141,7 @@ Thorough research may be necessary to determine the very best approach for any g
 
 ### Addendum
 
-The complete Ruby program used to measure request performance can be found at https://gist.github.com/keithrbennett/719af73894458a4378aa3e3a5cc9b70a and is also pasted here:
+The complete Ruby program used to measure request performance can be found at [https://gist.github.com/keithrbennett/719af73894458a4378aa3e3a5cc9b70a](https://gist.github.com/keithrbennett/719af73894458a4378aa3e3a5cc9b70a) and is also pasted here:
 
 ```ruby
 #!/usr/bin/env ruby
