@@ -1,7 +1,8 @@
-```yaml
+---
 title: Fiber, Thread, and Synchronous HTTP Requests in Ruby
-date: 2024-09-07
-```
+date: 2024-09-20
+published: true
+---
 
 ## Introduction
 
@@ -79,11 +80,11 @@ I did a benchmark to compare the results of fetching request counts for powers o
 
 Here are the results comparing all three approaches, using the averages of several test runs:
 
-![Synchronous, Threaded, and Fiber-based](../_site/assets/requests-article-fibers-threads-synchronous-graph.png)
+![Synchronous, Threaded, and Fiber-based](/assets/requests-article-fibers-threads-synchronous-graph.png)
 
 To zoom in on the difference between the thread and fiber approach, this graph omits the synchronous approach:
 
-![Threaded and Fiber-based](/_site/assets/requests-article-fibers-threads-graph.png)
+![Threaded and Fiber-based](/assets/requests-article-fibers-threads-graph.png)
 
 As expected, the synchronous approach was by far the slowest, since only one request could be active at any given time. Both the thread and fiber approach were dramatically faster, and not that different from each other. What do we make of this though? Which should we choose to use?
 
@@ -93,15 +94,15 @@ If one knows that the numbers will always fall within the bounds of 1 to 256, th
 
 **Threads:**
 
-- **OS-Mapped:** Ruby threads in Ruby 1.9+ are mapped to operating system threads. Each thread has its own dedicated stack and other resources allocated by the OS.
-- **Context Switching Overhead:** Switching between threads involves saving and restoring the entire execution context (registers, stack pointers, etc.), which is a relatively expensive operation.
-- **System Limits:** The operating system typically imposes limits on the number of threads a process can create due to resource constraints.
+- **OS-Mapped:** Ruby threads in Ruby 1.9+ are mapped to operating system threads. Each thread has its own dedicated stack and other resources allocated by the OS.
+- **Context Switching Overhead:** Switching between threads involves saving and restoring the entire execution context (registers, stack pointers, etc.), which is a relatively expensive operation.
+- **System Limits:** The operating system typically imposes limits on the number of threads a process can create due to resource constraints.
 
 **Fibers:**
 
-- **User-Level:** Fibers are a user-level construct managed entirely within the Ruby interpreter. They share the same stack and other resources with the thread they're running in.
-- **Cooperative Scheduling:** Fibers explicitly yield control to each other, making context switching much faster and less resource-intensive.
-- **Lightweight:** Due to their cooperative nature and shared resources, fibers have a much smaller memory footprint than threads.
+- **User-Level:** Fibers are a user-level construct managed entirely within the Ruby interpreter. They share the same stack and other resources with the thread they're running in.
+- **Cooperative Scheduling:** Fibers explicitly yield control to each other, making context switching much faster and less resource-intensive.
+- **Lightweight:** Due to their cooperative nature and shared resources, fibers have a much smaller memory footprint than threads.
 
 ### Operating System Open File Limits
 
