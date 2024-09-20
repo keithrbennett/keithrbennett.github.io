@@ -1,7 +1,7 @@
 ---
 id: 11
 title: 'JRuby: A Better Language for the Java Virtual Machine'
-date: 2009-02-26T02:53:22+00:00
+date: 2009-02-26
 author: keithrbennett
 guid: http://krbtech.wordpress.com/?p=11
 permalink: /index.php/2009/02/26/jruby-a-better-language-for-the-java-virtual-machine/

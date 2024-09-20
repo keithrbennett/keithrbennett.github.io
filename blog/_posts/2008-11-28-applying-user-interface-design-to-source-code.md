@@ -1,7 +1,7 @@
 ---
 id: 392
 title: Applying User Interface Design to Source Code
-date: 2008-11-28T19:36:14+00:00
+date: 2008-11-28
 author: keithrbennett
 guid: http://krbtech.wordpress.com/?p=5
 permalink: /index.php/2008/11/28/applying-user-interface-design-to-source-code/

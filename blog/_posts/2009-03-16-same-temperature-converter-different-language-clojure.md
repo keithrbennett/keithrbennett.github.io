@@ -1,7 +1,7 @@
 ---
 id: 124
 title: Dabbling in Clojure
-date: 2009-03-16T17:00:16+00:00
+date: 2009-03-16
 author: keithrbennett
 guid: http://krbtech.wordpress.com/?p=124
 permalink: /index.php/2009/03/16/same-temperature-converter-different-language-clojure/
