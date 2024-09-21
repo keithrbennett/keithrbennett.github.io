@@ -8,7 +8,7 @@ published: true
 
 In this article, we will explore different ways to make HTTP requests in Ruby and compare their performance. We will focus on three approaches: synchronous, threaded, and fiber-based. We will use a simple example of checking the availability of the same URL multiple times. Our tests will measure sending 1 to 256 requests using the different approaches.
 
-Why do I care? I have a Ruby on Rails web site containing many links to YouTube song videos, and they are subject to being pulled by their owner or taken down due to copyright issues. I wanted to automate as a rake task the checking of these links for availability, so that I can do the check with minimal effort from time to time. The links are stored in the project in a YAML file, so it's easy to read them into memory. However, how would I check them for accessibility?
+Why do I care? I have a Ruby on Rails web site containing many links to YouTube song videos, and they are subject to being pulled by their owner or taken down due to copyright issues. I wanted to automate the checking of these links for availability as a rake task, so that I can run the check with minimal effort from time to time. The links are stored in the project in a YAML file, so it's easy to read them into memory. However, how would I check them for accessibility?
 
 To simplify the examples below, instead of fetching the real URL's, I will fetch the same URL multiple times. I'll use a URL built with `"https://httpbin.org/delay/#{sleep_seconds}"` to access the Internet and simulate the response delay with a sleep on the server. The examples will return an array containing the responses.
 
@@ -29,7 +29,7 @@ However, the time it took was frustratingly long. How could I make this faster?
 
 ### The Thread Approach
 
-Having been a fan of threads for a long time, this was the next thing I tried. Since the number of links was just a few dozen, this number was low enough that creating a thread for each link was feasible. Note that we still use `Net::HTTP.get`, but each call runs in its own thread. Fortunately, `Net::HTTP.get` supports threaded use by yielding its thread's control after sending the request, thereby avoiding wasting CPU time waiting for the response:
+Having been a fan of threads for a long time, this was the next thing I tried. Since the number of links was just a few dozen, this number was low enough that creating a thread for each link was feasible. Note that we still use `Net::HTTP.get`, but each call runs in its own thread. Fortunately, `Net::HTTP.get` supports threaded use by yielding its thread's control after sending the request, thereby avoiding CPU time waste while waiting for the response:
 
 ```ruby
 def get_responses_using_threads(count)
@@ -72,11 +72,11 @@ def get_responses_using_fibers(count)
 end
 ```
 
-The magic is in the `Async` framework and `Async::HTTP::Internet`'s `get` method, which is fiber-aware and yields controlf of the CPU while waiting for a response.
+The magic is in the `Async` framework and `Async::HTTP::Internet`'s `get` method, which is fiber-aware and yields control of the CPU while waiting for a response.
 
 ### Comparing the Performance Results
 
-I did a benchmark to compare the results of fetching request counts for powers of 2 from 1 to 256 (1, 2, 4, 8, 16, 32, 64, 128, and 256).
+I did a benchmark comparing the results of fetching request counts for powers of 2 ranging from 1 to 256 (1, 2, 4, 8, 16, 32, 64, 128, and 256).
 
 Here are the results comparing all three approaches, using the averages of several test runs:
 
@@ -94,7 +94,7 @@ If one knows that the numbers will always fall within the bounds of 1 to 256, th
 
 **Threads:**
 
-- **OS-Mapped:** Ruby threads in Ruby 1.9+ are mapped to operating system threads. Each thread has its own dedicated stack and other resources allocated by the OS.
+- **OS-Mapped:** In Ruby versions 1.9 and later, Ruby threads are mapped to operating system threads. Each thread has its own dedicated stack and other resources allocated by the OS.
 - **Context Switching Overhead:** Switching between threads involves saving and restoring the entire execution context (registers, stack pointers, etc.), which is a relatively expensive operation.
 - **System Limits:** The operating system typically imposes limits on the number of threads a process can create due to resource constraints.
 
