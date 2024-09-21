@@ -112,7 +112,7 @@ In general, the synchronous approach results in only one file handle being used 
 
 Even with as few as 256 simultaneous requests, the operating system session's file handle limit may be exceeded. If you get an error saying that all the process' file handles have been used, in Linux and Mac OS you can use `ulimit` to increase the maximum file handle count (used for both files and network sockets) for the terminal session, and then rerun the program. For example: `ulimit -n 2048 && my-program`. However, `ulimit` will only do this successfully if the systemwide maximum file count is large enough to accommodate it.
 
-Threads are orders of magnitude more heavyweight than fibers, so for large request counts, one would need to implement some kind of thread pooling, and this would probably result in far fewer requests per second than fibers. Sam Williams posted a YouTube video ([RubyConf Taiwan 2019 - The Journey to One Million by Samuel Williams - YouTube](https://www.youtube.com/watch?v=Dtn9Uudw4Mo)) in which he showed one million fibers running network requests!
+Threads are far more heavyweight than fibers, so for large request counts, one would need to implement some kind of thread pooling, and this would probably result in far fewer requests per second than fibers. Sam Williams posted a YouTube video ([RubyConf Taiwan 2019 - The Journey to One Million by Samuel Williams - YouTube](https://www.youtube.com/watch?v=Dtn9Uudw4Mo)) in which he showed one million fibers running network requests!
 
 ### JRuby
 
