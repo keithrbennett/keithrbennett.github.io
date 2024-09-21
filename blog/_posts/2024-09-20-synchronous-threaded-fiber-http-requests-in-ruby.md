@@ -118,7 +118,7 @@ Threads are far more heavyweight than fibers, so for large request counts, one w
 
 No discussion of Ruby concurrency is complete without a reminder that even with multiple threads, C Ruby's Global Interpreter Lock (aka "the GIL") guarantees that only one CPU can be used at a time. In contrast, JRuby (Ruby running on the Java Virtual Machine), threads _do_ run truly concurrently, on multiple CPU's. This can make threading in JRuby much more performant.
 
-That said, these requests are not making heavy use of the CPU, and JRuby threads (really, Java threads) are still far more heavyweight than fibers.
+That said, these requests are not making heavy use of the CPU, and JRuby threads (really, Java threads) are still far more heavyweight than fibers, so even with JRuby fibers may be the better choice.
 
 ### Conclusion
 
