@@ -120,6 +120,37 @@ No discussion of Ruby concurrency is complete without a reminder that even with 
 
 That said, these requests are not making heavy use of the CPU, and JRuby threads (really, Java threads) are still far more heavyweight than fibers, so even with JRuby fibers may be the better choice.
 
+### Large Request Counts
+
+This article covered small numbers of requests, but what if you need to make thousands or millions of requests? In that case, 
+
+- **Thread Pooling:** If you are using threads, you may need to implement a thread pool to limit the number of threads created and manage the requests.
+
+- **Fiber Pooling:** If you are using fibers, you may need to implement a fiber pool to limit the number of fibers created and manage the requests.
+
+- **Async Gems:** If you are using fibers, you may want to consider using the `async` gems to handle the low-level plumbing for you. This will make your code simpler and more maintainable, but will add a dependency to your project.
+
+- **Operating System Limits:** Be aware of the operating system's file handle limits and ensure that you stay within them.
+
+- **JRuby:** If you are using JRuby, you may be able to take advantage of true concurrency with threads.
+
+- **Performance Testing:** Thoroughly test your code with the expected number of requests to ensure that it performs as expected.
+
+- **Error Handling:** Ensure that your code handles errors gracefully and does not crash when an error occurs.
+
+- **Logging:** Add logging to your code to help you diagnose issues and monitor performance.
+
+- **Code Complexity:** Consider the complexity of your code and choose the approach that is simplest and easiest to maintain.
+
+- **Code Review:** Have your code reviewed by a colleague to ensure that it is correct and follows best practices.
+
+- **Documentation:** Document your code to make it easier for others to understand and maintain.
+
+- **Testing:** Write tests for your code to ensure that it works as expected and to catch any regressions.
+
+- **Performance Monitoring:** Monitor the performance of your code in production to identify any bottlenecks and optimize as needed.
+  -
+
 ### Conclusion
 
 Which approach to use depends on a number of factors:
@@ -133,11 +164,11 @@ Which approach to use depends on a number of factors:
 
 Thorough research may be necessary to determine the very best approach for any given situation, but here is one policy that balances performance and simplicity:
 
-| Request Count |  Approach   |
+| Request Count | Approach    |
 |:-------------:|:-----------:|
-|    n <= 3     | Synchronous |
-| 4 <= n <= 16  |  Threaded   |
-|    n > 16     |    Fiber    |
+| n <= 3        | Synchronous |
+| 4 <= n <= 16  | Threaded    |
+| n > 16        | Fiber       |
 
 ### Addendum
 
